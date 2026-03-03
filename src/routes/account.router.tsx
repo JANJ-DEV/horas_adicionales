@@ -1,4 +1,5 @@
 import {AccountLayout, Account, UpdateAccount} from "./lazy.load";
+import { updateJobProfileAction } from "./actions";
 
 export const accountRouter = [
   {
@@ -11,7 +12,8 @@ export const accountRouter = [
       },
       {
         path: "update",
-        element: <UpdateAccount />
+        element: <UpdateAccount />,
+        action: updateJobProfileAction
       }
     ]
   }

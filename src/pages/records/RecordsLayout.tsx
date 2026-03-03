@@ -15,7 +15,7 @@ const RecordsLayout = () => {
     <>
       <MainHeader />
       <MainContent>
-        <nav className="flex gap-4">
+       <nav className="flex gap-4 mt-8">
           <GoBack />
           <NavLink to="/records/add" className={({ isActive }) => {
             return `py-2 px-4 border rounded-sm ${isActive ? "text-green-500" : "text-white"}`;

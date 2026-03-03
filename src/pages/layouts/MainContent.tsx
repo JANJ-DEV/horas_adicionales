@@ -6,7 +6,7 @@ type MainContentProps = {
 
 const MainContent: FC<MainContentProps> = ({ children }) => {
   return (
-    <main className="p-4">
+    <main className="px-4">
       {children}
     </main>
   )

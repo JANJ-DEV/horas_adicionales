@@ -18,7 +18,7 @@ const Records = () => {
       const customErrorMessage = "No tienes registros";
       getRecords(currentUser.uid).then((records) => {
         if (!records || records.length === 0) {
-          toast.warning(customErrorMessage, { containerId: "records" });
+          // toast.warning(customErrorMessage, { containerId: "records" });
           setErrorMessage(customErrorMessage);
           setIsError(true);
           return;
@@ -27,7 +27,7 @@ const Records = () => {
         console.log("User records:", records);
       }).catch(() => {
         setIsError(true);
-        toast.warning(customErrorMessage, { containerId: "records" });
+        // toast.warning(customErrorMessage, { containerId: "records" });
         setErrorMessage(customErrorMessage);
       }).finally(() => {
         setIsLoading(false);

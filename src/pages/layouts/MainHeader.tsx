@@ -5,7 +5,7 @@ import MenuBars from "@/components/MenuBars";
 const MainHeader = () => {
 
   return (
-     <header className="relative flex gap-4 p-4 justify-between items-center">
+    <header className="sticky top-0 bg-overlay-50 flex gap-4 p-4 justify-between items-center">
       <Menu />
       <MenuBars />
       <CurrentUser />
