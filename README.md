@@ -1,73 +1,131 @@
-# React + TypeScript + Vite
+# Horas Adicionales
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicación web para registrar horas trabajadas por jornada y gestionar perfiles de trabajo por usuario autenticado.
 
-Currently, two official plugins are available:
+## Resumen
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Este proyecto está construido con **React + TypeScript + Vite** y usa:
 
-## React Compiler
+- **Firebase Authentication** (inicio de sesión con Google).
+- **Cloud Firestore** para persistir datos por usuario.
+- **React Router** para navegación y acciones de formularios.
+- **Tailwind CSS** para estilos.
+- **React Toastify** para notificaciones.
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+## Funcionalidades actuales
 
-## Expanding the ESLint configuration
+- Inicio de sesión y cierre de sesión con cuenta de Google.
+- Protección de rutas privadas (`/records`, `/job-profiles`, `/account`).
+- Alta de registros de jornada (empresa, fecha, hora de entrada y salida).
+- Listado de registros guardados del usuario.
+- Creación y listado en tiempo real de perfiles de trabajo.
+- Vista de datos básicos de la cuenta autenticada.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Stack técnico
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- React 19
+- TypeScript 5
+- Vite 7
+- Firebase 12 (Auth + Firestore)
+- React Router 7
+- Tailwind CSS 4
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Requisitos
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Node.js 20+ recomendado
+- npm 10+
+- Proyecto de Firebase con Authentication (Google) y Firestore habilitados
+
+## Configuración de entorno
+
+1. Crea un archivo `.env.local` en la raíz del proyecto.
+2. Añade las variables de tu app de Firebase:
+
+```env
+VITE_API_KEY=
+VITE_AUTH_DOMAIN=
+VITE_DATABASE_URL=
+VITE_PROJECT_ID=
+VITE_STORAGE_BUCKET=
+VITE_MESSAGING_SENDER_ID=
+VITE_APP_ID=
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+> Nota: todas las variables del frontend deben comenzar por `VITE_` para que Vite las exponga en `import.meta.env`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Instalación y ejecución
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
+
+La app quedará disponible en la URL local que muestre Vite (normalmente `http://localhost:5173`).
+
+## Scripts disponibles
+
+- `npm run dev`: inicia servidor de desarrollo.
+- `npm run build`: compila TypeScript y genera build de producción.
+- `npm run preview`: sirve localmente la build generada.
+- `npm run lint`: ejecuta ESLint.
+
+## Estructura principal
+
+```text
+src/
+  apis/                # Configuración de Firebase
+  components/          # Componentes reutilizables UI
+  context/             # Contextos globales (auth, toast, estado global)
+  pages/               # Vistas y layouts por módulo
+    account/           # Cuenta de usuario
+    jobs_profiles/     # Perfiles de trabajo
+    records/           # Registros de horas
+    layouts/           # Layouts públicos/privados y estructura común
+  routes/              # Definición de rutas y acciones de formularios
+  services/            # Acceso a Auth y Firestore
+  utils/               # Utilidades compartidas
+```
+
+## Modelo de datos (Firestore)
+
+Los datos se guardan por usuario autenticado en:
+
+- `users/{uid}/records`
+- `users/{uid}/job_profiles`
+
+Ejemplo de documento en `records`:
+
+```json
+{
+  "id": "auto-id",
+  "nombreEmpresa": "Empresa X",
+  "fecha": "2026-03-03",
+  "hora_entrada": "08:00",
+  "hora_salida": "17:00",
+  "createdAt": "serverTimestamp",
+  "updatedAt": "serverTimestamp"
+}
+```
+
+## Rutas principales
+
+- `/` y `/home`: inicio público.
+- `/records`: listado de registros.
+- `/records/add`: formulario para nuevo registro.
+- `/job-profiles`: listado de perfiles de trabajo.
+- `/job-profiles/add`: formulario para nuevo perfil.
+- `/account`: información de cuenta.
+- `/account/update`: vista de actualización (placeholder).
+
+## Notas de desarrollo
+
+- Alias de importación configurado: `@` → `src`.
+- Se usa `babel-plugin-react-compiler` en la configuración de Vite.
+- El proyecto compila correctamente con `npm run build`.
+
+## Próximas mejoras sugeridas
+
+- Edición y borrado funcional de perfiles de trabajo (botones ya visibles en UI).
+- Filtros por fecha/empresa para registros.
+- Tests de servicios y componentes críticos.
+- Reglas de seguridad de Firestore documentadas por entorno.
