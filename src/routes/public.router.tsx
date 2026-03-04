@@ -1,19 +1,19 @@
-import { App, PublicLayout } from './lazy.load';
+import { App, PublicLayout } from "./lazy.load";
 
 export const publicRouter = [
   {
-    path: '/',
+    path: "/",
     element: <PublicLayout />,
     children: [
       {
-        path: '/',
+        path: "/",
         index: true,
-        element: <App />
+        element: <App />,
       },
       {
-        path: '/home',
-        element: <App />
+        path: "/home",
+        element: <App />,
       },
-    ]
-  }
+    ],
+  },
 ];

@@ -9,8 +9,6 @@ export type AuthContextType = {
   setCurrentUser: (user: User | null) => void;
   signInWithGoogle: () => void;
   signOutGoogle: () => void;
-}
+};
 
 export const AuthCtx = createContext<AuthContextType | null>(null);
-
-

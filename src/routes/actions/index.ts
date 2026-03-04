@@ -16,7 +16,7 @@ export async function addRecordAction({ request }: ActionFunctionArgs) {
   // Aquí puedes hacer validaciones
   if (!nombreEmpresa || !fecha || !horaEntrada || !horaSalida) {
     return {
-      error: "Todos los campos son requeridos"
+      error: "Todos los campos son requeridos",
     };
   }
 
@@ -37,7 +37,7 @@ export async function addRecordAction({ request }: ActionFunctionArgs) {
   return {
     success: true,
     message: "Registro guardado correctamente",
-    record
+    record,
   };
 }
 
@@ -49,58 +49,59 @@ export const addJobProfileAction = async ({ request }: ActionFunctionArgs) => {
 
   if (!nombrePerfil || !puestoTrabajo) {
     return {
-      error: "El nombre del perfil y el puesto de trabajo son requeridos"
+      error: "El nombre del perfil y el puesto de trabajo son requeridos",
     };
   }
 
   // Aquí harías la llamada a tu API o base de datos para guardar el perfil de trabajo
   // Por ejemplo:
-  const jobProfile = await saveJobProfile({ nombrePerfil, puestoTrabajo, descripcion }) as JobProfile;
+  const jobProfile = (await saveJobProfile({
+    nombrePerfil,
+    puestoTrabajo,
+    descripcion,
+  })) as JobProfile;
 
   toast.success("Perfil de trabajo guardado correctamente", { containerId: "job-profiles-toast" });
   return {
     success: true,
     message: "Perfil de trabajo guardado correctamente",
-    jobProfile
+    jobProfile,
   };
-}
+};
 
 export const updateJobProfileAction = async ({ request }: ActionFunctionArgs) => {
-
   const data = await request.formData();
   const displayName = data.get("displayName") as string;
-  const uploadPhoto = globalThis.document.querySelector<HTMLInputElement>('#uploadPhoto')?.files?.[0] as File;
-  
+  const uploadPhoto = globalThis.document.querySelector<HTMLInputElement>("#uploadPhoto")
+    ?.files?.[0] as File;
+
   if (!displayName) {
     toast.error("El nombre de usuario es requerido", { containerId: "global" });
     return {
-      error: "El nombre de usuario es requerido"
+      error: "El nombre de usuario es requerido",
     };
   }
 
   if (!uploadPhoto || uploadPhoto.size === 0) {
     updateAccount({ displayName });
-     data.set("photoURL", authFirebase.currentUser?.photoURL || "");
-     toast.success("Cuenta actualizada correctamente", { containerId: "global" });
-    
-  }else{
-     const url = await uploadFile(uploadPhoto)
-      console.log("URL de la foto subida:", url);
-      updateAccount({ displayName, photoURL: url });
-      data.set("photoURL", url);
-      toast.success("Cuenta actualizada correctamente", { containerId: "global" });
-  //   uploadFile(uploadPhoto).then((url) => {
-  //   console.log("URL de la foto subida:", url);
-  //   updateAccount({ displayName, photoURL: url });
-  //   data.set("photoURL", url);
-  //   toast.success("Cuenta actualizada correctamente", { containerId: "global" });
-  // }).catch((error: FirebaseError) => {
-  //   console.error("Error al subir la foto:", error);
-  //   toast.error("Error al subir la foto", { containerId: "global" });
-  // });
+    data.set("photoURL", authFirebase.currentUser?.photoURL || "");
+    toast.success("Cuenta actualizada correctamente", { containerId: "global" });
+  } else {
+    const url = await uploadFile(uploadPhoto);
+    console.log("URL de la foto subida:", url);
+    updateAccount({ displayName, photoURL: url });
+    data.set("photoURL", url);
+    toast.success("Cuenta actualizada correctamente", { containerId: "global" });
+    //   uploadFile(uploadPhoto).then((url) => {
+    //   console.log("URL de la foto subida:", url);
+    //   updateAccount({ displayName, photoURL: url });
+    //   data.set("photoURL", url);
+    //   toast.success("Cuenta actualizada correctamente", { containerId: "global" });
+    // }).catch((error: FirebaseError) => {
+    //   console.error("Error al subir la foto:", error);
+    //   toast.error("Error al subir la foto", { containerId: "global" });
+    // });
   }
-
-  
 
   const photoURL = data.get("photoURL") as string;
 
@@ -108,6 +109,6 @@ export const updateJobProfileAction = async ({ request }: ActionFunctionArgs) =>
     success: true,
     message: "Cuenta actualizada correctamente",
     displayName,
-    photoURL
-  }
-}
+    photoURL,
+  };
+};

@@ -17,57 +17,86 @@ const CurrentUser: FC = () => {
       if (!target.closest("article")) {
         closeMenuCurrentUser();
       }
-    }
+    };
     document.addEventListener("click", handlerCloseMenuCurrentUser);
     return () => {
       document.removeEventListener("click", handlerCloseMenuCurrentUser);
-    }
-  }, [closeMenuCurrentUser])
+    };
+  }, [closeMenuCurrentUser]);
 
   useEffect(() => {
     closeMenuCurrentUser();
-  }, [isAuthenticated, closeMenuCurrentUser])
+  }, [isAuthenticated, closeMenuCurrentUser]);
 
-  if (isLoading) return <Loading variant="auth" />
+  if (isLoading) return <Loading variant="auth" />;
 
-  return isAuthenticated && currentUser ?
+  return isAuthenticated && currentUser ? (
     <article className="flex flex-col group relative text-xl">
       <header className="flex">
-        <img onClick={(e) => {
-          e.stopPropagation();
-          toggleMenuCurrentUser();
-          closeMenuBars();
-        }} src={currentUser.photoURL || ""} alt="User profile" className={`w-10 h-10 rounded-full border-2 ${currentUser.emailVerified ? "border-green-500" : "border-red-500"}`} />
+        <img
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleMenuCurrentUser();
+            closeMenuBars();
+          }}
+          src={currentUser.photoURL || ""}
+          alt="User profile"
+          className={`w-10 h-10 rounded-full border-2 ${currentUser.emailVerified ? "border-green-500" : "border-red-500"}`}
+        />
       </header>
-      <section className={`absolute -z-50 top-full right-0 flex flex-col pt-12 ${isMenuCurrentUserOpen ? "flex min-w-max" : "hidden"}`}>
+      <section
+        className={`absolute -z-50 top-full right-0 flex flex-col pt-12 ${isMenuCurrentUserOpen ? "flex min-w-max" : "hidden"}`}
+      >
         <article className="flex flex-col gap-2 bg-dark border border-light/20 rounded-md py-4">
-          <aside className="px-4 mt-2"><span className="text-green-300 font-bold">{currentUser.displayName}</span></aside>
+          <aside className="px-4 mt-2">
+            <span className="text-green-300 font-bold">{currentUser.displayName}</span>
+          </aside>
           <section className="flex flex-col gap-2 my-2 cursor-pointer">
             <nav className="px-4">
-              <NavLink onClick={(e) => {
-                e.stopPropagation();
-                toggleMenuCurrentUser();
-                closeMenuBars();
-              }} to="/account" className={({ isActive }) => isActive ? "text-green-500" : "text-white"}>Mi cuenta</NavLink>
+              <NavLink
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleMenuCurrentUser();
+                  closeMenuBars();
+                }}
+                to="/account"
+                className={({ isActive }) => (isActive ? "text-green-500" : "text-white")}
+              >
+                Mi cuenta
+              </NavLink>
             </nav>
             <footer className="flex justify-between gap-2 items-center px-4">
-              <span onClick={(e) => {
-                e.stopPropagation();
-                signOutGoogle();
-              }}>Salir</span> <FaSignOutAlt size={20} className="text-red-300" onClick={(e) => {
-                e.stopPropagation();
-                signOutGoogle();
-              }} />
+              <span
+                onClick={(e) => {
+                  e.stopPropagation();
+                  signOutGoogle();
+                }}
+              >
+                Salir
+              </span>{" "}
+              <FaSignOutAlt
+                size={20}
+                className="text-red-300"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  signOutGoogle();
+                }}
+              />
             </footer>
           </section>
         </article>
       </section>
     </article>
-    : <FaRegUserCircle size={40} className="text-blue-500" onClick={(e) => {
-      e.stopPropagation();
-      signInWithGoogle();
-    }} />
-
+  ) : (
+    <FaRegUserCircle
+      size={40}
+      className="text-blue-500"
+      onClick={(e) => {
+        e.stopPropagation();
+        signInWithGoogle();
+      }}
+    />
+  );
 };
 
 export default CurrentUser;

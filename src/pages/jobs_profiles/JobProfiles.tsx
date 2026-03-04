@@ -3,7 +3,7 @@ import { firestore } from "@/apis/firebase";
 import useAuth from "@/context/hooks/auth.hook";
 import { collection, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer } from "react-toastify";
 // import {  toast, ToastContainer} from 'react-toastify';
 
 export interface JobProfile {
@@ -35,7 +35,7 @@ const JobProfiles = () => {
             setIsError(true);
             return;
           } else {
-            setUserData(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as JobProfile)));
+            setUserData(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }) as JobProfile));
           }
         });
       } catch {
@@ -54,12 +54,17 @@ const JobProfiles = () => {
   return (
     <section className="flex items-center justify-center">
       {isLoading && <p>Cargando...</p>}
-      {isError && errorMessage && (<section className="flex flex-col gap-4">
-        <p className="text-red-300">{errorMessage}</p>
-        <button type="button" className="text-white font-black py-2 px-4 border-2 border-white rounded-sm hover:bg-green-500/20">
-          Crea perfil de trabajo
-        </button>
-      </section>)}
+      {isError && errorMessage && (
+        <section className="flex flex-col gap-4">
+          <p className="text-red-300">{errorMessage}</p>
+          <button
+            type="button"
+            className="text-white font-black py-2 px-4 border-2 border-white rounded-sm hover:bg-green-500/20"
+          >
+            Crea perfil de trabajo
+          </button>
+        </section>
+      )}
       {userData && userData.length > 0 && (
         <section className="flex flex-col gap-4">
           {userData.map((job) => (
@@ -70,10 +75,16 @@ const JobProfiles = () => {
                 <p className="text-sm font-bold text-gray-300">{job.descripcion}</p>
               </div>
               <footer className="flex justify-end gap-4 mt-2">
-                <button type="button" className="border border-blue-300/50 rounded-sm hover:bg-green-500/20 py-2 px-4">
+                <button
+                  type="button"
+                  className="border border-blue-300/50 rounded-sm hover:bg-green-500/20 py-2 px-4"
+                >
                   Editar
                 </button>
-                <button type="button" className="border border-red-300/50 rounded-sm hover:bg-green-500/20 py-2 px-4">
+                <button
+                  type="button"
+                  className="border border-red-300/50 rounded-sm hover:bg-green-500/20 py-2 px-4"
+                >
                   Borrar
                 </button>
               </footer>
@@ -83,7 +94,7 @@ const JobProfiles = () => {
       )}
       <ToastContainer containerId="profile" position="top-right" />
     </section>
-  )
-}
+  );
+};
 
 export default JobProfiles;

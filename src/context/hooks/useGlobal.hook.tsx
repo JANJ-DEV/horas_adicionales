@@ -7,6 +7,6 @@ const useGlobal = () => {
     throw new Error("useGlobal must be used within a GlobalProvider");
   }
   return ctx;
-}
+};
 
 export default useGlobal;

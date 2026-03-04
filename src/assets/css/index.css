@@ -2,7 +2,7 @@
 
 @theme {
   /* Usamos el prefijo --background-image- para que Tailwind cree la clase */
-  --background-image-hero: url('./src/assets/img/image.png');
+  --background-image-hero: url("./src/assets/img/image.png");
   --color-primary: #3490dc;
   --color-secondary: #ffed4a;
   --color-accent: #e3342f;
@@ -10,8 +10,8 @@
   --color-text: #a5a5a5;
   --color-dark: #1a202c;
   --color-light: #f7fafc;
-  --color-overlay-80: rgba(33, 33, 33, .8);
-  --color-overlay-50: rgba(33, 33, 33, .5);
+  --color-overlay-80: rgba(33, 33, 33, 0.8);
+  --color-overlay-50: rgba(33, 33, 33, 0.5);
 }
 
 :root {
@@ -26,14 +26,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-body{
+body {
   overflow-x: hidden;
   width: 100%;
   min-height: 100vh;
   display: grid;
   @apply bg-hero bg-cover bg-center bg-no-repeat bg-fixed;
-  
- 
 }
 #root {
   display: flex;
@@ -41,6 +39,3 @@ body{
   min-height: inherit;
   background-color: var(--color-overlay-80);
 }
-
-
-

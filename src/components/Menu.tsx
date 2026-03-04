@@ -7,7 +7,7 @@ const Menu: FC = () => {
     <DesktopViewOnly tag="nav" className="gap-4 items-center">
       <MainMenu variant="desktop" />
     </DesktopViewOnly>
-  )
+  );
 };
 
 export default Menu;

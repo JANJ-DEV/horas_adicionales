@@ -1,6 +1,15 @@
-import { collection, doc, setDoc, serverTimestamp, getDocs, getDoc, deleteDoc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  setDoc,
+  serverTimestamp,
+  getDocs,
+  getDoc,
+  deleteDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { firestore } from "@/apis/firebase";
-import {authFirebase} from "@/apis/firebase";
+import { authFirebase } from "@/apis/firebase";
 
 export interface RecordService {
   id?: string;
@@ -11,7 +20,6 @@ export interface RecordService {
   createdAt?: Date;
   updatedAt?: Date;
 }
-
 
 export const saveRecord = async (record: RecordService) => {
   const userId = authFirebase.currentUser?.uid;
@@ -24,9 +32,9 @@ export const saveRecord = async (record: RecordService) => {
   try {
     // 1. Referencia a la colección
     const collectionRef = collection(firestore, "users", userId, "records");
-    
+
     // 2. Crear un nuevo documento con ID automático
-    const newDocRef = doc(collectionRef); 
+    const newDocRef = doc(collectionRef);
 
     await setDoc(newDocRef, {
       id: newDocRef.id, // Guardamos el ID dentro del doc por comodidad
@@ -56,7 +64,11 @@ export const getRecords = async (userId: string) => {
   }
 };
 
-export const updateRecord = async (userId: string, recordId: string, updatedData: Partial<RecordService>) => {
+export const updateRecord = async (
+  userId: string,
+  recordId: string,
+  updatedData: Partial<RecordService>
+) => {
   try {
     const docRef = doc(firestore, "users", userId, "records", recordId);
     await updateDoc(docRef, {
@@ -81,7 +93,7 @@ export const deleteRecord = async (userId: string, recordId: string) => {
 export const getRecordById = async (userId: string, recordId: string) => {
   try {
     const docRef = doc(firestore, "users", userId, "records", recordId);
-    const docSnap = await getDoc(docRef);       
+    const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       return { id: docSnap.id, ...docSnap.data() };
     } else {
@@ -97,12 +109,17 @@ export const getRecordsByDateRange = async (userId: string, startDate: Date, end
   try {
     const collectionRef = collection(firestore, "users", userId, "records");
     const querySnapshot = await getDocs(collectionRef);
-    const records = querySnapshot.docs.map((doc) => ({ id: doc.id, nombreEmpresa: doc.data().nombreEmpresa, fecha: doc.data().fecha, ...doc.data() }));
+    const records = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      nombreEmpresa: doc.data().nombreEmpresa,
+      fecha: doc.data().fecha,
+      ...doc.data(),
+    }));
     // Filtrar registros por rango de fechas
     const filteredRecords = records.filter((record) => {
       const recordDate = new Date(record.fecha as string | Date);
       return recordDate >= startDate && recordDate <= endDate;
-    });   
+    });
     return filteredRecords;
   } catch (error) {
     console.error("Error al obtener registros por rango de fechas:", error);
@@ -113,13 +130,19 @@ export const getRecordsByCompanyName = async (userId: string, companyName: strin
   try {
     const collectionRef = collection(firestore, "users", userId, "records");
     const querySnapshot = await getDocs(collectionRef);
-    const records = querySnapshot.docs.map((doc) => ({ id: doc.id, nombreEmpresa: doc.data().nombreEmpresa, fecha: doc.data().fecha, ...doc.data() }));   
+    const records = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      nombreEmpresa: doc.data().nombreEmpresa,
+      fecha: doc.data().fecha,
+      ...doc.data(),
+    }));
     // Filtrar registros por nombre de empresa
-    const filteredRecords = records.filter((record) => record.nombreEmpresa.toLowerCase().includes(companyName.toLowerCase()));   
+    const filteredRecords = records.filter((record) =>
+      record.nombreEmpresa.toLowerCase().includes(companyName.toLowerCase())
+    );
     return filteredRecords;
   } catch (error) {
     console.error("Error al obtener registros por nombre de empresa:", error);
     return [];
   }
 };
-

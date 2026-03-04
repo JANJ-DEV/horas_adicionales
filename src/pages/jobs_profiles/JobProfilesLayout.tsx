@@ -17,19 +17,21 @@ const JobProfilesLayout = () => {
       <MainContent>
         <nav className="flex gap-4 mt-8">
           <GoBack />
-          <NavLink to="/job-profiles/add" className={({ isActive }) => {
-            return `py-2 px-4 border rounded-sm ${isActive ? "text-green-500" : "text-white"}`;
-          }}>
+          <NavLink
+            to="/job-profiles/add"
+            className={({ isActive }) => {
+              return `py-2 px-4 border rounded-sm ${isActive ? "text-green-500" : "text-white"}`;
+            }}
+          >
             Añadir perfil
           </NavLink>
         </nav>
         <section className="flex flex-col gap-4 mt-4">
           <Outlet />
         </section>
-
       </MainContent>
     </>
-  )
-}
+  );
+};
 
 export default JobProfilesLayout;

@@ -15,21 +15,23 @@ const RecordsLayout = () => {
     <>
       <MainHeader />
       <MainContent>
-       <nav className="flex gap-4 mt-8">
+        <nav className="flex gap-4 mt-8">
           <GoBack />
-          <NavLink to="/records/add" className={({ isActive }) => {
-            return `py-2 px-4 border rounded-sm ${isActive ? "text-green-500" : "text-white"}`;
-          }}>
+          <NavLink
+            to="/records/add"
+            className={({ isActive }) => {
+              return `py-2 px-4 border rounded-sm ${isActive ? "text-green-500" : "text-white"}`;
+            }}
+          >
             Registrar Hora
           </NavLink>
         </nav>
         <section className="flex flex-col gap-4 mt-4">
           <Outlet />
         </section>
-
       </MainContent>
     </>
-  )
-}
+  );
+};
 
 export default RecordsLayout;

@@ -6,7 +6,6 @@ import MainContent from "../layouts/MainContent";
 import GoBack from "@/components/GoBack";
 
 const AccountLayout: FC = () => {
-
   const { isAuthenticated } = useAuth();
 
   if (!isAuthenticated) {
@@ -19,16 +18,21 @@ const AccountLayout: FC = () => {
       <MainContent>
         <nav className="flex gap-4 mt-8">
           <GoBack />
-          <NavLink to="/account/update" className={({ isActive }) => {
-            return `py-2 px-4 border rounded-sm ${isActive ? "text-green-500" : "text-white"}`;
-          }}>Actualizar cuenta</NavLink>
+          <NavLink
+            to="/account/update"
+            className={({ isActive }) => {
+              return `py-2 px-4 border rounded-sm ${isActive ? "text-green-500" : "text-white"}`;
+            }}
+          >
+            Actualizar cuenta
+          </NavLink>
         </nav>
-         <section className="flex flex-col gap-4 mt-4">
+        <section className="flex flex-col gap-4 mt-4">
           <Outlet /> {/* Aquí se renderizarán las rutas hijas como Update Account */}
         </section>
       </MainContent>
     </>
   );
-}
+};
 
 export default AccountLayout;

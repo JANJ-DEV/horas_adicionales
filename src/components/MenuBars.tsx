@@ -12,23 +12,31 @@ const MenuBars = () => {
 
   return (
     <MobileViewOnly tag="section">
-      <LuSquareMenu size={38} onClick={(e) => {
-        e.stopPropagation();
-        toggleMenuBars();
-        closeMenuCurrentUser();
-      }} />
-      <nav className={`${isMenuBarsOpen ? "flex flex-col fixed top-0 left-0 min-w-screen min-h-dvh bg-black gap-4 z-50" : "hidden"} `}>
+      <LuSquareMenu
+        size={38}
+        onClick={(e) => {
+          e.stopPropagation();
+          toggleMenuBars();
+          closeMenuCurrentUser();
+        }}
+      />
+      <nav
+        className={`${isMenuBarsOpen ? "flex flex-col fixed top-0 left-0 min-w-screen min-h-dvh bg-black gap-4 z-50" : "hidden"} `}
+      >
         <aside className="flex justify-between items-center pr-4">
           <Brand variant="small" />
-          <CgCloseR size={38} onClick={(e) => {
-            e.stopPropagation();
-            toggleMenuBars();
-          }} />
+          <CgCloseR
+            size={38}
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleMenuBars();
+            }}
+          />
         </aside>
         <MainMenu variant="mobile" />
       </nav>
     </MobileViewOnly>
-  )
-}
+  );
+};
 
-export default MenuBars
+export default MenuBars;
