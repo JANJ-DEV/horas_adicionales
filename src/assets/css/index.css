@@ -10,8 +10,10 @@
   --color-text: #a5a5a5;
   --color-dark: #1a202c;
   --color-light: #f7fafc;
+  --color-overlay-90: rgba(33, 33, 33, 0.9);
   --color-overlay-80: rgba(33, 33, 33, 0.8);
   --color-overlay-50: rgba(33, 33, 33, 0.5);
+  --color-overlay-25: rgba(33, 33, 33, 0.25);
 }
 
 :root {
@@ -37,5 +39,6 @@ body {
   display: flex;
   flex-direction: column;
   min-height: inherit;
-  background-color: var(--color-overlay-80);
+  background-color: var(--color-overlay-90);
+  @apply w-full max-w-7xl mx-auto;
 }
