@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import useAuth from "@/context/hooks/auth.hook";
 import { useEffect, useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { getRecords, type RecordService } from "@/services/records.service";
 
 const Records = () => {
@@ -24,7 +24,6 @@ const Records = () => {
           return;
         }
         setRecords(records as RecordService[]);
-        console.log("User records:", records);
       }).catch(() => {
         setIsError(true);
         // toast.warning(customErrorMessage, { containerId: "records" });
