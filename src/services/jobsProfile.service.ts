@@ -68,8 +68,6 @@ export const subscribeToJobProfiles = (
           ...doc.data(),
         }) as JobProfile
     );
-
-    console.log("Perfiles actualizados:", profiles);
     // Le pasamos los datos a la función callback
     callback(profiles);
   });

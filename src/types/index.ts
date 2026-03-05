@@ -48,3 +48,21 @@ export type BranchData = {
   id: string;
   data: Branch[];
 };
+export interface PuestoDeTrabajo {
+  id: string;
+  nombre: string;
+  puestoTrabajoDescripcion: string;
+}
+
+// Interface para cada sector principal
+export interface Sector {
+  id: string;
+  sector: string;
+  descripcion_sector: string;
+  puestos_de_trabajo: PuestoDeTrabajo[];
+}
+
+// Interface para la raíz del documento JSON
+export interface SectoresData {
+  sectores_y_puestos: Sector[];
+}

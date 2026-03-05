@@ -3,6 +3,7 @@ import { Navigate, NavLink, Outlet } from "react-router";
 import MainContent from "../layouts/MainContent";
 import MainHeader from "../layouts/MainHeader";
 import GoBack from "@/components/GoBack";
+import BranchesProvider from "@/context/providers/BranchesProvider";
 
 const JobProfilesLayout = () => {
   const { isAuthenticated } = useAuth();
@@ -12,7 +13,7 @@ const JobProfilesLayout = () => {
   }
 
   return (
-    <>
+    <BranchesProvider>
       <MainHeader />
       <MainContent>
         <nav className="flex gap-4 mt-8">
@@ -30,7 +31,7 @@ const JobProfilesLayout = () => {
           <Outlet />
         </section>
       </MainContent>
-    </>
+    </BranchesProvider>
   );
 };
 

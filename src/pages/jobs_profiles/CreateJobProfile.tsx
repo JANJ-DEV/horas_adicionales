@@ -1,36 +1,22 @@
-import { useEffect, type FC } from "react";
+import useBranches from "@/context/hooks/useBranches.hook.";
+import { useFilterBranches } from "@/hooks/useFilterBranches";
+import type { Branch, JobPosition } from "@/types";
+import { type FC } from "react";
 import { useFetcher } from "react-router";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 // Interface para los puestos de trabajo individuales
-export interface PuestoDeTrabajo {
-  id: string;
-  nombre: string;
-  puestoTrabajoDescripcion: string;
-}
-
-// Interface para cada sector principal
-export interface Sector {
-  id: string;
-  sector: string;
-  descripcion_sector: string;
-  puestos_de_trabajo: PuestoDeTrabajo[];
-}
-
-// Interface para la raíz del documento JSON
-export interface SectoresData {
-  sectores_y_puestos: Sector[];
-}
 
 const CreateJobProfile: FC = () => {
+  const { branches } = useBranches();
   const formAction = useFetcher();
-
-  useEffect(() => {
-    if (formAction.data && formAction.data.error) {
-      toast.error(formAction.data.error, { containerId: "job-profiles-toast" });
-    } else if (formAction.data && formAction.data.success) {
-      toast.success(formAction.data.message, { containerId: "job-profiles-toast" });
-    }
-  }, [formAction.data]);
+  const {
+    selectedBranch,
+    handlerOnChangeBranch,
+    selectedJobPosition,
+    handlerOnChangeJobPosition,
+    getJobPositionByBranch,
+    getBranch,
+  } = useFilterBranches();
 
   return (
     <section>
@@ -56,47 +42,85 @@ const CreateJobProfile: FC = () => {
                 <label htmlFor="sectorName" title="Selecciona tu sector">
                   Cual es tu sector?
                 </label>
-                <select name="sectorName" id="sectorName">
-                  <option value="" disabled>
-                    Elige tu sector
-                  </option>
-                  <option value="1">Transporte</option>
+                <select
+                  id="sectorName"
+                  name="sectorName"
+                  title="Selecciona tu sector"
+                  className="bg-dark text-white p-2 rounded-sm"
+                  onChange={handlerOnChangeBranch}
+                >
+                  <option value="">Selecciona tu sector</option>
+                  {branches.map((branch: Branch) => (
+                    <option key={branch.id} value={branch.id}>
+                      {branch.sector}
+                    </option>
+                  ))}
                 </select>
               </div>
-              <div className="flex flex-col text-xl border p-4 rounded-xl gap-4">
-                <label htmlFor="sectorDescription">Descripción</label>
-                <textarea
-                  rows={4}
-                  id="sectorDescription"
-                  title="Descripción del sector"
-                  name="sectorDescription"
-                  placeholder="ejemplo: Conductor de autobús encargado de rutas urbanas, con experiencia en atención al cliente y manejo de vehículos de gran tamaño."
-                />
-              </div>
+              {selectedBranch && (
+                <div className="flex flex-col text-xl border p-4 rounded-xl gap-4">
+                  <label htmlFor="sectorDescription">Descripción</label>
+                  <textarea
+                    value={
+                      branches.find((branch: Branch) => branch.id === selectedBranch)
+                        ?.descripcion_sector || ""
+                    }
+                    rows={4}
+                    id="sectorDescription"
+                    title="Descripción del sector"
+                    name="sectorDescription"
+                    placeholder="ejemplo: Conductor de autobús encargado de rutas urbanas, con experiencia en atención al cliente y manejo de vehículos de gran tamaño."
+                  />
+                </div>
+              )}
             </section>
             <section className="flex flex-col gap-4 justify-around">
               <div className="flex flex-col text-xl border p-4 rounded-xl gap-4">
                 <label htmlFor="jobPosition">Cual es tu puesto de trabajo?</label>
-                <select name="jobPosition" id="jobPosition">
-                  <option value="" disabled>
-                    Elige tu puesto de trabajo
-                  </option>
-                  <option value={"monitor"}>Monitor</option>
-                </select>
+                {selectedBranch && (
+                  <>
+                    <select
+                      name="jobPosition"
+                      id="jobPosition"
+                      title="Selecciona tu puesto de trabajo"
+                      onChange={handlerOnChangeJobPosition}
+                    >
+                      <option value="">Selecciona tu puesto de trabajo</option>
+                      {getBranch(selectedBranch)?.map((job: JobPosition) => (
+                        <option key={job.id} value={job.id}>
+                          {job.nombre}
+                        </option>
+                      ))}
+                    </select>
+                  </>
+                )}
               </div>
-              <div className="flex flex-col text-xl border p-4 rounded-xl gap-4">
-                <label htmlFor="jobDescription">Descripción</label>
-                <textarea
-                  rows={4}
-                  id="jobDescription"
-                  title="Descripción del puesto de trabajo"
-                  name="jobDescription"
-                  placeholder="ejemplo: Conductor de autobús encargado de rutas urbanas, con experiencia en atención al cliente y manejo de vehículos de gran tamaño."
-                />
-              </div>
+              {selectedJobPosition && (
+                <div className="flex flex-col text-xl border p-4 rounded-xl gap-4">
+                  <label htmlFor="jobDescription">Descripción</label>
+                  <textarea
+                    value={getJobPositionByBranch(selectedJobPosition)?.descripcion || ""}
+                    rows={4}
+                    id="jobDescription"
+                    title="Descripción del puesto de trabajo"
+                    name="jobDescription"
+                    placeholder="ejemplo: Conductor de autobús encargado de rutas urbanas, con experiencia en atención al cliente y manejo de vehículos de gran tamaño."
+                  />
+                </div>
+              )}
             </section>
           </article>
         </section>
+
+        <section className="flex flex-col gap-4">
+          {branches.length > 0 && selectedBranch && (
+            <span>{branches.find((branch: Branch) => branch.id === selectedBranch)?.sector}</span>
+          )}
+          {getJobPositionByBranch && (
+            <span>{getJobPositionByBranch(selectedJobPosition)?.nombre}</span>
+          )}
+        </section>
+
         <button type="submit" disabled={formAction.state === "submitting"}>
           {formAction.state === "submitting" ? "Guardando..." : "Guardar"}
         </button>
@@ -107,6 +131,12 @@ const CreateJobProfile: FC = () => {
           <p className="text-green-500">{formAction.data.message}</p>
         )}
       </formAction.Form>
+      {/* {newJob && (
+        <div className="mt-4 p-4 border rounded-lg">
+          <h2 className="text-2xl font-bold mb-2">{newJob.sector}</h2>
+          <p className="mb-1"><strong>Descripción del sector:</strong> {newJob.descripcion_sector}</p>
+        </div>
+      )} */}
       <ToastContainer
         containerId="job-profiles-toast"
         position="top-right"

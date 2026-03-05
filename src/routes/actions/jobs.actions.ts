@@ -1,17 +1,13 @@
-import { saveJobProfile } from "@/services/jobsProfile.service";
 import type { JobProfile } from "@/types";
 import type { ActionFunctionArgs } from "react-router";
 import { toast } from "react-toastify";
 import { updateAccount } from "@/services/auth.service";
 import { uploadFile } from "@/services/uploadFile.service";
 import { authFirebase } from "@/apis/firebase";
+import { saveJobProfile } from "@/services/jobsProfile.service";
 
 export const add = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
-  console.log(
-    "Datos del formulario recibidos en el action:",
-    Object.fromEntries(formData.entries())
-  );
   const profileTitle = formData.get("profileTitle") as string;
   const sectorName = formData.get("sectorName") as string;
   const sectorDescription = formData.get("sectorDescription") as string;
