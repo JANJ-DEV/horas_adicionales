@@ -14,9 +14,9 @@ const Brand: FC<Props> = ({ variant = "large" }) => {
       height={128}
       className={
         variant === "small"
-          ? "w-16 h-16 cover"
+          ? "w-18 h-18 cover"
           : variant === "large"
-            ? "w-32 h-32 cover"
+            ? "w-24 h-24 cover"
             : "w-full h-full cover"
       }
     />

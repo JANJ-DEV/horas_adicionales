@@ -1,6 +1,6 @@
 // Pages
 import { JobProfiles, JobProfilesLayout, CreateJobProfile } from "./lazy.load";
-import { addJobProfileAction } from "./actions";
+import { jobsProfileActions } from "./actions";
 
 // Router
 export const jobProfilesRouter = [
@@ -15,7 +15,7 @@ export const jobProfilesRouter = [
       {
         path: "add",
         element: <CreateJobProfile />,
-        action: addJobProfileAction,
+        action: jobsProfileActions.add,
       },
     ],
   },

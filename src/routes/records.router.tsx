@@ -1,5 +1,5 @@
 // Pages
-import { addRecordAction } from "./actions";
+import { recordActions } from "./actions";
 import { AddNewRecord, Records, RecordsLayout } from "./lazy.load";
 
 // Router
@@ -15,7 +15,7 @@ export const recordsRouter = [
       {
         path: "add",
         element: <AddNewRecord />,
-        action: addRecordAction,
+        action: recordActions.add,
       },
     ],
   },

@@ -8,10 +8,10 @@ import styles from "@/assets/css/index.module.css";
 const MainHeader = () => {
   return (
     <header
-      className={`sticky top-0 bg-overlay-90 flex gap-4 p-4 justify-between items-center ${styles.borderBottomShadow}`}
+      className={`sticky top-0 bg-overlay-90 flex gap-4 px-4 justify-between items-center ${styles.borderBottomShadow}`}
     >
       <DesktopViewOnly tag="section" className="-ml-4">
-        <Brand />
+        <Brand variant="small" />
       </DesktopViewOnly>
       <Menu />
       <MenuBars />

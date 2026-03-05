@@ -10,7 +10,6 @@ import {
 } from "firebase/firestore";
 import { firestore } from "@/apis/firebase";
 import { authFirebase } from "@/apis/firebase";
-
 export interface RecordService {
   id?: string;
   nombreEmpresa: string;
@@ -90,6 +89,7 @@ export const deleteRecord = async (userId: string, recordId: string) => {
     console.error("Error al eliminar registro:", error);
   }
 };
+
 export const getRecordById = async (userId: string, recordId: string) => {
   try {
     const docRef = doc(firestore, "users", userId, "records", recordId);
@@ -105,6 +105,7 @@ export const getRecordById = async (userId: string, recordId: string) => {
     return null;
   }
 };
+
 export const getRecordsByDateRange = async (userId: string, startDate: Date, endDate: Date) => {
   try {
     const collectionRef = collection(firestore, "users", userId, "records");
@@ -126,6 +127,7 @@ export const getRecordsByDateRange = async (userId: string, startDate: Date, end
     return [];
   }
 };
+
 export const getRecordsByCompanyName = async (userId: string, companyName: string) => {
   try {
     const collectionRef = collection(firestore, "users", userId, "records");

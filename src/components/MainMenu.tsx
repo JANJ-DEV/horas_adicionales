@@ -27,7 +27,7 @@ const MainMenu = ({ variant }: MainMenuProps) => {
 
   return (
     <nav
-      className={`flex ${variant === "mobile" ? "flex-col gap-4 px-4 text-lg" : "flex-row gap-4 text-xl"} `}
+      className={`flex ${variant === "mobile" ? "flex-col gap-4 px-4 text-lg" : "flex-row gap-4"} `}
     >
       <NavLink
         onClick={closeMenuBars}
