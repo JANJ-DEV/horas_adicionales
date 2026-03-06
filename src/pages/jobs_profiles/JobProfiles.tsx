@@ -56,18 +56,18 @@ const JobProfiles = () => {
         </code>
       </pre> */}
 
-      <div className="grid grid-cols-2 bg-accent p-4">
+      <div className="grid grid-cols-2 gap-4 bg-accent p-4">
         {jobs.map((job) => (
           <div key={job.id} className="bg-dark p-4 rounded-sm">
             <h2>{job.profileTitle}</h2>
-            <div>
-              <div>
-                <h1>{getNameJobPosition(job.sectorName)}</h1>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="text-pink-600">
+                <h1 className="text-mauve-600">{getNameBranch(job.sectorName)}</h1>
                 <p>{job.sectorDescription}</p>
               </div>
-              <div>
-                <h2>{getNameBranch(job.sectorName)}</h2>
-                <p>{job.jobDescription}</p>
+              <div className="text-pink-300">
+                <h2 className="text-mauve-600">{job.jobPosition}</h2>
+                <p className="text-yellow-300">{job.jobDescription}</p>
               </div>
             </div>
           </div>

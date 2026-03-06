@@ -1,0 +1,59 @@
+{
+  "branches": {
+    "COM-01": {
+      "id": "COM-01",
+      "name": "Comercial, Ventas y Atención al Cliente",
+      "description": "Área dedicada a la promoción, distribución y venta de productos o servicios, garantizando la satisfacción del consumidor y construyendo relaciones comerciales sólidas."
+    },
+    "FIN-02": {
+      "id": "FIN-02",
+      "name": "Compras, Logística y Transporte",
+      "description": "Sector estratégico que abarca la planificación, ejecución y control del flujo de mercancías, desde la adquisición hasta la entrega final."
+    },
+    "IT-03": {
+      "id": "IT-03",
+      "name": "Informática y Telecomunicaciones",
+      "description": "Industria tecnológica centrada en el diseño, desarrollo, implementación y mantenimiento de software, hardware y redes."
+    },
+    "SAN-04": {
+      "id": "SAN-04",
+      "name": "Sanidad, Salud y Servicios Sociales",
+      "description": "Sector enfocado en el cuidado, tratamiento y bienestar físico, mental y social de las personas."
+    },
+    "ING-05": {
+      "id": "ING-05",
+      "name": "Ingeniería, Industria y Producción",
+      "description": "Área dedicada al diseño, fabricación, montaje, optimización y mantenimiento de productos, maquinaria e infraestructuras industriales."
+    },
+    "AGR-06": {
+      "id": "AGR-06",
+      "name": "Construcción e Inmobiliario",
+      "description": "Sector que abarca la planificación, diseño, edificación, mantenimiento y comercialización de infraestructuras civiles y viviendas."
+    },
+    "TUR-07": {
+      "id": "TUR-07",
+      "name": "Turismo, Hostelería y Restauración",
+      "description": "Industria centrada en la prestación de servicios de alojamiento, gastronomía, ocio y asistencia a viajeros."
+    },
+    "TEC-08": {
+      "id": "TEC-08",
+      "name": "Agricultura, Ganadería, Pesca y Medio Ambiente",
+      "description": "Sector primario y de conservación enfocado en la extracción de recursos naturales, cultivo, cría de animales y protección del entorno."
+    },
+    "EDU-09": {
+      "id": "EDU-09",
+      "name": "Educación y Formación",
+      "description": "Área dedicada a la enseñanza, transmisión de conocimientos, desarrollo de habilidades y formación integral en distintos niveles."
+    },
+    "ADM-01": {
+      "id": "ADM-01",
+      "name": "Administración de Empresas, Legal y Finanzas",
+      "description": "Sector encargado de la gestión contable, jurídica, financiera y administrativa para el correcto funcionamiento de las organizaciones."
+    },
+    "ART-02": {
+      "id": "ART-02",
+      "name": "Artes, Diseño, Cultura y Espectáculos",
+      "description": "Ámbito creativo centrado en la expresión artística, el entretenimiento, la comunicación visual y la preservación del patrimonio cultural."
+    }
+  }
+}

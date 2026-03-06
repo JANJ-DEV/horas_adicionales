@@ -9,7 +9,9 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "seed:catalog": "node scripts/seed-catalog.mjs",
+    "seed:catalog:dry": "node scripts/seed-catalog.mjs --dry-run"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.2.1",

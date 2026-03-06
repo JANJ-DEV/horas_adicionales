@@ -1,0 +1,669 @@
+{
+  "jobsPositions": {
+    "COM-01-01": {
+      "id": "COM-01-01",
+      "name": "Teleoperador/a",
+      "description": "Profesional que gestiona llamadas telefónicas para vender productos, realizar encuestas o dar soporte."
+    },
+    "COM-01-02": {
+      "id": "COM-01-02",
+      "name": "Delegado/a comercial",
+      "description": "Representante encargado de gestionar una zona geográfica, abriendo mercado y manteniendo clientes."
+    },
+    "COM-01-03": {
+      "id": "COM-01-03",
+      "name": "Dependiente/a",
+      "description": "Persona que atiende al público en un comercio, asesorando en la compra y manteniendo el local."
+    },
+    "COM-01-04": {
+      "id": "COM-01-04",
+      "name": "Vendedor/a en tiendas y almacenes",
+      "description": "Especialista enfocado en cerrar ventas directas y cumplir objetivos comerciales."
+    },
+    "COM-01-05": {
+      "id": "COM-01-05",
+      "name": "Jefe/a de sección de tiendas y almacenes",
+      "description": "Responsable de coordinar a los vendedores, gestionar el stock y asegurar la rentabilidad."
+    },
+    "COM-01-06": {
+      "id": "COM-01-06",
+      "name": "Cajero/a",
+      "description": "Encargado de procesar pagos, gestionar efectivo y realizar el cuadre de caja."
+    },
+    "COM-01-07": {
+      "id": "COM-01-07",
+      "name": "Promotor/a de ventas",
+      "description": "Profesional que realiza demostraciones de productos para incentivar la compra directa."
+    },
+    "COM-01-08": {
+      "id": "COM-01-08",
+      "name": "Agente inmobiliario/a",
+      "description": "Intermediario en la compra, venta o alquiler de bienes raíces."
+    },
+    "COM-01-09": {
+      "id": "COM-01-09",
+      "name": "Agente de servicio de atención al cliente",
+      "description": "Punto de contacto para resolver dudas, quejas, reclamaciones o devoluciones."
+    },
+    "COM-01-10": {
+      "id": "COM-01-10",
+      "name": "Asistente de departamento de ventas",
+      "description": "Apoyo administrativo que gestiona bases de datos y hace seguimiento de pedidos."
+    },
+    "COM-01-11": {
+      "id": "COM-01-11",
+      "name": "Azafato/a de eventos",
+      "description": "Personal de asistencia que guía e informa en congresos y ferias."
+    },
+    "COM-01-12": {
+      "id": "COM-01-12",
+      "name": "Comerciante propietario/a de tienda",
+      "description": "Dueño de un negocio minorista, responsable de su gestión integral."
+    },
+    "FIN-02-01": {
+      "id": "FIN-02-01",
+      "name": "Mozo/a de almacén",
+      "description": "Operario encargado de la recepción, colocación y preparación de mercancía."
+    },
+    "FIN-02-02": {
+      "id": "FIN-02-02",
+      "name": "Conductor/a de vehículo de reparto",
+      "description": "Profesional que transporta paquetes desde un centro de distribución hasta el destino final."
+    },
+    "FIN-02-03": {
+      "id": "FIN-02-03",
+      "name": "Operador/a de carretilla elevadora",
+      "description": "Especialista que maneja maquinaria para mover carga pesada en el almacén."
+    },
+    "FIN-02-04": {
+      "id": "FIN-02-04",
+      "name": "Jefe/a de compras",
+      "description": "Responsable de negociar con proveedores y asegurar el abastecimiento al mejor coste."
+    },
+    "FIN-02-05": {
+      "id": "FIN-02-05",
+      "name": "Empaquetador/a",
+      "description": "Encargado de embalar y preparar los productos para su envío."
+    },
+    "FIN-02-06": {
+      "id": "FIN-02-06",
+      "name": "Conductor/a de camiones pesados",
+      "description": "Profesional que maneja vehículos de gran tonelaje para transportar mercancías a largas distancias."
+    },
+    "FIN-02-07": {
+      "id": "FIN-02-07",
+      "name": "Conductor/a de autobuses y tranvías",
+      "description": "Encargado del transporte de pasajeros, garantizando la seguridad y rutas."
+    },
+    "FIN-02-08": {
+      "id": "FIN-02-08",
+      "name": "Empleado/a de logística y transporte de mercancías",
+      "description": "Personal que coordina rutas, albaranes y documenta el tráfico de bienes."
+    },
+    "FIN-02-09": {
+      "id": "FIN-02-09",
+      "name": "Marinero/a de puente y máquinas",
+      "description": "Tripulante de embarcaciones comerciales encargado de navegación y mantenimiento."
+    },
+    "FIN-02-10": {
+      "id": "FIN-02-10",
+      "name": "Monitor/a de transporte de personas de movilidad reducida",
+      "description": "Asistente que ayuda a personas con discapacidad en vehículos adaptados."
+    },
+    "FIN-02-11": {
+      "id": "FIN-02-11",
+      "name": "Piloto de aviación y profesionales afines",
+      "description": "Profesional que opera aeronaves para el transporte de pasajeros o carga."
+    },
+    "FIN-02-12": {
+      "id": "FIN-02-12",
+      "name": "Consignatario/a",
+      "description": "Agente que gestiona los trámites aduaneros y logísticos de un buque en puerto."
+    },
+    "IT-03-01": {
+      "id": "IT-03-01",
+      "name": "Analista IT",
+      "description": "Profesional que evalúa sistemas informáticos para proponer mejoras y optimizar procesos."
+    },
+    "IT-03-02": {
+      "id": "IT-03-02",
+      "name": "Desarrollador/a backend",
+      "description": "Programador especializado en la lógica del servidor y bases de datos."
+    },
+    "IT-03-03": {
+      "id": "IT-03-03",
+      "name": "Full stack engineer",
+      "description": "Ingeniero capaz de desarrollar tanto la interfaz de usuario como la lógica del servidor."
+    },
+    "IT-03-04": {
+      "id": "IT-03-04",
+      "name": "Frontend engineer",
+      "description": "Desarrollador enfocado en la interfaz gráfica y la experiencia de usuario."
+    },
+    "IT-03-05": {
+      "id": "IT-03-05",
+      "name": "Consultor/a TIC",
+      "description": "Experto que asesora a empresas sobre el uso de tecnologías para alcanzar sus objetivos."
+    },
+    "IT-03-06": {
+      "id": "IT-03-06",
+      "name": "Arquitecto/a de sistemas TIC",
+      "description": "Diseñador que estructura la infraestructura tecnológica de una organización."
+    },
+    "IT-03-07": {
+      "id": "IT-03-07",
+      "name": "Arquitecto/a de software",
+      "description": "Líder técnico que toma decisiones de diseño estructural de un programa."
+    },
+    "IT-03-08": {
+      "id": "IT-03-08",
+      "name": "Científico/a de datos",
+      "description": "Especialista que utiliza programación y estadística para extraer conocimiento de los datos."
+    },
+    "IT-03-09": {
+      "id": "IT-03-09",
+      "name": "Programador/a informático/a",
+      "description": "Profesional que escribe y depura el código fuente de aplicaciones."
+    },
+    "IT-03-10": {
+      "id": "IT-03-10",
+      "name": "Analista de redes informáticas",
+      "description": "Técnico encargado de instalar y mantener las redes de una organización."
+    },
+    "IT-03-11": {
+      "id": "IT-03-11",
+      "name": "Especialista en ciberseguridad",
+      "description": "Experto dedicado a proteger sistemas y datos contra ataques cibernéticos."
+    },
+    "IT-03-12": {
+      "id": "IT-03-12",
+      "name": "Experto/a en cloud computing",
+      "description": "Ingeniero especializado en diseñar infraestructuras en la nube (AWS, Google Cloud, etc.)."
+    },
+    "IT-03-13": {
+      "id": "IT-03-13",
+      "name": "Instalador/a y reparador/a en tecnologías de la información",
+      "description": "Técnico que asiste en la configuración de hardware y resolución de problemas."
+    },
+    "SAN-04-01": {
+      "id": "SAN-04-01",
+      "name": "Enfermero/a no especializado",
+      "description": "Profesional que asiste a pacientes y médicos en cuidados generales de salud."
+    },
+    "SAN-04-02": {
+      "id": "SAN-04-02",
+      "name": "Enfermero/a especializado",
+      "description": "Profesional de enfermería con formación específica en áreas como pediatría, urgencias o quirófano."
+    },
+    "SAN-04-03": {
+      "id": "SAN-04-03",
+      "name": "Médico/a de familia",
+      "description": "Facultativo de atención primaria que diagnostica y trata enfermedades comunes."
+    },
+    "SAN-04-04": {
+      "id": "SAN-04-04",
+      "name": "Médico/a especialista",
+      "description": "Médico con conocimientos profundos en una rama específica de la medicina (cardiología, neurología, etc.)."
+    },
+    "SAN-04-05": {
+      "id": "SAN-04-05",
+      "name": "Odontólogo/a",
+      "description": "Especialista en la salud bucodental, encargado de diagnosticar y tratar problemas dentales."
+    },
+    "SAN-04-06": {
+      "id": "SAN-04-06",
+      "name": "Fisioterapeuta",
+      "description": "Profesional que utiliza terapias físicas para rehabilitar y prevenir lesiones musculoesqueléticas."
+    },
+    "SAN-04-07": {
+      "id": "SAN-04-07",
+      "name": "Psicólogo/a",
+      "description": "Especialista en salud mental que evalúa y trata problemas emocionales y de comportamiento."
+    },
+    "SAN-04-08": {
+      "id": "SAN-04-08",
+      "name": "Farmacéutico/a",
+      "description": "Profesional experto en medicamentos que dispensa recetas y asesora sobre su uso seguro."
+    },
+    "SAN-04-09": {
+      "id": "SAN-04-09",
+      "name": "Logopeda",
+      "description": "Especialista que evalúa y trata trastornos del habla, lenguaje y comunicación."
+    },
+    "SAN-04-10": {
+      "id": "SAN-04-10",
+      "name": "Podólogo/a",
+      "description": "Profesional sanitario dedicado a la prevención, diagnóstico y tratamiento de afecciones del pie."
+    },
+    "SAN-04-11": {
+      "id": "SAN-04-11",
+      "name": "Técnico/a de atención sociosanitaria en el domicilio",
+      "description": "Asistente que proporciona cuidados básicos y apoyo a personas dependientes en su hogar."
+    },
+    "SAN-04-12": {
+      "id": "SAN-04-12",
+      "name": "Trabajador/a social",
+      "description": "Profesional que ayuda a individuos y familias a superar dificultades sociales e integrarse."
+    },
+    "SAN-04-13": {
+      "id": "SAN-04-13",
+      "name": "Gerocultor/a",
+      "description": "Especialista en el cuidado y atención directa a personas de la tercera edad en residencias."
+    },
+    "SAN-04-14": {
+      "id": "SAN-04-14",
+      "name": "Cuidador/a de niños en guarderías y centros educativos",
+      "description": "Persona encargada del bienestar, higiene y desarrollo temprano de los infantes."
+    },
+    "SAN-04-15": {
+      "id": "SAN-04-15",
+      "name": "Óptico/a y optometrista",
+      "description": "Profesional encargado de evaluar la visión y adaptar gafas o lentes de contacto."
+    },
+    "ING-05-01": {
+      "id": "ING-05-01",
+      "name": "Ingeniero/a industrial y de producción",
+      "description": "Profesional que optimiza procesos de fabricación y gestiona los recursos industriales."
+    },
+    "ING-05-02": {
+      "id": "ING-05-02",
+      "name": "Ingeniero/a mecánico/a",
+      "description": "Especialista en el diseño, análisis y fabricación de sistemas mecánicos y maquinaria."
+    },
+    "ING-05-03": {
+      "id": "ING-05-03",
+      "name": "Ingeniero/a eléctrico/a",
+      "description": "Profesional dedicado al diseño y mantenimiento de sistemas de generación y distribución de energía eléctrica."
+    },
+    "ING-05-04": {
+      "id": "ING-05-04",
+      "name": "Director/a de industrias manufactureras",
+      "description": "Responsable de coordinar todas las operaciones de una planta de producción."
+    },
+    "ING-05-05": {
+      "id": "ING-05-05",
+      "name": "Operario/a de fábrica",
+      "description": "Trabajador que realiza tareas manuales o maneja maquinaria en una línea de montaje."
+    },
+    "ING-05-06": {
+      "id": "ING-05-06",
+      "name": "Soldador/a y oxicortador/a",
+      "description": "Especialista en unir y cortar piezas metálicas utilizando herramientas de alta temperatura."
+    },
+    "ING-05-07": {
+      "id": "ING-05-07",
+      "name": "Ajustador/a y operador/a de máquinas-herramienta",
+      "description": "Técnico que configura y opera maquinaria industrial para fabricar piezas con precisión."
+    },
+    "ING-05-08": {
+      "id": "ING-05-08",
+      "name": "Ensamblador/a de equipos eléctricos y electrónicos",
+      "description": "Trabajador que monta componentes para crear dispositivos electrónicos o tableros eléctricos."
+    },
+    "ING-05-09": {
+      "id": "ING-05-09",
+      "name": "Mecánico/a electricista",
+      "description": "Técnico especializado en reparar y mantener componentes mecánicos y eléctricos de motores y maquinaria."
+    },
+    "ING-05-10": {
+      "id": "ING-05-10",
+      "name": "Matarife y trabajador/a de industrias cárnicas",
+      "description": "Operario encargado del sacrificio, despiece y procesamiento de carne en mataderos."
+    },
+    "ING-05-11": {
+      "id": "ING-05-11",
+      "name": "Operador/a de máquinas para fabricar productos plásticos",
+      "description": "Encargado de operar inyectoras o extrusoras para la producción de piezas de plástico."
+    },
+    "ING-05-12": {
+      "id": "ING-05-12",
+      "name": "Peón de la industria manufacturera",
+      "description": "Trabajador no especializado que apoya en tareas de carga, limpieza y asistencia en la fábrica."
+    },
+    "AGR-06-01": {
+      "id": "AGR-06-01",
+      "name": "Arquitecto/a",
+      "description": "Profesional que diseña edificios y espacios, asegurando su funcionalidad, estética y seguridad."
+    },
+    "AGR-06-02": {
+      "id": "AGR-06-02",
+      "name": "Arquitecto/a técnico/a",
+      "description": "Especialista que dirige la ejecución material de la obra y controla la calidad y seguridad de la construcción."
+    },
+    "AGR-06-03": {
+      "id": "AGR-06-03",
+      "name": "Ingeniero/a en construcción y obra civil",
+      "description": "Profesional que diseña y supervisa grandes infraestructuras como puentes, carreteras y presas."
+    },
+    "AGR-06-04": {
+      "id": "AGR-06-04",
+      "name": "Albañil",
+      "description": "Trabajador experto en la construcción de muros, cimientos y cerramientos con ladrillos, cemento y otros materiales."
+    },
+    "AGR-06-05": {
+      "id": "AGR-06-05",
+      "name": "Encofrador/a y operario/a de hormigón",
+      "description": "Especialista en crear los moldes (encofrados) y verter hormigón para estructuras."
+    },
+    "AGR-06-06": {
+      "id": "AGR-06-06",
+      "name": "Carpintero/a",
+      "description": "Artesano o técnico que trabaja la madera para fabricar e instalar puertas, ventanas y mobiliario."
+    },
+    "AGR-06-07": {
+      "id": "AGR-06-07",
+      "name": "Electricista de la construcción",
+      "description": "Técnico encargado de instalar el cableado y sistemas eléctricos en nuevos edificios."
+    },
+    "AGR-06-08": {
+      "id": "AGR-06-08",
+      "name": "Fontanero/a",
+      "description": "Especialista en instalar y reparar sistemas de agua potable, saneamiento y calefacción."
+    },
+    "AGR-06-09": {
+      "id": "AGR-06-09",
+      "name": "Pintor/a y empapelador/a",
+      "description": "Profesional que aplica pintura y revestimientos en paredes y techos para protección y decoración."
+    },
+    "AGR-06-10": {
+      "id": "AGR-06-10",
+      "name": "Montador/a de estructuras metálicas",
+      "description": "Técnico que ensambla y fija las vigas y pilares de acero que forman el esqueleto de un edificio."
+    },
+    "AGR-06-11": {
+      "id": "AGR-06-11",
+      "name": "Escayolista",
+      "description": "Especialista en la colocación de techos falsos y molduras de yeso o escayola."
+    },
+    "AGR-06-12": {
+      "id": "AGR-06-12",
+      "name": "Solador/a",
+      "description": "Trabajador encargado de colocar baldosas, azulejos y pavimentos en suelos y paredes."
+    },
+    "AGR-06-13": {
+      "id": "AGR-06-13",
+      "name": "Instalador/a de material aislante térmico",
+      "description": "Técnico que coloca materiales para proteger los edificios del frío, calor o ruido."
+    },
+    "AGR-06-14": {
+      "id": "AGR-06-14",
+      "name": "Peón de la construcción de edificios",
+      "description": "Ayudante general en la obra que prepara materiales, limpia y asiste a los oficiales."
+    },
+    "TUR-07-01": {
+      "id": "TUR-07-01",
+      "name": "Director/a de hotel",
+      "description": "Responsable de la gestión comercial, administrativa y operativa de un establecimiento hotelero."
+    },
+    "TUR-07-02": {
+      "id": "TUR-07-02",
+      "name": "Director/a de restaurante o cafetería",
+      "description": "Encargado de gestionar el local, dirigir al personal, controlar el inventario y asegurar el buen servicio al cliente."
+    },
+    "TUR-07-03": {
+      "id": "TUR-07-03",
+      "name": "Recepcionista de hotel",
+      "description": "Profesional que atiende a los huéspedes en su llegada y salida, y gestiona las reservas."
+    },
+    "TUR-07-04": {
+      "id": "TUR-07-04",
+      "name": "Chef",
+      "description": "Jefe de cocina que diseña el menú, dirige al equipo culinario y supervisa la calidad de los platos."
+    },
+    "TUR-07-05": {
+      "id": "TUR-07-05",
+      "name": "Cocinero/a asalariado/a",
+      "description": "Profesional encargado de preparar y cocinar los alimentos siguiendo las directrices del chef."
+    },
+    "TUR-07-06": {
+      "id": "TUR-07-06",
+      "name": "Camarero/a asalariado/a",
+      "description": "Personal que atiende a los comensales en las mesas, toma notas de los pedidos y sirve alimentos y bebidas."
+    },
+    "TUR-07-07": {
+      "id": "TUR-07-07",
+      "name": "Ayudante de cocina",
+      "description": "Asistente que apoya en la limpieza, preparación de ingredientes y tareas básicas de cocina."
+    },
+    "TUR-07-08": {
+      "id": "TUR-07-08",
+      "name": "Preparador/a de comidas rápidas",
+      "description": "Trabajador en establecimientos de comida rápida encargado de ensamblar y servir alimentos de forma ágil."
+    },
+    "TUR-07-09": {
+      "id": "TUR-07-09",
+      "name": "Guía de turismo",
+      "description": "Profesional certificado que muestra y explica lugares de interés histórico y cultural a los visitantes."
+    },
+    "TUR-07-10": {
+      "id": "TUR-07-10",
+      "name": "Acompañante turístico",
+      "description": "Persona que viaja con grupos turísticos para resolver problemas logísticos y organizar el itinerario."
+    },
+    "TUR-07-11": {
+      "id": "TUR-07-11",
+      "name": "Empleado/a de agencia de viajes",
+      "description": "Asesor que ayuda a los clientes a planificar sus vacaciones, reservando vuelos, hoteles y excursiones."
+    },
+    "TEC-08-01": {
+      "id": "TEC-08-01",
+      "name": "Ingeniero/a agrónomo",
+      "description": "Profesional que aplica la ciencia y tecnología para mejorar la producción agrícola y ganadera."
+    },
+    "TEC-08-02": {
+      "id": "TEC-08-02",
+      "name": "Ingeniero/a técnico/a agrícola",
+      "description": "Especialista técnico que asesora y dirige explotaciones agrarias e instalaciones rurales."
+    },
+    "TEC-08-03": {
+      "id": "TEC-08-03",
+      "name": "Biólogo/a, botánico/a o zoólogo/a",
+      "description": "Científico que estudia los organismos vivos, su comportamiento y su relación con el ecosistema."
+    },
+    "TEC-08-04": {
+      "id": "TEC-08-04",
+      "name": "Trabajador/a cualificado/a en actividades agrícolas",
+      "description": "Agricultor con experiencia técnica en el manejo de cultivos, riegos y fertilizantes."
+    },
+    "TEC-08-05": {
+      "id": "TEC-08-05",
+      "name": "Trabajador/a cualificado/a en actividades forestales",
+      "description": "Operario especializado en la tala, poda y mantenimiento de bosques y montes."
+    },
+    "TEC-08-06": {
+      "id": "TEC-08-06",
+      "name": "Peón agrícola",
+      "description": "Trabajador que realiza tareas manuales de siembra, recolección y mantenimiento en el campo."
+    },
+    "TEC-08-07": {
+      "id": "TEC-08-07",
+      "name": "Peón ganadero",
+      "description": "Ayudante encargado de la alimentación, limpieza y cuidado básico de los animales en granjas."
+    },
+    "TEC-08-08": {
+      "id": "TEC-08-08",
+      "name": "Pescador/a de aguas costeras y altura",
+      "description": "Profesional que captura pescado y marisco utilizando diferentes artes de pesca comerciales."
+    },
+    "TEC-08-09": {
+      "id": "TEC-08-09",
+      "name": "Operador/a de maquinaria agrícola",
+      "description": "Conductor especializado en manejar tractores, cosechadoras y otras máquinas agrarias."
+    },
+    "TEC-08-10": {
+      "id": "TEC-08-10",
+      "name": "Bombero/a forestal",
+      "description": "Profesional entrenado para prevenir, controlar y extinguir incendios en entornos naturales."
+    },
+    "TEC-08-11": {
+      "id": "TEC-08-11",
+      "name": "Agente forestal y medioambiental",
+      "description": "Funcionario encargado de vigilar y proteger el patrimonio natural, flora y fauna."
+    },
+    "TEC-08-12": {
+      "id": "TEC-08-12",
+      "name": "Experto/a en medioambiente",
+      "description": "Especialista que evalúa el impacto ambiental de actividades humanas y propone soluciones sostenibles."
+    },
+    "EDU-09-01": {
+      "id": "EDU-09-01",
+      "name": "Profesor/a de universidad y enseñanza superior",
+      "description": "Docente e investigador que imparte clases en grados universitarios y másteres."
+    },
+    "EDU-09-02": {
+      "id": "EDU-09-02",
+      "name": "Profesor/a de formación profesional",
+      "description": "Educador especializado en enseñar oficios técnicos y habilidades prácticas para el empleo."
+    },
+    "EDU-09-03": {
+      "id": "EDU-09-03",
+      "name": "Profesor/a de enseñanza secundaria",
+      "description": "Docente que imparte materias específicas a estudiantes adolescentes en institutos."
+    },
+    "EDU-09-04": {
+      "id": "EDU-09-04",
+      "name": "Maestro/a de educación primaria",
+      "description": "Educador que enseña materias básicas y fomenta el desarrollo en niños de 6 a 12 años."
+    },
+    "EDU-09-05": {
+      "id": "EDU-09-05",
+      "name": "Maestro/a de educación infantil",
+      "description": "Especialista en el cuidado y primera educación de niños de 0 a 6 años."
+    },
+    "EDU-09-06": {
+      "id": "EDU-09-06",
+      "name": "Educador/a ambiental",
+      "description": "Profesional que conciencia y enseña a la población sobre la conservación del medio ambiente."
+    },
+    "EDU-09-07": {
+      "id": "EDU-09-07",
+      "name": "Instructor/a en tecnologías de la información",
+      "description": "Formador que enseña el uso de software, programación o herramientas digitales a alumnos o empresas."
+    },
+    "EDU-09-08": {
+      "id": "EDU-09-08",
+      "name": "Profesor/a de enseñanza no reglada de idiomas o artes",
+      "description": "Docente en academias privadas que enseña lenguas extranjeras, música, pintura, etc."
+    },
+    "ADM-01-01": {
+      "id": "ADM-01-01",
+      "name": "Contable",
+      "description": "Profesional que registra y analiza las transacciones financieras de la empresa, elaborando balances y cuentas."
+    },
+    "ADM-01-02": {
+      "id": "ADM-01-02",
+      "name": "Administrativo/a",
+      "description": "Empleado que gestiona la documentación, correspondencia y procesos ofimáticos de una oficina."
+    },
+    "ADM-01-03": {
+      "id": "ADM-01-03",
+      "name": "Auxiliar administrativo/a",
+      "description": "Apoyo en tareas básicas de oficina como archivo, fotocopias y atención telefónica básica."
+    },
+    "ADM-01-04": {
+      "id": "ADM-01-04",
+      "name": "Recepcionista (excepto hoteles)",
+      "description": "Persona encargada de recibir a los visitantes de una empresa y derivar las llamadas entrantes."
+    },
+    "ADM-01-05": {
+      "id": "ADM-01-05",
+      "name": "Asesor/a financiero y en inversiones",
+      "description": "Experto que guía a clientes o empresas sobre dónde y cómo invertir su capital para obtener rentabilidad."
+    },
+    "ADM-01-06": {
+      "id": "ADM-01-06",
+      "name": "Economista",
+      "description": "Profesional que analiza datos económicos, tendencias de mercado y asesora en política financiera."
+    },
+    "ADM-01-07": {
+      "id": "ADM-01-07",
+      "name": "Abogado/a",
+      "description": "Licenciado en derecho que asesora legalmente y defiende a sus clientes en procesos judiciales."
+    },
+    "ADM-01-08": {
+      "id": "ADM-01-08",
+      "name": "Procurador/a",
+      "description": "Representante legal de las partes ante los tribunales, agilizando los trámites judiciales."
+    },
+    "ADM-01-09": {
+      "id": "ADM-01-09",
+      "name": "Notario/a y registrador/a",
+      "description": "Funcionario público que da fe de contratos y testamentos, o que inscribe propiedades y empresas."
+    },
+    "ADM-01-10": {
+      "id": "ADM-01-10",
+      "name": "Especialista de la Administración Pública",
+      "description": "Técnico o funcionario que gestiona expedientes y procesos dentro de entidades gubernamentales."
+    },
+    "ADM-01-11": {
+      "id": "ADM-01-11",
+      "name": "Empleado/a de servicios estadísticos y bancarios",
+      "description": "Trabajador que procesa datos numéricos, gestiona cuentas o atiende en sucursales de banco."
+    },
+    "ADM-01-12": {
+      "id": "ADM-01-12",
+      "name": "Tenedor/a de libros",
+      "description": "Persona encargada de registrar los ingresos y gastos diarios en los libros contables básicos."
+    },
+    "ART-02-01": {
+      "id": "ART-02-01",
+      "name": "Escritor/a",
+      "description": "Autor de obras literarias, guiones o textos creativos para su publicación."
+    },
+    "ART-02-02": {
+      "id": "ART-02-02",
+      "name": "Periodista",
+      "description": "Profesional que investiga, redacta y difunde noticias e información a través de medios de comunicación."
+    },
+    "ART-02-03": {
+      "id": "ART-02-03",
+      "name": "Artista de artes plásticas y visuales",
+      "description": "Creador de obras de arte como pinturas, esculturas o ilustraciones."
+    },
+    "ART-02-04": {
+      "id": "ART-02-04",
+      "name": "Compositor/a, músico/a y cantante",
+      "description": "Profesional dedicado a crear, tocar o interpretar obras musicales."
+    },
+    "ART-02-05": {
+      "id": "ART-02-05",
+      "name": "Coreógrafo/a y bailarín/a",
+      "description": "Artista que diseña rutinas de baile o que interpreta danzas de forma profesional."
+    },
+    "ART-02-06": {
+      "id": "ART-02-06",
+      "name": "Director/a de cine y teatro",
+      "description": "Responsable creativo que guía a los actores y al equipo técnico en la producción de una obra audiovisual o escénica."
+    },
+    "ART-02-07": {
+      "id": "ART-02-07",
+      "name": "Actor / Actriz",
+      "description": "Profesional que interpreta personajes en teatro, cine, televisión o radio."
+    },
+    "ART-02-08": {
+      "id": "ART-02-08",
+      "name": "Fotógrafo/a",
+      "description": "Especialista en capturar imágenes con cámaras profesionales para prensa, publicidad o arte."
+    },
+    "ART-02-09": {
+      "id": "ART-02-09",
+      "name": "Diseñador/a gráfico/a y multimedia",
+      "description": "Creativo que utiliza herramientas digitales para crear logotipos, interfaces, animaciones y material visual."
+    },
+    "ART-02-10": {
+      "id": "ART-02-10",
+      "name": "Gestor/a de patrimonio cultural",
+      "description": "Profesional que promueve y administra proyectos relacionados con la conservación histórica y cultural."
+    },
+    "ART-02-11": {
+      "id": "ART-02-11",
+      "name": "Bibliotecario/a y documentalista",
+      "description": "Encargado de organizar, catalogar y facilitar el acceso a libros, archivos y bases de datos de información."
+    },
+    "ART-02-12": {
+      "id": "ART-02-12",
+      "name": "Archivista y conservador/a de museos",
+      "description": "Especialista que clasifica documentos históricos y cuida las colecciones de arte o historia en los museos."
+    }
+  }
+}

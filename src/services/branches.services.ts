@@ -1,28 +1,77 @@
-import { collection, onSnapshot, doc, type Unsubscribe, FirestoreError } from "firebase/firestore";
+import {
+  collection,
+  onSnapshot,
+  type Unsubscribe,
+  type FirestoreError,
+  getDocs,
+} from "firebase/firestore";
 import { firestore } from "@/apis/firebase";
 import { toast } from "react-toastify";
 import type { Branch, BranchData } from "@/types";
+
+type BranchDoc = {
+  id?: string;
+  name?: string;
+  description?: string;
+  sector?: string;
+  descripcion_sector?: string;
+};
+
+type JobPositionDoc = {
+  id?: string;
+  name?: string;
+  description?: string;
+  nombre?: string;
+  descripcion?: string;
+};
 
 export const subscribeToBranches = (
   callback: (branches: BranchData) => void,
   errorCallback?: (error: FirestoreError) => void,
   finallyCallback?: () => void
 ): Unsubscribe | FirestoreError | void => {
-  const refBranches = collection(firestore, "ramas");
-  const refDoc = doc(refBranches, "sectores");
+  const refBranches = collection(firestore, "branches");
+
   return onSnapshot(
-    refDoc,
-    (snapshot) => {
-      if (!snapshot.exists()) {
-        toast.error("No se pudieron cargar los sectores y puestos de trabajo", {
-          containerId: "global",
-        });
-      }
+    refBranches,
+    async (snapshot) => {
+      const branches: Branch[] = await Promise.all(
+        snapshot.docs.map(async (branchDoc) => {
+          const branchData = branchDoc.data() as BranchDoc;
+          const jobsRef = collection(
+            firestore,
+            "branches",
+            branchDoc.id,
+            "jobsPositions"
+          );
+          const jobsSnapshot = await getDocs(jobsRef);
+
+          const puestos_de_trabajo = jobsSnapshot.docs.map((jobDoc) => {
+            const jobData = jobDoc.data() as JobPositionDoc;
+            return {
+              id: jobDoc.id,
+              // Compatibilidad con modelo anterior consumido por la UI
+              nombre: jobData.name ?? jobData.nombre ?? "",
+              descripcion: jobData.description ?? jobData.descripcion ?? "",
+            };
+          });
+
+          return {
+            id: branchDoc.id,
+            // Compatibilidad con modelo anterior consumido por la UI
+            sector: branchData.name ?? branchData.sector ?? "",
+            descripcion_sector:
+              branchData.description ?? branchData.descripcion_sector ?? "",
+            puestos_de_trabajo,
+          };
+        })
+      );
 
       const result: BranchData = {
-        id: snapshot.id,
-        ...(snapshot.data() as Omit<BranchData, "id">),
+        id: "branches",
+        data: branches,
       };
+
       callback(result);
       toast.success("Sectores y puestos de trabajo cargados correctamente", {
         containerId: "global",
