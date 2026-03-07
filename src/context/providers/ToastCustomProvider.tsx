@@ -1,4 +1,4 @@
-import {  useState } from "react";
+import { useState } from "react";
 import { ToastCtx } from "../ToastCtx";
 
 const ToastCustomProvider = ({ children }: { children: React.ReactNode }) => {
@@ -9,9 +9,7 @@ const ToastCustomProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <ToastCtx.Provider value={{containerId, updateContainerId}}>
-      {children}
-    </ToastCtx.Provider>
+    <ToastCtx.Provider value={{ containerId, updateContainerId }}>{children}</ToastCtx.Provider>
   );
 };
 

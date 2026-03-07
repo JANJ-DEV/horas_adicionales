@@ -19,6 +19,7 @@ Este proyecto está construido con **React + TypeScript + Vite** y usa:
 - Alta de registros de jornada (empresa, fecha, hora de entrada y salida).
 - Listado de registros guardados del usuario.
 - Creación y listado en tiempo real de perfiles de trabajo.
+- Gestión completa (CRUD) de perfiles de trabajo desde el servicio.
 - Vista de datos básicos de la cuenta autenticada.
 
 ## Stack técnico
@@ -26,7 +27,8 @@ Este proyecto está construido con **React + TypeScript + Vite** y usa:
 - React 19
 - TypeScript 5
 - Vite 7
-- Firebase 12 (Auth + Firestore)
+- Vite 6
+- Firebase 11 (Auth + Firestore)
 - React Router 7
 - Tailwind CSS 4
 
@@ -76,13 +78,15 @@ src/
   apis/                # Configuración de Firebase
   components/          # Componentes reutilizables UI
   context/             # Contextos globales (auth, toast, estado global)
+  json/                # Catálogos estáticos (sectores y puestos)
   pages/               # Vistas y layouts por módulo
     account/           # Cuenta de usuario
     jobs_profiles/     # Perfiles de trabajo
     records/           # Registros de horas
     layouts/           # Layouts públicos/privados y estructura común
   routes/              # Definición de rutas y acciones de formularios
-  services/            # Acceso a Auth y Firestore
+  services/            # Lógica de negocio (Auth, Firestore y Errores)
+  types/               # Definiciones de interfaces TypeScript
   utils/               # Utilidades compartidas
 ```
 

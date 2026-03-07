@@ -1,12 +1,12 @@
-import { createBrowserRouter } from 'react-router'
+import { createBrowserRouter } from "react-router";
 
 // Pages
-import {  PageNotFound } from './lazy.load';
+import { PageNotFound } from "./lazy.load";
 // Routers
-import { jobProfilesRouter } from './job_profiles.router';
-import { recordsRouter } from './records.router';
-import { publicRouter } from './public.router';
-import { accountRouter } from './account.router';
+import { jobProfilesRouter } from "./job_profiles.router";
+import { recordsRouter } from "./records.router";
+import { publicRouter } from "./public.router";
+import { accountRouter } from "./account.router";
 
 // Router
 export const routers = [
@@ -16,11 +16,11 @@ export const routers = [
   ...accountRouter,
   {
     path: "*",
-    element: <PageNotFound />
-  }
-]
+    element: <PageNotFound />,
+  },
+];
 
 // Create the router
-const router = createBrowserRouter(routers)
+const router = createBrowserRouter(routers);
 
 export default router;

@@ -1,4 +1,3 @@
-
 import useAuth from "@/context/hooks/auth.hook";
 import type { FC } from "react";
 import { Navigate, Outlet } from "react-router";
@@ -11,12 +10,14 @@ const PrivateLayout: FC = () => {
   if (!isAuthenticated) {
     return <Navigate to="/" replace />;
   }
-  return <>
-    <MainHeader />
-    <MainContent>
-      <Outlet />
-    </MainContent>
-  </>
-}
+  return (
+    <>
+      <MainHeader />
+      <MainContent>
+        <Outlet />
+      </MainContent>
+    </>
+  );
+};
 
 export default PrivateLayout;

@@ -1,14 +1,14 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import tseslint from 'typescript-eslint'
-import { defineConfig, globalIgnores } from 'eslint/config'
+import js from "@eslint/js";
+import globals from "globals";
+import reactHooks from "eslint-plugin-react-hooks";
+import reactRefresh from "eslint-plugin-react-refresh";
+import tseslint from "typescript-eslint";
+import { defineConfig, globalIgnores } from "eslint/config";
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  globalIgnores(["dist"]),
   {
-    files: ['**/*.{ts,tsx}'],
+    files: ["**/*.{ts,tsx}"],
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,
@@ -20,19 +20,19 @@ export default defineConfig([
       globals: globals.browser,
     },
     rules: {
-      'no-restricted-imports': [
-        'warn',
+      "no-restricted-imports": [
+        "warn",
         {
           paths: [
             {
-              name: 'react',
-              importNames: ['useMemo', 'useCallback'],
+              name: "react",
+              importNames: ["useMemo", "useCallback"],
               message:
-                'Con React Compiler activo, evita useMemo/useCallback salvo caso justificado.',
+                "Con React Compiler activo, evita useMemo/useCallback salvo caso justificado.",
             },
           ],
         },
       ],
     },
   },
-])
+]);

@@ -1,0 +1,133 @@
+export const BRANCHES_OF_WORK = {
+  mercado_laboral_espana_2026_completo: {
+    version: "4.0_Full_Spectrum",
+    sectores: [
+      {
+        id: "TRA-01",
+        sector: "Transporte y Logística",
+        ramas: [
+          "Transporte de Mercancías (Carretera, Marítimo, Ferroviario)",
+          "Logística de Última Milla y E-commerce",
+          "Aviación Comercial y Gestión Aeroportuaria",
+          "Transporte de Pasajeros (Autobús, Tren, Taxi/VTC)",
+          "Transporte Adaptado y Movilidad Reducida (PMR)",
+          "Gestión de Puertos y Aduanas",
+        ],
+      },
+      {
+        id: "TIC-02",
+        sector: "Tecnología y Economía Digital",
+        ramas: [
+          "Desarrollo de Software y Apps",
+          "Ciberseguridad y Blockchain",
+          "Inteligencia Artificial y Big Data",
+          "Telecomunicaciones y 5G/6G",
+          "Sistemas y Cloud Computing",
+        ],
+      },
+      {
+        id: "IND-03",
+        sector: "Industria y Energía",
+        ramas: [
+          "Automoción y Vehículo Eléctrico",
+          "Energías Renovables e Hidrógeno",
+          "Industria Química y Farmacéutica",
+          "Siderurgia y Metalurgia",
+          "Mantenimiento Industrial y Robótica",
+        ],
+      },
+      {
+        id: "SAN-04",
+        sector: "Salud y Biociencias",
+        ramas: [
+          "Sanidad Pública y Privada",
+          "Biotecnología e Investigación Médica",
+          "Transporte Sanitario (Ambulancias)",
+          "Odontología y Servicios Ópticos",
+          "Salud Mental y Psicología",
+        ],
+      },
+      {
+        id: "TUR-05",
+        sector: "Turismo y Hostelería",
+        ramas: [
+          "Hotelería y Alojamientos Turísticos",
+          "Restauración y Gastronomía",
+          "Gestión de Viajes y Agencias",
+          "Eventos, Congresos y Ocio Nocturno",
+        ],
+      },
+      {
+        id: "FIN-06",
+        sector: "Finanzas, Legal y Consultoría",
+        ramas: [
+          "Banca, Fintech e Inversiones",
+          "Despachos de Abogados y Notarías",
+          "Auditoría y Consultoría Estratégica",
+          "Seguros y Reaseguros",
+          "Recursos Humanos y Headhunting",
+        ],
+      },
+      {
+        id: "CON-07",
+        sector: "Construcción e Inmobiliaria",
+        ramas: [
+          "Edificación Residencial y Obra Civil",
+          "Rehabilitación Energética",
+          "Arquitectura y Urbanismo",
+          "Promoción e Intermediación Inmobiliaria",
+        ],
+      },
+      {
+        id: "EDU-08",
+        sector: "Educación y Formación",
+        ramas: [
+          "Enseñanza Reglada (Colegios e Institutos)",
+          "Formación Profesional y Universitaria",
+          "E-learning y Formación Continua",
+          "Investigación y Desarrollo (I+D)",
+        ],
+      },
+      {
+        id: "SOC-09",
+        sector: "Servicios Sociales y Dependencia",
+        ramas: [
+          "Atención a la Tercera Edad y Residencias",
+          "Servicios de Ayuda a Domicilio (SAD)",
+          "Gestión de ONGs y Cooperación",
+          "Integración Social y Centros de Día",
+        ],
+      },
+      {
+        id: "PRI-10",
+        sector: "Sector Primario y Medio Ambiente",
+        ramas: [
+          "Agricultura y Ganadería Tecnificada",
+          "Pesca y Acuicultura",
+          "Gestión Forestal y Paisajismo",
+          "Tratamiento de Residuos y Economía Circular",
+        ],
+      },
+      {
+        id: "COM-11",
+        sector: "Comercio y Retail",
+        ramas: [
+          "Grandes Superficies y Supermercados",
+          "Comercio Minorista Especializado",
+          "Moda, Textil y Complementos",
+          "Gestión de Franquicias",
+        ],
+      },
+      {
+        id: "ART-12",
+        sector: "Cultura, Medios y Deporte",
+        ramas: [
+          "Producción Audiovisual y Cine",
+          "Periodismo y Medios de Comunicación",
+          "Gestión Deportiva y Fitness",
+          "Videojuegos y Entretenimiento Digital",
+        ],
+      },
+    ],
+  },
+};
