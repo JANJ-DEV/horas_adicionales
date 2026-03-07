@@ -4,7 +4,7 @@ import type { FC } from "react";
 type SelectJobProfileProps = {
   branches?: Branch[];
   jobsPositions?: JobPosition[];
-  onChangeSelectJobProfile: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  onChangeSelectJobProfile?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 };
 // import { useFilterBranches } from "@/hooks/useFilterBranches"; --- IGNORE ---
 // Este componente tiene que devolver un select con las ramas o puestos de trabajo dependiendo de lo que se le pase por props

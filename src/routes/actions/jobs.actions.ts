@@ -15,7 +15,7 @@ export const add = async ({ request }: ActionFunctionArgs) => {
   const idBranch = formData.get("branch") as string;
   const idJobPosition = formData.get("jobPosition") as string;
 
-  console.table({ title, idBranch, idJobPosition });
+  // console.table({ title, idBranch, idJobPosition });
 
   if (!title || !idBranch || !idJobPosition) {
     toast.error("Todos los campos son requeridos", { containerId: "job-profiles-toast" });

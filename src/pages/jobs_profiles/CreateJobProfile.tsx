@@ -22,18 +22,19 @@ const CreateJobProfile: FC = () => {
   }, [branchId]);
 
   const handlerOnChangeSelectedBranch = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log(e.target.value);
+    // console.log(e.target.value);
     setBranchId(e.target.value);
   };
-  const handlerOnSelectedJobPosition = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log(e.target.value);
-  };
+ 
 
   return (
     <section>
-      <h1>Crear nuevo perfil de trabajo</h1>
+      <h2 className="text-2xl">Crear nuevo perfil de trabajo</h2>
       <formAction.Form action="/job-profiles/add" method="post" className="flex flex-col gap-4">
-        <input type="text" name="title" id="title" placeholder="Título del perfil de trabajo" />
+        <section>
+          <label htmlFor="title">Título del perfil de trabajo:</label>
+          <input type="text" name="title" id="title" placeholder="ej. Transportes SL" />
+        </section>
         {branches && (
           <>
             <SelectJobProfile
@@ -44,7 +45,6 @@ const CreateJobProfile: FC = () => {
             {branchId && (
               <SelectJobProfile
                 jobsPositions={jobsPositions}
-                onChangeSelectJobProfile={handlerOnSelectedJobPosition}
               />
             )}
           </>
