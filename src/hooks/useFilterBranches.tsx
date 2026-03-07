@@ -36,7 +36,8 @@ export const useFilterBranches = () => {
 
   const getBranch = (selectedBranch: string) =>
     branches
-      .find((branch: Branch) => branch.id === selectedBranch)?.jobsPositions?.map((job: JobPosition) => job);
+      .find((branch: Branch) => branch.id === selectedBranch)
+      ?.jobsPositions?.map((job: JobPosition) => job);
   const getNameBranch = (selectedBranch: string) =>
     branches.find((branch: Branch) => branch.id === selectedBranch)?.name;
   const getNameJobPosition = (selectedJobPosition: string) => {
