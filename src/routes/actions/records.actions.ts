@@ -4,13 +4,14 @@ import { saveRecord, type RecordService } from "@/services/records.service";
 
 export async function add({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
-  const nombreEmpresa = formData.get("nombre-empresa") as string;
-  const fecha = formData.get("fecha") as string;
-  const horaEntrada = formData.get("hora-entrada") as string;
-  const horaSalida = formData.get("hora-salida") as string;
+  const jobProfileId = formData.get("jobProfileId") as string;
+  const titleJobProfile = formData.get("titleJobProfile") as string;
+  const dateTimeRecord = formData.get("dateTimeRecord") as string;
+  const workStartTime = formData.get("workStartTime") as string;
+  const workEndTime = formData.get("workEndTime") as string;
 
   // Aquí puedes hacer validaciones
-  if (!nombreEmpresa || !fecha || !horaEntrada || !horaSalida) {
+  if (!titleJobProfile || !dateTimeRecord || !workStartTime || !workEndTime) {
     return {
       error: "Todos los campos son requeridos",
     };
@@ -19,22 +20,23 @@ export async function add({ request }: ActionFunctionArgs) {
   // Aquí harías la llamada a tu API o base de datos
   const userId = authFirebase.currentUser?.uid;
   if (!userId) {
-    console.error("No hay un usuario autenticado");
     return {
       error: "No hay un usuario autenticado",
     };
   }
   const record: RecordService = {
-    nombreEmpresa,
-    fecha,
-    hora_entrada: horaEntrada,
-    hora_salida: horaSalida,
+    titleJobProfile,
+    dateTimeRecord,
+    workStartTime,
+    workEndTime,
   };
+
   await saveRecord(record);
   // Retorna el resultado
   return {
     success: true,
     message: "Registro guardado correctamente",
     record,
+    jobProfileId,
   };
 }

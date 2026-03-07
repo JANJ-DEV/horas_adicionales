@@ -14,6 +14,7 @@ const BranchesProvider: FC<Children> = ({ children }) => {
     isLoadingBranches,
     isErrorBranches,
   };
+
   useEffect(() => {
     const unsubscribe = subscribeToBranches(
       (branches) => {

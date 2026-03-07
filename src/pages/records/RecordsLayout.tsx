@@ -3,6 +3,7 @@ import { Navigate, NavLink, Outlet } from "react-router";
 import MainContent from "../layouts/MainContent";
 import MainHeader from "../layouts/MainHeader";
 import GoBack from "@/components/GoBack";
+import { ToastContainer } from "react-toastify";
 
 const RecordsLayout = () => {
   const { isAuthenticated } = useAuth();
@@ -29,6 +30,19 @@ const RecordsLayout = () => {
         <section className="flex flex-col gap-4 mt-4">
           <Outlet />
         </section>
+        <ToastContainer
+          containerId="records"
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+        />
       </MainContent>
     </>
   );

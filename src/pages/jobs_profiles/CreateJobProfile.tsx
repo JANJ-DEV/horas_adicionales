@@ -30,7 +30,7 @@ const CreateJobProfile: FC = () => {
     <section className="flex flex-col justify-evenly lg:justify-start items-center lg:gap-8 h-[80vh]">
       <h2 className="text-3xl mt-12 lg:text-4xl ">Añadir perfil de trabajo</h2>
       <section className="lg:max-w-96">
-        <formAction.Form action="/job-profiles/add" method="post" className="flex flex-col gap-4">
+        <formAction.Form action="/jobs-profiles/add" method="post" className="flex flex-col gap-4">
           <section className="flex flex-col gap-2">
             <label htmlFor="title" className="text-2xl">
               Título del perfil de trabajo:

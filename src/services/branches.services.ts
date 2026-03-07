@@ -48,10 +48,6 @@ export const subscribeToBranches = (
       );
 
       callback(branches);
-
-      toast.success("Sectores y puestos de trabajo cargados correctamente", {
-        containerId: "global",
-      });
     },
     errorCallback,
     finallyCallback

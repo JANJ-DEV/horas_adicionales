@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import useAuth from "@/context/hooks/auth.hook";
 import { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
@@ -16,15 +15,16 @@ const JobProfiles = () => {
 
   useEffect(() => {
     if (!currentUser) return;
-    const unsubscribe = subscribeToJobProfiles((profiles) => {
+
+    const unsubscribe = subscribeToJobProfiles(currentUser.uid, (profiles) => {
       setJobs(profiles);
       setIsLoading(false);
     });
 
     return () => {
-      if (unsubscribe) unsubscribe();
+      unsubscribe();
     };
-  }, []);
+  }, [currentUser]);
 
   return (
     <section className="flex flex-col gap-4">

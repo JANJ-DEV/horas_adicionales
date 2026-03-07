@@ -49,7 +49,7 @@ const MainMenu = ({ variant }: MainMenuProps) => {
           </NavLink>
           <NavLink
             onClick={closeMenuBars}
-            to="/job-profiles"
+            to="/jobs-profiles"
             className={({ isActive }) =>
               `font-bold ${isActive ? "text-green-500" : "text-gray-500"}`
             }

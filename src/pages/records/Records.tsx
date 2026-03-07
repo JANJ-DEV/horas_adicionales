@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import useAuth from "@/context/hooks/auth.hook";
 import { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
@@ -6,41 +5,49 @@ import { getRecords, type RecordService } from "@/services/records.service";
 
 const Records = () => {
   const { currentUser } = useAuth();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [records, setRecords] = useState<RecordService[]>([]);
+  const visibleRecords = currentUser ? records : [];
 
   useEffect(() => {
-    if (!currentUser) return;
+    if (!currentUser) {
+      return;
+    }
+
+    let isMounted = true;
+
     const fetchData = () => {
       setIsLoading(true);
       const customErrorMessage = "No tienes registros";
       getRecords(currentUser.uid)
         .then((records) => {
+          if (!isMounted) return;
           if (!records || records.length === 0) {
-            // toast.warning(customErrorMessage, { containerId: "records" });
             setErrorMessage(customErrorMessage);
             setIsError(true);
-            return;
+          } else {
+            setRecords(records as RecordService[]);
+            setIsError(false);
           }
-          setRecords(records as RecordService[]);
         })
         .catch(() => {
+          if (!isMounted) return;
           setIsError(true);
-          // toast.warning(customErrorMessage, { containerId: "records" });
           setErrorMessage(customErrorMessage);
         })
         .finally(() => {
-          setIsLoading(false);
+          if (isMounted) setIsLoading(false);
         });
     };
+
     fetchData();
 
     return () => {
-      setRecords([]);
+      isMounted = false;
     };
-  }, []);
+  }, [currentUser]);
 
   return (
     <section className="flex flex-col gap-4">
@@ -55,24 +62,24 @@ const Records = () => {
         </aside>
       )}
       <article>
-        {records && (
+        {visibleRecords && (
           <section className="flex flex-col gap-4">
-            {records.map((record) => (
+            {visibleRecords.map((record) => (
               <div key={record.id} className="flex flex-col gap-2 border p-4 rounded">
                 <div className="flex justify-between">
                   <p>
-                    <strong>Empresa:</strong> {record.nombreEmpresa}
+                    <strong>Empresa:</strong> {record.titleJobProfile}
                   </p>
                   <p>
-                    <strong>Fecha:</strong> {new Date(record.fecha).toLocaleDateString()}
+                    <strong>Fecha:</strong> {new Date(record.dateTimeRecord).toLocaleDateString()}
                   </p>
                 </div>
                 <div className="flex justify-between">
                   <p>
-                    <strong>Entrada:</strong> {record.hora_entrada}
+                    <strong>Entrada:</strong> {record.workStartTime}
                   </p>
                   <p>
-                    <strong>Salida:</strong> {record.hora_salida}
+                    <strong>Salida:</strong> {record.workEndTime}
                   </p>
                 </div>
               </div>

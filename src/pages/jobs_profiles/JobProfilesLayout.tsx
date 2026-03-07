@@ -20,7 +20,7 @@ const JobProfilesLayout = () => {
         <nav className="flex gap-4 mt-8">
           <GoBack />
           <NavLink
-            to="/job-profiles/add"
+            to="/jobs-profiles/add"
             className={({ isActive }) => {
               return `py-2 px-4 border rounded-sm ${isActive ? "text-green-500" : "text-white"}`;
             }}
@@ -33,7 +33,7 @@ const JobProfilesLayout = () => {
         </section>
       </MainContent>
       <ToastContainer
-        containerId="job-profiles"
+        containerId="jobs-profiles"
         position="top-right"
         autoClose={3000}
         hideProgressBar={false}

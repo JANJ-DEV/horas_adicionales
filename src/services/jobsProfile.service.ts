@@ -13,12 +13,12 @@ import { authFirebase } from "@/apis/firebase";
 import { toast } from "react-toastify";
 import type { JobProfile } from "@/types";
 
-const nameCollection = "job_profiles";
+const nameCollection = "jobsProfiles";
 
 export const saveJobProfile = async (payload: JobProfile) => {
   const userId = authFirebase.currentUser?.uid;
   if (!userId) {
-    toast.error("No hay un usuario autenticado", { containerId: "job-profiles" });
+    toast.error("No hay un usuario autenticado", { containerId: "jobs-profiles" });
     return;
   }
   try {
@@ -43,16 +43,10 @@ export const saveJobProfile = async (payload: JobProfile) => {
 };
 
 export const subscribeToJobProfiles = (
+  userId: string,
   callback: (profiles: JobProfile[]) => void
-): Unsubscribe | void => {
-  const userId = authFirebase.currentUser?.uid;
-
-  if (!userId) {
-    console.error("No hay un usuario autenticado");
-    return;
-  }
-
-  const refUser = collection(firestore, `users/${userId}/job_profiles`);
+): Unsubscribe => {
+  const refUser = collection(firestore, `users/${userId}/${nameCollection}`);
 
   // Retornamos la función unsubscribe para poder detener la escucha cuando el componente se desmonte
   const unsubscribe = onSnapshot(refUser, (snapshot) => {

@@ -5,7 +5,7 @@ import { jobsProfileActions } from "./actions";
 // Router
 export const jobProfilesRouter = [
   {
-    path: "/job-profiles",
+    path: "/jobs-profiles",
     element: <JobProfilesLayout />,
     children: [
       {

@@ -10,15 +10,19 @@ import {
 } from "firebase/firestore";
 import { firestore } from "@/apis/firebase";
 import { authFirebase } from "@/apis/firebase";
+import { toast } from "react-toastify";
+
 export interface RecordService {
   id?: string;
-  nombreEmpresa: string;
-  fecha: string | Date;
-  hora_entrada?: string;
-  hora_salida?: string;
+  titleJobProfile: string;
+  dateTimeRecord: string | Date;
+  workStartTime?: string;
+  workEndTime?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+const NAME_COLLECTION = "records";
 
 export const saveRecord = async (record: RecordService) => {
   const userId = authFirebase.currentUser?.uid;
@@ -30,22 +34,22 @@ export const saveRecord = async (record: RecordService) => {
 
   try {
     // 1. Referencia a la colección
-    const collectionRef = collection(firestore, "users", userId, "records");
+    const collectionRef = collection(firestore, "users", userId, NAME_COLLECTION);
 
     // 2. Crear un nuevo documento con ID automático
     const newDocRef = doc(collectionRef);
 
     await setDoc(newDocRef, {
       id: newDocRef.id, // Guardamos el ID dentro del doc por comodidad
-      nombreEmpresa: record.nombreEmpresa,
-      fecha: record.fecha, // La fecha del registro (la que eligió el usuario)
-      hora_entrada: record.hora_entrada,
-      hora_salida: record.hora_salida,
+      titleJobProfile: record.titleJobProfile,
+      dateTimeRecord: record.dateTimeRecord, // La fecha del registro (la que eligió el usuario)
+      workStartTime: record.workStartTime,
+      workEndTime: record.workEndTime,
       createdAt: serverTimestamp(), // Fecha de creación real
       updatedAt: serverTimestamp(), // Fecha de última actualización
     });
 
-    console.log("Documento guardado con éxito");
+    toast.success("Registro guardado con éxito", { containerId: "records" });
   } catch (error) {
     console.error("Error al guardar:", error);
   }
@@ -53,7 +57,7 @@ export const saveRecord = async (record: RecordService) => {
 
 export const getRecords = async (userId: string) => {
   try {
-    const collectionRef = collection(firestore, "users", userId, "records");
+    const collectionRef = collection(firestore, "users", userId, NAME_COLLECTION);
     const querySnapshot = await getDocs(collectionRef);
     const records = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     return records;
@@ -69,12 +73,12 @@ export const updateRecord = async (
   updatedData: Partial<RecordService>
 ) => {
   try {
-    const docRef = doc(firestore, "users", userId, "records", recordId);
+    const docRef = doc(firestore, "users", userId, NAME_COLLECTION, recordId);
     await updateDoc(docRef, {
       ...updatedData,
       updatedAt: serverTimestamp(),
     });
-    console.log("Registro actualizado con éxito");
+    toast.success("Registro actualizado con éxito", { containerId: "records" });
   } catch (error) {
     console.error("Error al actualizar registro:", error);
   }
@@ -82,9 +86,9 @@ export const updateRecord = async (
 
 export const deleteRecord = async (userId: string, recordId: string) => {
   try {
-    const docRef = doc(firestore, "users", userId, "records", recordId);
+    const docRef = doc(firestore, "users", userId, NAME_COLLECTION, recordId);
     await deleteDoc(docRef);
-    console.log("Registro eliminado con éxito");
+    toast.success("Registro eliminado con éxito", { containerId: "records" });
   } catch (error) {
     console.error("Error al eliminar registro:", error);
   }
@@ -97,7 +101,7 @@ export const getRecordById = async (userId: string, recordId: string) => {
     if (docSnap.exists()) {
       return { id: docSnap.id, ...docSnap.data() };
     } else {
-      console.log("No such document!");
+      toast.error("No se encontró el documento", { containerId: "records" });
       return null;
     }
   } catch (error) {
@@ -108,11 +112,11 @@ export const getRecordById = async (userId: string, recordId: string) => {
 
 export const getRecordsByDateRange = async (userId: string, startDate: Date, endDate: Date) => {
   try {
-    const collectionRef = collection(firestore, "users", userId, "records");
+    const collectionRef = collection(firestore, "users", userId, NAME_COLLECTION);
     const querySnapshot = await getDocs(collectionRef);
     const records = querySnapshot.docs.map((doc) => ({
       id: doc.id,
-      nombreEmpresa: doc.data().nombreEmpresa,
+      titleJobProfile: doc.data().titleJobProfile,
       fecha: doc.data().fecha,
       ...doc.data(),
     }));
@@ -130,17 +134,17 @@ export const getRecordsByDateRange = async (userId: string, startDate: Date, end
 
 export const getRecordsByCompanyName = async (userId: string, companyName: string) => {
   try {
-    const collectionRef = collection(firestore, "users", userId, "records");
+    const collectionRef = collection(firestore, "users", userId, NAME_COLLECTION);
     const querySnapshot = await getDocs(collectionRef);
     const records = querySnapshot.docs.map((doc) => ({
       id: doc.id,
-      nombreEmpresa: doc.data().nombreEmpresa,
+      titleJobProfile: doc.data().titleJobProfile,
       fecha: doc.data().fecha,
       ...doc.data(),
     }));
     // Filtrar registros por nombre de empresa
     const filteredRecords = records.filter((record) =>
-      record.nombreEmpresa.toLowerCase().includes(companyName.toLowerCase())
+      record.titleJobProfile.toLowerCase().includes(companyName.toLowerCase())
     );
     return filteredRecords;
   } catch (error) {

@@ -18,7 +18,7 @@ export const add = async ({ request }: ActionFunctionArgs) => {
   // console.table({ title, idBranch, idJobPosition });
 
   if (!title || !idBranch || !idJobPosition) {
-    toast.error("Todos los campos son requeridos", { containerId: "job-profiles-toast" });
+    toast.error("Todos los campos son requeridos", { containerId: "jobs-profiles" });
     return;
   }
 
@@ -40,7 +40,7 @@ export const add = async ({ request }: ActionFunctionArgs) => {
   };
 
   const jobProfile = (await saveJobProfile(newJobProfile)) as JobProfile;
-  toast.success("Perfil de trabajo guardado correctamente ", { containerId: "job-profiles-toast" });
+  toast.success("Perfil de trabajo guardado correctamente ", { containerId: "jobs-profiles" });
   return {
     success: true,
     message: "Perfil de trabajo guardado correctamente",
