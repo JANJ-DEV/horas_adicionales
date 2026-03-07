@@ -26,35 +26,41 @@ const CreateJobProfile: FC = () => {
     setBranchId(e.target.value);
   };
 
-
   return (
     <section className="flex flex-col justify-evenly lg:justify-start items-center lg:gap-8 h-[80vh]">
       <h2 className="text-3xl mt-12 lg:text-4xl ">Añadir perfil de trabajo</h2>
       <section className="lg:max-w-96">
         <formAction.Form action="/job-profiles/add" method="post" className="flex flex-col gap-4">
           <section className="flex flex-col gap-2">
-            <label htmlFor="title" className="text-2xl">Título del perfil de trabajo:</label>
-            <input type="text" name="title" id="title" placeholder="ej. Transportes SL" className="border py-2 px-4 rounded" />
+            <label htmlFor="title" className="text-2xl">
+              Título del perfil de trabajo:
+            </label>
+            <input
+              type="text"
+              name="title"
+              id="title"
+              placeholder="ej. Transportes SL"
+              className="border py-2 px-4 rounded"
+            />
           </section>
           {branches && (
             <>
               <section>
-
                 <SelectJobProfile
                   branches={branches}
                   jobsPositions={[]}
                   onChangeSelectJobProfile={handlerOnChangeSelectedBranch}
                 />
               </section>
-              {branchId && (
-                <SelectJobProfile
-                  jobsPositions={jobsPositions}
-                />
-              )}
+              {branchId && <SelectJobProfile jobsPositions={jobsPositions} />}
             </>
           )}
 
-          <button type="submit" disabled={formAction.state === "submitting"} className="text-xl border border-green-300 font-bold py-2 px-4 rounded">
+          <button
+            type="submit"
+            disabled={formAction.state === "submitting"}
+            className="text-xl border border-green-300 font-bold py-2 px-4 rounded"
+          >
             {formAction.state === "submitting" ? "Guardando..." : "Guardar"}
           </button>
           {/*         

@@ -17,7 +17,9 @@ const SelectJobProfile: FC<SelectJobProfileProps> = ({
   if (branches) {
     return (
       <section className="flex flex-col gap-2">
-        <label htmlFor="branch" className="text-2xl">Selecciona una rama:</label>
+        <label htmlFor="branch" className="text-2xl">
+          Selecciona una rama:
+        </label>
         <select
           name="branch"
           id="branch"
@@ -40,8 +42,15 @@ const SelectJobProfile: FC<SelectJobProfileProps> = ({
 
   return (
     <section className="flex flex-col gap-2">
-      <label htmlFor="jobPosition" className="text-2xl">Selecciona un puesto de trabajo:</label>
-      <select name="jobPosition" id="jobPosition" aria-label="Select job position" className="border py-2 rounded">
+      <label htmlFor="jobPosition" className="text-2xl">
+        Selecciona un puesto de trabajo:
+      </label>
+      <select
+        name="jobPosition"
+        id="jobPosition"
+        aria-label="Select job position"
+        className="border py-2 rounded"
+      >
         <option value="" disabled selected className="text-xl">
           Puesto de trabajo
         </option>
