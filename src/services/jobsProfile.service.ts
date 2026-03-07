@@ -18,13 +18,9 @@ const nameCollection = "job_profiles";
 export const saveJobProfile = async (payload: JobProfile) => {
   const userId = authFirebase.currentUser?.uid;
   if (!userId) {
-    toast.error("No hay un usuario autenticado", { containerId: "job-profiles-toast" });
-    console.error("No hay un usuario autenticado");
+    toast.error("No hay un usuario autenticado", { containerId: "job-profiles" });
     return;
   }
-  console.log("Guardando perfil de trabajo para el usuario:", userId);
-  console.table(payload);
-
   try {
     // 1. Referencia a la colección
     const collectionRef = collection(firestore, "users", userId, nameCollection);
@@ -38,7 +34,7 @@ export const saveJobProfile = async (payload: JobProfile) => {
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     });
-
+    toast.success("Perfil de trabajo guardado correctamente ", { containerId: "job-profiles" });
     return { ...payload, id: newDocRef.id } as JobProfile;
   } catch (error) {
     console.error("Error al crear el perfil de trabajo:", error);

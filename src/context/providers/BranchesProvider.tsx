@@ -19,7 +19,7 @@ const BranchesProvider: FC<Children> = ({ children }) => {
       (branches) => {
         setIsLoadingBranches(true);
         if (branches) {
-          setBranches(branches.data);
+          setBranches(branches);
           setIsLoadingBranches(false);
         }
       },

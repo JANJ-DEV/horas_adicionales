@@ -1,68 +1,89 @@
 import type { Timestamp } from "firebase/firestore";
 import type { ReactNode } from "react";
 
+/**
+ * Props base para componentes que reciben contenido hijo.
+ */
 export type Children = {
   children: ReactNode;
 };
+/**
+ * Puesto de trabajo asociado a una rama/sector en datos operativos.
+ */
+export interface JobPosition {
+  id: string;
+  description: string;
+  name: string;
+}
 
+/**
+ * Documento de perfil de puesto manejado en Firestore.
+ */
 export interface JobProfile {
   id?: string;
-  profileTitle: string;
-  sectorName: string;
-  sectorDescription?: string;
-  jobPosition: string;
-  jobDescription?: string;
+  title: string;
+  branch: MakeOptional<Branch, "jobsPositions">;
+  jobPosition: JobPosition;
   createdAt?: Timestamp;
   updatedAt?: Timestamp;
 }
 
+/**
+ * Ítem de puesto dentro del catálogo de sectores.
+ */
 export interface JobCatalogItem {
   id: string;
-  nombre: string;
-  descripcion: string;
+  name: string;
+  description: string;
 }
+/**
+ * Proyección parcial de documento de puesto para formularios/edición.
+ * Incluye claves en inglés y español por compatibilidad.
+ */
+export type JobPositionDoc = {
+  id?: string;
+  name?: string;
+  description?: string;
+  nombre?: string;
+  descripcion?: string;
+};
 
+/**
+ * Sector del catálogo maestro de puestos.
+ */
 export interface SectorCatalog {
   id: string;
-  sector: string;
-  descripcion_sector: string;
-  puestos_de_trabajo: JobCatalogItem[];
+  name: string;
+  description: string;
+  jobsPositions: JobCatalogItem[];
 }
 
+/**
+ * Estructura raíz para el JSON del catálogo maestro.
+ */
 export interface SectorsCatalogRoot {
   sectores_y_puestos: SectorCatalog[];
 }
-export interface JobPosition {
-  id: string;
-  descripcion: string;
-  nombre: string;
-}
+
+/**
+ * Estructura de una rama con sus puestos de trabajo.
+ */
 export interface Branch {
   id: string;
-  sector: string;
-  descripcion_sector: string;
-  puestos_de_trabajo: JobPosition[];
+  name: string;
+  description: string;
+  jobsPositions?: JobPosition[];
 }
 
-export type BranchData = {
-  id: string;
-  data: Branch[];
+/**
+ * Proyección parcial de documento de rama para formularios/edición.
+ */
+export type BranchDoc = {
+  id?: string;
+  name?: string;
+  description?: string;
+  sector?: string;
+  descripcion_sector?: string;
 };
-export interface PuestoDeTrabajo {
-  id: string;
-  nombre: string;
-  puestoTrabajoDescripcion: string;
-}
 
-// Interface para cada sector principal
-export interface Sector {
-  id: string;
-  sector: string;
-  descripcion_sector: string;
-  puestos_de_trabajo: PuestoDeTrabajo[];
-}
-
-// Interface para la raíz del documento JSON
-export interface SectoresData {
-  sectores_y_puestos: Sector[];
-}
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;

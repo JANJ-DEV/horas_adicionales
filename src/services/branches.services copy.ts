@@ -4,12 +4,10 @@ import {
   type Unsubscribe,
   type FirestoreError,
   getDocs,
-  doc,
-  getDoc,
 } from "firebase/firestore";
 import { firestore } from "@/apis/firebase";
 import { toast } from "react-toastify";
-import type { Branch, BranchDoc, JobPositionDoc} from "@/types";
+import type { Branch, BranchDoc, JobPositionDoc } from "@/types";
 
 export const subscribeToBranches = (
   callback: (branches: Branch[]) => void,
@@ -71,35 +69,13 @@ export const addBranch = (branch: Branch): void => {
   // Implement the logic to add a branch
   toast.info(`Se ha agregado la rama: ${branch.name} `, { containerId: "global" });
 };
-
-export const getBranchById = async (id: string): Promise<Branch | null> => {
-    const refBranches = collection(firestore, "branches");
-    const refDoc = doc(refBranches, id);
-    const docSnap = await getDoc(refDoc);
-    const refJobsPositions = collection(firestore, "branches", id, "jobsPositions");
-    
-    const jobsSnapshot = await getDocs(refJobsPositions);
-    if (docSnap.exists()) {
-      const branchData = docSnap.data() as BranchDoc;
-      const jobsPositions = jobsSnapshot.docs.map((jobDoc) => {
-        const jobData = jobDoc.data() as JobPositionDoc;
-        return {
-          id: jobDoc.id,
-          name: jobData.name ?? jobData.nombre ?? "",
-          description: jobData.description ?? jobData.descripcion ?? "",
-        };
-      });
-      return {
-        id: docSnap.id,
-        name: branchData.name ?? branchData.sector ?? "",
-        description: branchData.description ?? branchData.descripcion_sector ?? "",
-        jobsPositions,
-      };
-    }
-    toast.error(`No se encontró la rama con ID: ${id} `, { containerId: "global" });
-    return null;
+export const getBranchById = (id: string): Branch | undefined => {
+  // Implement the logic to get a branch by its ID
+  toast.info(`Se ha obtenido la rama con ID: ${id} `, { containerId: "global" });
+  return undefined;
 };
-export const updateBranchById = (id: string): Partial<Branch> | undefined => {
+
+export const updateBranchById = (id: string): Branch | undefined => {
   // Implement the logic to get a branch by its ID
   toast.info(`Se ha actualizado la rama con ID: ${id} `, { containerId: "global" });
   return undefined;

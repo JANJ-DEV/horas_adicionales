@@ -4,6 +4,7 @@ import MainContent from "../layouts/MainContent";
 import MainHeader from "../layouts/MainHeader";
 import GoBack from "@/components/GoBack";
 import BranchesProvider from "@/context/providers/BranchesProvider";
+import { ToastContainer } from "react-toastify";
 
 const JobProfilesLayout = () => {
   const { isAuthenticated } = useAuth();
@@ -31,6 +32,7 @@ const JobProfilesLayout = () => {
           <Outlet />
         </section>
       </MainContent>
+      <ToastContainer containerId="job-profiles" position="top-right" autoClose={3000} hideProgressBar={false} />
     </BranchesProvider>
   );
 };

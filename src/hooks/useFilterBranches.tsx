@@ -28,7 +28,7 @@ export const useFilterBranches = () => {
   const getJobPositionByBranch = (selectedJobPosition: string) => {
     const branch = branches.find((branch: Branch) => branch.id === selectedBranch);
     if (!branch) return undefined;
-    const jobPosition = branch.puestos_de_trabajo.find(
+    const jobPosition = branch.jobsPositions.find(
       (job: JobPosition) => job.id === selectedJobPosition
     );
     return jobPosition;
@@ -37,16 +37,16 @@ export const useFilterBranches = () => {
   const getBranch = (selectedBranch: string) =>
     branches
       .find((branch: Branch) => branch.id === selectedBranch)
-      ?.puestos_de_trabajo.map((job: JobPosition) => job);
+      ?.jobsPositions.map((job: JobPosition) => job);
   const getNameBranch = (selectedBranch: string) =>
-    branches.find((branch: Branch) => branch.id === selectedBranch)?.sector;
+    branches.find((branch: Branch) => branch.id === selectedBranch)?.name;
   const getNameJobPosition = (selectedJobPosition: string) => {
     const branch = branches.find((branch: Branch) => branch.id === selectedBranch);
     if (!branch) return undefined;
-    const jobPosition = branch.puestos_de_trabajo.find(
+    const jobPosition = branch.jobsPositions.find(
       (job: JobPosition) => job.id === selectedJobPosition
     );
-    return jobPosition?.nombre;
+    return jobPosition?.name;
   };
   return {
     filteredbranches,

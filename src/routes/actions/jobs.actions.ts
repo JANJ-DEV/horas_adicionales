@@ -1,41 +1,52 @@
-import type { JobProfile } from "@/types";
+import type { Branch, JobPosition, JobProfile } from "@/types";
 import type { ActionFunctionArgs } from "react-router";
 import { toast } from "react-toastify";
 import { updateAccount } from "@/services/auth.service";
 import { uploadFile } from "@/services/uploadFile.service";
 import { authFirebase } from "@/apis/firebase";
+import { getBranchById } from "@/services/branches.services";
+import { getJobById } from "@/services/jobsPositions.service";
 import { saveJobProfile } from "@/services/jobsProfile.service";
+// import { saveJobProfile } from "@/services/jobsProfile.service";
 
 export const add = async ({ request }: ActionFunctionArgs) => {
+
+
   const formData = await request.formData();
-  const profileTitle = formData.get("profileTitle") as string;
-  const sectorName = formData.get("sectorName") as string;
-  const sectorDescription = formData.get("sectorDescription") as string;
-  const jobPosition = formData.get("jobPosition") as string;
-  const jobDescription = formData.get("jobDescription") as string;
+  const title = formData.get("title") as string;
+  const idBranch = formData.get("branch") as string;
+  const idJobPosition = formData.get("jobPosition") as string;
 
-  if (!profileTitle || !jobPosition) {
-    return {
-      error: "El nombre del perfil y el puesto de trabajo son requeridos",
-    };
+  console.table({ title, idBranch, idJobPosition });
+
+  if (!title || !idBranch || !idJobPosition) {
+    toast.error("Todos los campos son requeridos", { containerId: "job-profiles-toast" });
+    return;
   }
-  const newJobProfile: JobProfile = {
-    profileTitle,
-    sectorName,
-    sectorDescription,
-    jobPosition,
-    jobDescription,
-  };
 
-  console.table(newJobProfile);
+  const branch = await getBranchById(idBranch) as Branch;
+  const jobPositions = await getJobById(idJobPosition, idBranch) as JobPosition;
+
+  const newJobProfile: JobProfile = {
+    title,
+    branch: {
+      id: branch.id,
+      name: branch.name,
+      description: branch.description
+    },
+    jobPosition: {
+      id: jobPositions.id,
+      name: jobPositions.name,
+      description: jobPositions.description
+    }
+  };
 
   const jobProfile = (await saveJobProfile(newJobProfile)) as JobProfile;
   toast.success("Perfil de trabajo guardado correctamente ", { containerId: "job-profiles-toast" });
   return {
     success: true,
     message: "Perfil de trabajo guardado correctamente",
-    newJobProfile,
-    jobProfile,
+    jobProfile
   };
 };
 
