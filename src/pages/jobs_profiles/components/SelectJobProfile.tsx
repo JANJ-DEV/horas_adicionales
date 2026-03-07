@@ -16,34 +16,42 @@ const SelectJobProfile: FC<SelectJobProfileProps> = ({
 }) => {
   if (branches) {
     return (
-      <select
-        name="branch"
-        id="branch"
-        aria-label="Select branch"
-        onChange={onChangeSelectJobProfile}
-      >
-        {branches.map((branch) => (
-          <option key={branch.id} value={branch.id}>
-            {branch.name}
+      <section className="flex flex-col gap-2">
+        <label htmlFor="branch" className="text-2xl">Selecciona una rama:</label>
+        <select
+          name="branch"
+          id="branch"
+          aria-label="Select branch"
+          onChange={onChangeSelectJobProfile}
+          className="border py-2 rounded"
+        >
+          <option value="" disabled selected>
+            Ramas
           </option>
-        ))}
-      </select>
+          {branches.map((branch) => (
+            <option key={branch.id} value={branch.id}>
+              {branch.name}
+            </option>
+          ))}
+        </select>
+      </section>
     );
   }
 
   return (
-    <select
-      name="jobPosition"
-      id="jobPosition"
-      aria-label="Select job position"
-      onChange={onChangeSelectJobProfile}
-    >
-      {jobsPositions?.map((jobPosition) => (
-        <option key={jobPosition.id} value={jobPosition.id}>
-          {jobPosition.name}
+    <section className="flex flex-col gap-2">
+      <label htmlFor="jobPosition" className="text-2xl">Selecciona un puesto de trabajo:</label>
+      <select name="jobPosition" id="jobPosition" aria-label="Select job position" className="border py-2 rounded">
+        <option value="" disabled selected className="text-xl">
+          Puesto de trabajo
         </option>
-      ))}
-    </select>
+        {jobsPositions?.map((job) => (
+          <option key={job.id} value={job.id}>
+            {job.name}
+          </option>
+        ))}
+      </select>
+    </section>
   );
 };
 

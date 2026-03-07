@@ -25,47 +25,48 @@ const CreateJobProfile: FC = () => {
     // console.log(e.target.value);
     setBranchId(e.target.value);
   };
- 
+
 
   return (
-    <section>
-      <h2 className="text-2xl">Crear nuevo perfil de trabajo</h2>
-      <formAction.Form action="/job-profiles/add" method="post" className="flex flex-col gap-4">
-        <section>
-          <label htmlFor="title">Título del perfil de trabajo:</label>
-          <input type="text" name="title" id="title" placeholder="ej. Transportes SL" className="flex flex-col" />
-        </section>
-        {branches && (
-          <>
-            <SelectJobProfile
-              branches={branches}
-              jobsPositions={[]}
-              onChangeSelectJobProfile={handlerOnChangeSelectedBranch}
-            />
-            {branchId && (
-              <SelectJobProfile
-                jobsPositions={jobsPositions}
-              />
-            )}
-          </>
-        )}
+    <section className="flex flex-col justify-evenly lg:justify-start items-center lg:gap-8 h-[80vh]">
+      <h2 className="text-3xl mt-12 lg:text-4xl ">Añadir perfil de trabajo</h2>
+      <section className="lg:max-w-96">
+        <formAction.Form action="/job-profiles/add" method="post" className="flex flex-col gap-4">
+          <section className="flex flex-col gap-2">
+            <label htmlFor="title" className="text-2xl">Título del perfil de trabajo:</label>
+            <input type="text" name="title" id="title" placeholder="ej. Transportes SL" className="border py-2 px-4 rounded" />
+          </section>
+          {branches && (
+            <>
+              <section>
 
-        <button type="submit" disabled={formAction.state === "submitting"}>
-          {formAction.state === "submitting" ? "Guardando..." : "Guardar"}
-        </button>
+                <SelectJobProfile
+                  branches={branches}
+                  jobsPositions={[]}
+                  onChangeSelectJobProfile={handlerOnChangeSelectedBranch}
+                />
+              </section>
+              {branchId && (
+                <SelectJobProfile
+                  jobsPositions={jobsPositions}
+                />
+              )}
+            </>
+          )}
+
+          <button type="submit" disabled={formAction.state === "submitting"} className="text-xl border border-green-300 font-bold py-2 px-4 rounded">
+            {formAction.state === "submitting" ? "Guardando..." : "Guardar"}
+          </button>
+          {/*         
         {formAction.data && formAction.data.error && (
           <p className="text-red-500">{formAction.data.error}</p>
         )}
         {formAction.data && formAction.data.success && (
           <p className="text-green-500">{formAction.data.message}</p>
-        )}
-      </formAction.Form>
-      {/* {newJob && (
-        <div className="mt-4 p-4 border rounded-lg">
-          <h2 className="text-2xl font-bold mb-2">{newJob.name}</h2>
-          <p className="mb-1"><strong>Descripción del sector:</strong> {newJob.description}</p>
-        </div>
-      )} */}
+        )} */}
+        </formAction.Form>
+      </section>
+
       <ToastContainer
         containerId="job-profiles-toast"
         position="top-right"
