@@ -32,7 +32,12 @@ const JobProfilesLayout = () => {
           <Outlet />
         </section>
       </MainContent>
-      <ToastContainer containerId="job-profiles" position="top-right" autoClose={3000} hideProgressBar={false} />
+      <ToastContainer
+        containerId="job-profiles"
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+      />
     </BranchesProvider>
   );
 };

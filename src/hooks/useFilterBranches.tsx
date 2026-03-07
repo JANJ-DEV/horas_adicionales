@@ -28,7 +28,7 @@ export const useFilterBranches = () => {
   const getJobPositionByBranch = (selectedJobPosition: string) => {
     const branch = branches.find((branch: Branch) => branch.id === selectedBranch);
     if (!branch) return undefined;
-    const jobPosition = branch.jobsPositions.find(
+    const jobPosition = branch.jobsPositions?.find(
       (job: JobPosition) => job.id === selectedJobPosition
     );
     return jobPosition;
@@ -36,14 +36,13 @@ export const useFilterBranches = () => {
 
   const getBranch = (selectedBranch: string) =>
     branches
-      .find((branch: Branch) => branch.id === selectedBranch)
-      ?.jobsPositions.map((job: JobPosition) => job);
+      .find((branch: Branch) => branch.id === selectedBranch)?.jobsPositions?.map((job: JobPosition) => job);
   const getNameBranch = (selectedBranch: string) =>
     branches.find((branch: Branch) => branch.id === selectedBranch)?.name;
   const getNameJobPosition = (selectedJobPosition: string) => {
     const branch = branches.find((branch: Branch) => branch.id === selectedBranch);
     if (!branch) return undefined;
-    const jobPosition = branch.jobsPositions.find(
+    const jobPosition = branch.jobsPositions?.find(
       (job: JobPosition) => job.id === selectedJobPosition
     );
     return jobPosition?.name;

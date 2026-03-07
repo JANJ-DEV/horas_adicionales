@@ -1,6 +1,3 @@
-
-
-
 import { collection, doc, setDoc, type Firestore } from "firebase/firestore";
 import type { FirebaseError } from "firebase/app";
 
@@ -40,7 +37,7 @@ function isJsonObject(value: unknown): value is JsonObject {
 export async function populateCollectionFromFirstLevel(
   db: Firestore,
   collectionName: string,
-  jsonData: unknown,
+  jsonData: unknown
 ) {
   if (!isJsonObject(jsonData)) {
     throw new Error("El JSON debe ser un objeto en el primer nivel.");
@@ -58,17 +55,15 @@ export async function populateCollectionFromFirstLevel(
     await Promise.all(
       entries.map(async ([documentId, content]) => {
         if (!isJsonObject(content)) {
-          throw new Error(
-            `El contenido de "${documentId}" debe ser un objeto JSON.`,
-          );
+          throw new Error(`El contenido de "${documentId}" debe ser un objeto JSON.`);
         }
 
         await setDoc(doc(ref, documentId), content);
-      }),
+      })
     );
 
     console.log(
-      `Colección ${collectionName} poblada correctamente con ${entries.length} documentos.`,
+      `Colección ${collectionName} poblada correctamente con ${entries.length} documentos.`
     );
   } catch (error) {
     const firebaseError = error as FirebaseError;
@@ -101,10 +96,7 @@ export async function populateBranches(db: Firestore, branchesJson: unknown) {
  * 2) { "jobsPosition": { "COM-01-01": { ... } }
  * 3) { "jobsPositions": { "COM-01-01": { ... } }
  */
-export async function populateJobsPositions(
-  db: Firestore,
-  jobsPositionsJson: unknown,
-) {
+export async function populateJobsPositions(db: Firestore, jobsPositionsJson: unknown) {
   if (!isJsonObject(jobsPositionsJson)) {
     throw new Error("El JSON de jobs positions no tiene formato válido.");
   }
@@ -112,11 +104,7 @@ export async function populateJobsPositions(
   const wrapped = jobsPositionsJson.jobsPosition ?? jobsPositionsJson.jobsPositions;
   const jobsPositionsData = isJsonObject(wrapped) ? wrapped : jobsPositionsJson;
 
-  await populateCollectionFromFirstLevel(
-    db,
-    COLLECTIONS.JOBS_POSITIONS,
-    jobsPositionsData,
-  );
+  await populateCollectionFromFirstLevel(db, COLLECTIONS.JOBS_POSITIONS, jobsPositionsData);
 }
 
 function extractBranchIdFromJobId(jobId: string): string | null {
@@ -137,7 +125,7 @@ function extractBranchIdFromJobId(jobId: string): string | null {
 export async function populateBranchesCatalog(
   db: Firestore,
   branchesJson: unknown,
-  jobsPositionsJson: unknown,
+  jobsPositionsJson: unknown
 ) {
   if (!isJsonObject(branchesJson)) {
     throw new Error("El JSON de branches no tiene formato válido.");
@@ -164,37 +152,28 @@ export async function populateBranchesCatalog(
         throw new Error(`El job "${jobId}" debe ser un objeto JSON.`);
       }
 
-      const explicitBranchId =
-        typeof jobContent.branchId === "string" ? jobContent.branchId : null;
+      const explicitBranchId = typeof jobContent.branchId === "string" ? jobContent.branchId : null;
       const inferredBranchId = extractBranchIdFromJobId(jobId);
       const branchId = explicitBranchId ?? inferredBranchId;
 
       if (!branchId || !branchIds.has(branchId)) {
-        invalidRelations.push(
-          `${jobId} -> ${branchId ?? "(sin branchId inferible)"}`,
-        );
+        invalidRelations.push(`${jobId} -> ${branchId ?? "(sin branchId inferible)"}`);
         return;
       }
 
-      const jobsRef = collection(
-        db,
-        COLLECTIONS.BRANCHES,
-        branchId,
-        COLLECTIONS.JOBS_POSITIONS,
-      );
+      const jobsRef = collection(db, COLLECTIONS.BRANCHES, branchId, COLLECTIONS.JOBS_POSITIONS);
 
       await setDoc(doc(jobsRef, jobId), jobContent);
-    }),
+    })
   );
 
   if (invalidRelations.length > 0) {
     throw new Error(
-      `Se encontraron ${invalidRelations.length} jobs sin rama válida: ${invalidRelations.join(", ")}`,
+      `Se encontraron ${invalidRelations.length} jobs sin rama válida: ${invalidRelations.join(", ")}`
     );
   }
 
   console.log(
-    `Catálogo de branches poblado con ${Object.keys(branchesData).length} ramas y ${Object.keys(jobsData).length} puestos.`,
+    `Catálogo de branches poblado con ${Object.keys(branchesData).length} ramas y ${Object.keys(jobsData).length} puestos.`
   );
 }
-

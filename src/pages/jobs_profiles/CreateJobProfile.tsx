@@ -24,7 +24,6 @@ const CreateJobProfile: FC = () => {
   const handlerOnChangeSelectedBranch = (e: React.ChangeEvent<HTMLSelectElement>) => {
     console.log(e.target.value);
     setBranchId(e.target.value);
-    
   };
   const handlerOnSelectedJobPosition = (e: React.ChangeEvent<HTMLSelectElement>) => {
     console.log(e.target.value);
@@ -37,9 +36,17 @@ const CreateJobProfile: FC = () => {
         <input type="text" name="title" id="title" placeholder="Título del perfil de trabajo" />
         {branches && (
           <>
-            <SelectJobProfile branches={branches} jobsPositions={[]} onChangeSelectJobProfile={handlerOnChangeSelectedBranch} />
-            {branchId && <SelectJobProfile jobsPositions={jobsPositions} onChangeSelectJobProfile={handlerOnSelectedJobPosition} />
-            }
+            <SelectJobProfile
+              branches={branches}
+              jobsPositions={[]}
+              onChangeSelectJobProfile={handlerOnChangeSelectedBranch}
+            />
+            {branchId && (
+              <SelectJobProfile
+                jobsPositions={jobsPositions}
+                onChangeSelectJobProfile={handlerOnSelectedJobPosition}
+              />
+            )}
           </>
         )}
 

@@ -10,8 +10,6 @@ import { saveJobProfile } from "@/services/jobsProfile.service";
 // import { saveJobProfile } from "@/services/jobsProfile.service";
 
 export const add = async ({ request }: ActionFunctionArgs) => {
-
-
   const formData = await request.formData();
   const title = formData.get("title") as string;
   const idBranch = formData.get("branch") as string;
@@ -24,21 +22,21 @@ export const add = async ({ request }: ActionFunctionArgs) => {
     return;
   }
 
-  const branch = await getBranchById(idBranch) as Branch;
-  const jobPositions = await getJobById(idJobPosition, idBranch) as JobPosition;
+  const branch = (await getBranchById(idBranch)) as Branch;
+  const jobPositions = (await getJobById(idJobPosition, idBranch)) as JobPosition;
 
   const newJobProfile: JobProfile = {
     title,
     branch: {
       id: branch.id,
       name: branch.name,
-      description: branch.description
+      description: branch.description,
     },
     jobPosition: {
       id: jobPositions.id,
       name: jobPositions.name,
-      description: jobPositions.description
-    }
+      description: jobPositions.description,
+    },
   };
 
   const jobProfile = (await saveJobProfile(newJobProfile)) as JobProfile;
@@ -46,7 +44,7 @@ export const add = async ({ request }: ActionFunctionArgs) => {
   return {
     success: true,
     message: "Perfil de trabajo guardado correctamente",
-    jobProfile
+    jobProfile,
   };
 };
 

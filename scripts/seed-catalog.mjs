@@ -134,8 +134,7 @@ async function main() {
       continue;
     }
 
-    const explicitBranchId =
-      typeof jobDoc.branchId === "string" ? jobDoc.branchId : null;
+    const explicitBranchId = typeof jobDoc.branchId === "string" ? jobDoc.branchId : null;
     const inferredBranchId = extractBranchIdFromJobId(jobId);
     const branchId = explicitBranchId ?? inferredBranchId;
 
@@ -146,13 +145,13 @@ async function main() {
 
   if (relationErrors.length > 0) {
     throw new Error(
-      `Invalid branch relation for ${relationErrors.length} jobs: ${relationErrors.join(", ")}`,
+      `Invalid branch relation for ${relationErrors.length} jobs: ${relationErrors.join(", ")}`
     );
   }
 
   if (isDryRun) {
     console.log(
-      `[dry-run] Ready to seed ${branchEntries.length} branches and ${jobEntries.length} jobs.`,
+      `[dry-run] Ready to seed ${branchEntries.length} branches and ${jobEntries.length} jobs.`
     );
     return;
   }
@@ -162,8 +161,7 @@ async function main() {
   }
 
   for (const [jobId, jobDoc] of jobEntries) {
-    const explicitBranchId =
-      typeof jobDoc.branchId === "string" ? jobDoc.branchId : null;
+    const explicitBranchId = typeof jobDoc.branchId === "string" ? jobDoc.branchId : null;
     const inferredBranchId = extractBranchIdFromJobId(jobId);
     const branchId = explicitBranchId ?? inferredBranchId;
 
@@ -172,7 +170,7 @@ async function main() {
   }
 
   console.log(
-    `Seed completed: ${branchEntries.length} branches and ${jobEntries.length} jobs written.`,
+    `Seed completed: ${branchEntries.length} branches and ${jobEntries.length} jobs written.`
   );
 }
 

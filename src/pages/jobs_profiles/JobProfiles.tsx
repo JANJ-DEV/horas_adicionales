@@ -34,14 +34,12 @@ const JobProfiles = () => {
           <div key={jobProfile.id} className="p-4 border rounded-sm">
             <h3 className="text-lg font-semibold">{jobProfile.title}</h3>
             <strong>{jobProfile.branch.name}</strong>
-            <p className="font-medium"> 
-              {jobProfile.branch.description}
-              </p>
+            <p className="font-medium">{jobProfile.branch.description}</p>
             <strong>{jobProfile.jobPosition.name}</strong>
             <p className="font-medium">{jobProfile.jobPosition.description}</p>
-          </div>  
+          </div>
         );
-      })}    
+      })}
       <ToastContainer containerId="profile" position="top-right" />
     </section>
   );
