@@ -33,7 +33,7 @@ const CreateJobProfile: FC = () => {
       <formAction.Form action="/job-profiles/add" method="post" className="flex flex-col gap-4">
         <section>
           <label htmlFor="title">Título del perfil de trabajo:</label>
-          <input type="text" name="title" id="title" placeholder="ej. Transportes SL" />
+          <input type="text" name="title" id="title" placeholder="ej. Transportes SL" className="flex flex-col" />
         </section>
         {branches && (
           <>
