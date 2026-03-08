@@ -53,7 +53,7 @@ const JobProfiles = () => {
   }, [currentUser?.uid]);
 
   return (
-    <section className="flex flex-col gap-4">
+    <section className="flex flex-col gap-4 bg-slate-800/50">
       {hasCurrentUser && isLoading && <p>Cargando...</p>}
       {hasCurrentUser && isError && errorMessage && (
         <aside className="flex flex-col gap-4 bg-black/50 p-4 rounded">
@@ -68,6 +68,11 @@ const JobProfiles = () => {
             <p className="font-medium">{jobProfile.branch.description}</p>
             <strong>{jobProfile.jobPosition.name}</strong>
             <p className="font-medium">{jobProfile.jobPosition.description}</p>
+            {jobProfile.estimatedHourlyRate !== undefined && (
+              <p className="font-medium">
+                Tarifa horaria estimada: {jobProfile.estimatedHourlyRate}€/hora
+              </p>
+            )}
           </div>
         );
       })}

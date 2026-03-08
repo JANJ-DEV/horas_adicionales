@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import { subscribeToRecords, deleteRecord, type RecordService } from "@/services/records.service";
 import Btn from "@/components/Btn";
+import { useNavigate } from "react-router";
+import RecordCalculationSummary from "@/components/RecordCalculationSummary";
 
 const Records = () => {
   const { currentUser } = useAuth();
@@ -12,10 +14,14 @@ const Records = () => {
   const [records, setRecords] = useState<RecordService[]>([]);
   const customErrorMessage = "No tienes registros";
   const hasCurrentUser = Boolean(currentUser?.uid);
+  const navigate = useNavigate();
 
   const handleDeleteRecord = (recordId: string) => {
     alert("Funcionalidad en desarrollo");
     deleteRecord(recordId);
+  };
+  const handlerViewDetails = (recordId: string) => {
+    navigate(`/records/details/${recordId}`);
   };
 
   useEffect(() => {
@@ -57,7 +63,7 @@ const Records = () => {
   }, [currentUser?.uid]);
 
   return (
-    <section className="flex flex-col gap-4">
+    <section className="flex flex-col gap-4 bg-slate-800/50">
       {hasCurrentUser && isLoading && (
         <aside className="flex flex-col gap-4 bg-black/50 p-4 rounded">
           <p className="text-yellow-300">Cargando registros...</p>
@@ -72,7 +78,7 @@ const Records = () => {
         {(hasCurrentUser ? records : []) && (
           <section className="flex flex-col gap-4">
             {(hasCurrentUser ? records : []).map((record) => (
-              <div key={record.id} className="flex flex-col gap-2 border p-4 rounded">
+              <div key={record.id} className="flex flex-col gap-5 border p-4 rounded">
                 <div className="flex justify-between">
                   <p>
                     <strong>Empresa:</strong> {record.titleJobProfile}
@@ -89,11 +95,15 @@ const Records = () => {
                     <strong>Salida:</strong> {record.workEndTime}
                   </p>
                 </div>
-                {record.id && <p className="text-sm text-gray-500">ID: {record.id}</p>}
-                <footer className="flex gap-2 justify-end">
+                <RecordCalculationSummary
+                  startTime={record.workStartTime as string | undefined}
+                  endTime={record.workEndTime as string | undefined}
+                  hourlyRate={record.estimatedHourlyRate as number}
+                />
+                <footer className="flex gap-4 justify-end items-center">
                   <Btn
-                    label="Ver detalles"
-                    onClick={() => alert("Funcionalidad en desarrollo")}
+                    label="Detalles"
+                    onClick={() => handlerViewDetails(record.id as string)}
                     variant="info"
                   />
                   <Btn

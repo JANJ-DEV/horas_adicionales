@@ -14,8 +14,8 @@ export const add = async ({ request }: ActionFunctionArgs) => {
   const title = formData.get("title") as string;
   const idBranch = formData.get("branch") as string;
   const idJobPosition = formData.get("jobPosition") as string;
-
-  // console.table({ title, idBranch, idJobPosition });
+  const estimatedHourlyRate = formData.get("estimatedHourlyRate") as string;
+  // console.table({ title, idBranch, idJobPosition, estimatedHourlyRate });
 
   if (!title || !idBranch || !idJobPosition) {
     toast.error("Todos los campos son requeridos", { containerId: "jobs-profiles" });
@@ -37,6 +37,7 @@ export const add = async ({ request }: ActionFunctionArgs) => {
       name: jobPositions.name,
       description: jobPositions.description,
     },
+    estimatedHourlyRate: parseFloat(estimatedHourlyRate),
   };
 
   const jobProfile = (await saveJobProfile(newJobProfile)) as JobProfile;

@@ -10,6 +10,10 @@
   --color-text: #a5a5a5;
   --color-dark: #1a202c;
   --color-light: #f7fafc;
+  --color-info: #63b3ed;
+  --color-success: #48bb78;
+  --color-warning: #ed8936;
+  --color-error: #e53e3e;
   --color-overlay-90: rgba(33, 33, 33, 0.9);
   --color-overlay-80: rgba(33, 33, 33, 0.8);
   --color-overlay-50: rgba(33, 33, 33, 0.5);

@@ -9,6 +9,7 @@ import {
   updateDoc,
   onSnapshot,
   type FirestoreError,
+  Timestamp,
 } from "firebase/firestore";
 import { firestore } from "@/apis/firebase";
 import { authFirebase } from "@/apis/firebase";
@@ -20,8 +21,9 @@ export interface RecordService {
   dateTimeRecord: string | Date;
   workStartTime?: string;
   workEndTime?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  estimatedHourlyRate?: number;
+  createdAt?: Timestamp | Date;
+  updatedAt?: Timestamp | Date;
 }
 
 const NAME_COLLECTION = "records";
@@ -134,12 +136,17 @@ export const deleteRecord = async (recordId: string) => {
   }
 };
 
-export const getRecordById = async (userId: string, recordId: string) => {
+export const getRecordById = async (recordId: string): Promise<RecordService | null> => {
   try {
+    const userId = authFirebase.currentUser?.uid;
+    if (!userId) {
+      console.error("No hay un usuario autenticado");
+      return null;
+    }
     const docRef = doc(firestore, "users", userId, NAME_COLLECTION, recordId);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      return { id: docSnap.id, ...docSnap.data() };
+      return { id: docSnap.id, ...docSnap.data() } as RecordService;
     } else {
       toast.error("No se encontró el documento", { containerId: "records" });
       return null;
