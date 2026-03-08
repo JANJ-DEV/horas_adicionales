@@ -2,7 +2,7 @@
 
 @theme {
   /* Usamos el prefijo --background-image- para que Tailwind cree la clase */
-  --background-image-hero: url("./src/assets/img/image.png");
+  --background-image-hero: url("../img/image.png");
   --color-primary: #3490dc;
   --color-secondary: #ffed4a;
   --color-accent: #e3342f;

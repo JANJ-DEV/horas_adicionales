@@ -7,6 +7,8 @@ import {
   getDoc,
   deleteDoc,
   updateDoc,
+  onSnapshot,
+  type FirestoreError,
 } from "firebase/firestore";
 import { firestore } from "@/apis/firebase";
 import { authFirebase } from "@/apis/firebase";
@@ -23,6 +25,38 @@ export interface RecordService {
 }
 
 const NAME_COLLECTION = "records";
+
+export const subscribeToRecords = (
+  onUpdate: (records: RecordService[]) => void,
+  onError: (error: FirestoreError) => void,
+  onComplete: () => void
+) => {
+  const userId = authFirebase.currentUser?.uid;
+  if (!userId) {
+    console.error("No hay un usuario autenticado");
+    return;
+  }
+
+  const collectionRef = collection(firestore, "users", userId, NAME_COLLECTION);
+
+  const unsubscribe = onSnapshot(
+    collectionRef,
+    (snapshot) => {
+      const records = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      onUpdate(records as RecordService[]);
+    },
+    (error) => {
+      console.error("Error al suscribirse a registros:", error);
+      onError(error);
+    },
+    () => {
+      console.log("Suscripción a registros completada");
+      onComplete();
+    }
+  );
+
+  return unsubscribe;
+};
 
 export const saveRecord = async (record: RecordService) => {
   const userId = authFirebase.currentUser?.uid;
@@ -84,8 +118,14 @@ export const updateRecord = async (
   }
 };
 
-export const deleteRecord = async (userId: string, recordId: string) => {
+export const deleteRecord = async (recordId: string) => {
   try {
+    const userId = authFirebase.currentUser?.uid;
+    if (!userId) {
+      console.error("No hay un usuario autenticado");
+      return;
+    }
+    toast.info("Eliminando registro... " + recordId, { containerId: "records" });
     const docRef = doc(firestore, "users", userId, NAME_COLLECTION, recordId);
     await deleteDoc(docRef);
     toast.success("Registro eliminado con éxito", { containerId: "records" });
@@ -96,7 +136,7 @@ export const deleteRecord = async (userId: string, recordId: string) => {
 
 export const getRecordById = async (userId: string, recordId: string) => {
   try {
-    const docRef = doc(firestore, "users", userId, "records", recordId);
+    const docRef = doc(firestore, "users", userId, NAME_COLLECTION, recordId);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       return { id: docSnap.id, ...docSnap.data() };

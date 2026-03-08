@@ -1,70 +1,77 @@
 import useAuth from "@/context/hooks/auth.hook";
 import { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
-import { getRecords, type RecordService } from "@/services/records.service";
+import { subscribeToRecords, deleteRecord, type RecordService } from "@/services/records.service";
+import Btn from "@/components/Btn";
 
 const Records = () => {
   const { currentUser } = useAuth();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [records, setRecords] = useState<RecordService[]>([]);
-  const visibleRecords = currentUser ? records : [];
+  const customErrorMessage = "No tienes registros";
+  const hasCurrentUser = Boolean(currentUser?.uid);
+
+  const handleDeleteRecord = (recordId: string) => {
+    alert("Funcionalidad en desarrollo");
+    deleteRecord(recordId);
+  };
 
   useEffect(() => {
-    if (!currentUser) {
+    if (!currentUser?.uid) {
       return;
     }
 
-    let isMounted = true;
-
-    const fetchData = () => {
-      setIsLoading(true);
-      const customErrorMessage = "No tienes registros";
-      getRecords(currentUser.uid)
-        .then((records) => {
-          if (!isMounted) return;
-          if (!records || records.length === 0) {
-            setErrorMessage(customErrorMessage);
-            setIsError(true);
-          } else {
-            setRecords(records as RecordService[]);
-            setIsError(false);
-          }
-        })
-        .catch(() => {
-          if (!isMounted) return;
-          setIsError(true);
+    const unsubscribe = subscribeToRecords(
+      (records) => {
+        if (!records || records.length === 0) {
+          setRecords([]);
           setErrorMessage(customErrorMessage);
-        })
-        .finally(() => {
-          if (isMounted) setIsLoading(false);
-        });
-    };
-
-    fetchData();
+          setIsError(true);
+          setIsLoading(false);
+        } else {
+          setRecords(records as RecordService[]);
+          setIsError(false);
+          setErrorMessage(null);
+          setIsLoading(false);
+        }
+      },
+      (error) => {
+        console.error("Error al suscribirse a los registros:", error);
+        setRecords([]);
+        setIsError(true);
+        setErrorMessage(customErrorMessage);
+        setIsLoading(false);
+      },
+      () => {
+        setIsLoading(false);
+      }
+    );
 
     return () => {
-      isMounted = false;
+      if (typeof unsubscribe === "function") {
+        unsubscribe();
+      }
     };
-  }, [currentUser]);
+  }, [currentUser?.uid]);
 
   return (
     <section className="flex flex-col gap-4">
-      {isLoading && (
+      {hasCurrentUser && isLoading && (
         <aside className="flex flex-col gap-4 bg-black/50 p-4 rounded">
           <p className="text-yellow-300">Cargando registros...</p>
         </aside>
       )}
-      {isError && errorMessage && (
+      {hasCurrentUser && isError && errorMessage && (
         <aside className="flex flex-col gap-4 bg-black/50 p-4 rounded">
           <p className="text-yellow-300">{errorMessage}</p>
         </aside>
       )}
       <article>
-        {visibleRecords && (
+        {(hasCurrentUser ? records : []) && (
           <section className="flex flex-col gap-4">
-            {visibleRecords.map((record) => (
+            {(hasCurrentUser ? records : []).map((record) => (
               <div key={record.id} className="flex flex-col gap-2 border p-4 rounded">
                 <div className="flex justify-between">
                   <p>
@@ -82,6 +89,19 @@ const Records = () => {
                     <strong>Salida:</strong> {record.workEndTime}
                   </p>
                 </div>
+                {record.id && <p className="text-sm text-gray-500">ID: {record.id}</p>}
+                <footer className="flex gap-2 justify-end">
+                  <Btn
+                    label="Ver detalles"
+                    onClick={() => alert("Funcionalidad en desarrollo")}
+                    variant="info"
+                  />
+                  <Btn
+                    label="Eliminar"
+                    onClick={() => handleDeleteRecord(record.id as string)}
+                    variant="danger"
+                  />
+                </footer>
               </div>
             ))}
           </section>

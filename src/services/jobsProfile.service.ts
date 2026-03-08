@@ -5,6 +5,7 @@ import {
   serverTimestamp,
   onSnapshot,
   type Unsubscribe,
+  type FirestoreError,
   getDoc,
   deleteDoc,
 } from "firebase/firestore";
@@ -14,6 +15,40 @@ import { toast } from "react-toastify";
 import type { JobProfile } from "@/types";
 
 const nameCollection = "jobsProfiles";
+
+export const subscribeToJobProfiles = (
+  callback: (profiles: JobProfile[]) => void,
+  onError: (error: FirestoreError) => void,
+  onComplete: () => void
+): Unsubscribe => {
+  const userId = authFirebase.currentUser?.uid;
+  const refUser = collection(firestore, `users/${userId}/${nameCollection}`);
+  const unsubscribe = onSnapshot(
+    refUser,
+    (snapshot) => {
+      // El arreglo se crea NUEVO en cada actualización para no duplicar datos
+      const profiles: JobProfile[] = snapshot.docs.map(
+        (doc) =>
+          ({
+            id: doc.id,
+            ...doc.data(),
+          }) as JobProfile
+      );
+      // Le pasamos los datos a la función callback
+      callback(profiles);
+    },
+    (error) => {
+      console.error("Error al suscribirse a perfiles de trabajo:", error);
+      onError(error);
+    },
+    () => {
+      console.log("Suscripción a perfiles de trabajo completada");
+      onComplete();
+    }
+  );
+
+  return unsubscribe;
+};
 
 export const saveJobProfile = async (payload: JobProfile) => {
   const userId = authFirebase.currentUser?.uid;
@@ -42,28 +77,6 @@ export const saveJobProfile = async (payload: JobProfile) => {
   }
 };
 
-export const subscribeToJobProfiles = (
-  userId: string,
-  callback: (profiles: JobProfile[]) => void
-): Unsubscribe => {
-  const refUser = collection(firestore, `users/${userId}/${nameCollection}`);
-
-  // Retornamos la función unsubscribe para poder detener la escucha cuando el componente se desmonte
-  const unsubscribe = onSnapshot(refUser, (snapshot) => {
-    // El arreglo se crea NUEVO en cada actualización para no duplicar datos
-    const profiles: JobProfile[] = snapshot.docs.map(
-      (doc) =>
-        ({
-          id: doc.id,
-          ...doc.data(),
-        }) as JobProfile
-    );
-    // Le pasamos los datos a la función callback
-    callback(profiles);
-  });
-
-  return unsubscribe;
-};
 export const getJobProfileById = async (id: string): Promise<JobProfile | null> => {
   const userId = authFirebase.currentUser?.uid;
   if (!userId) {

@@ -7,6 +7,7 @@ import { useFetcher } from "react-router";
 const AddNewRecord: FC = () => {
   const { currentUser } = useAuth();
   const formAction = useFetcher();
+  const hasCurrentUser = Boolean(currentUser?.uid);
 
   const [jobProfiles, setJobProfiles] = useState<JobProfile[]>([]);
   const [loading, setLoading] = useState(true);
@@ -21,19 +22,32 @@ const AddNewRecord: FC = () => {
 
   // Efecto para la suscripción a los perfiles
   useEffect(() => {
-    if (!currentUser) return;
+    if (!currentUser?.uid) {
+      return;
+    }
 
-    // Asumimos que `subscribeToJobProfiles` retorna la función para desuscribirse
-    const unsubscribe = subscribeToJobProfiles(currentUser.uid, (profiles) => {
-      setJobProfiles(profiles);
-      setLoading(false);
-    });
+    const unsubscribe = subscribeToJobProfiles(
+      (profiles) => {
+        setJobProfiles(profiles);
+        setLoading(false);
+      },
+      (error) => {
+        console.error("Error al suscribirse a perfiles de trabajo:", error);
+        setJobProfiles([]);
+        setLoading(false);
+      },
+      () => {
+        setLoading(false);
+      }
+    );
 
     // Cleanup correcto: se ejecuta cuando el componente se desmonta
     return () => {
-      unsubscribe();
+      if (typeof unsubscribe === "function") {
+        unsubscribe();
+      }
     };
-  }, [currentUser]);
+  }, [currentUser?.uid]);
 
   const formResetKey = formAction.data ? JSON.stringify(formAction.data) : "initial";
 
@@ -41,7 +55,7 @@ const AddNewRecord: FC = () => {
     <section>
       {/* La key fuerza un remount tras éxito y limpia el formulario + estado local */}
       <formAction.Form key={formResetKey} className="flex flex-col gap-4" method="post">
-        {loading ? (
+        {hasCurrentUser && loading ? (
           <p>Cargando...</p>
         ) : (
           <div className="flex flex-col text-xl gap-4">
@@ -54,7 +68,7 @@ const AddNewRecord: FC = () => {
               required // Recomendable hacer requerido el select
             >
               <option value="">Selecciona un perfil de trabajo</option>
-              {jobProfiles.map((profile) => (
+              {(hasCurrentUser ? jobProfiles : []).map((profile) => (
                 <option key={profile.id} value={profile.id}>
                   {profile.title}
                 </option>
