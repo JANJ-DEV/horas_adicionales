@@ -88,14 +88,16 @@ const CurrentUser: FC = () => {
       </section>
     </article>
   ) : (
-    <FaRegUserCircle
-      size={40}
-      className="text-blue-500"
-      onClick={(e) => {
-        e.stopPropagation();
-        signInWithGoogle();
-      }}
-    />
+    <>
+      <FaRegUserCircle
+        size={40}
+        className="text-blue-500"
+        onClick={(e) => {
+          e.stopPropagation();
+          signInWithGoogle();
+        }}
+      />
+    </>
   );
 };
 

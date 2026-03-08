@@ -1,8 +1,12 @@
-import { useState, type FC } from "react";
+import { useState, type FC, type ReactNode } from "react";
 
 interface BtnProps {
+  children?: ReactNode;
   label: string;
-  onClick: () => void;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  type?: "button" | "submit" | "reset";
+  formState?: boolean;
+  title?: string;
   variant?:
     | "primary"
     | "secondary"
@@ -18,7 +22,15 @@ interface BtnProps {
     | "loading";
 }
 
-const Btn: FC<BtnProps> = ({ label, onClick, variant = "primary" }) => {
+const Btn: FC<BtnProps> = ({
+  children,
+  label,
+  onClick,
+  variant = "primary",
+  formState,
+  type = "button",
+  title = "",
+}) => {
   const [variantStyles] = useState({
     primary: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded",
     secondary: "bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded",
@@ -37,10 +49,13 @@ const Btn: FC<BtnProps> = ({ label, onClick, variant = "primary" }) => {
 
   return (
     <button
+      type={type}
       className={`${variantStyles[variant]} transition-colors duration-300`}
       onClick={onClick}
+      disabled={formState}
+      title={title}
     >
-      {label}
+      {children ? children : label}
     </button>
   );
 };

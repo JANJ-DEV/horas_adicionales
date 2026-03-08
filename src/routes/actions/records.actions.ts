@@ -9,14 +9,13 @@ export async function add({ request }: ActionFunctionArgs) {
   const dateTimeRecord = formData.get("dateTimeRecord") as string;
   const workStartTime = formData.get("workStartTime") as string;
   const workEndTime = formData.get("workEndTime") as string;
-
+  const estimatedHourlyRate = formData.get("estimatedHourlyRate") as string;
   // Aquí puedes hacer validaciones
   if (!titleJobProfile || !dateTimeRecord || !workStartTime || !workEndTime) {
     return {
       error: "Todos los campos son requeridos",
     };
   }
-
   // Aquí harías la llamada a tu API o base de datos
   const userId = authFirebase.currentUser?.uid;
   if (!userId) {
@@ -29,6 +28,7 @@ export async function add({ request }: ActionFunctionArgs) {
     dateTimeRecord,
     workStartTime,
     workEndTime,
+    estimatedHourlyRate: Number(estimatedHourlyRate),
   };
 
   await saveRecord(record);

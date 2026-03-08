@@ -29,13 +29,6 @@ const MainMenu = ({ variant }: MainMenuProps) => {
     <nav
       className={`flex ${variant === "mobile" ? "flex-col gap-4 px-4 text-lg" : "flex-row gap-4"} `}
     >
-      <NavLink
-        onClick={closeMenuBars}
-        to="/"
-        className={({ isActive }) => `font-bold ${isActive ? "text-green-500" : "text-gray-500"}`}
-      >
-        Inicio
-      </NavLink>
       {isAuthenticated && (
         <>
           <NavLink

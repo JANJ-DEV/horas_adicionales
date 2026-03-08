@@ -1,53 +1,17 @@
-import useAuth from "@/context/hooks/auth.hook";
-import { subscribeToJobProfiles } from "@/services/jobsProfile.service";
-import type { JobProfile } from "@/types";
-import { useEffect, useState, type FC } from "react";
-import { useFetcher } from "react-router";
+import Btn from "@/components/Btn";
+import { useAddRecord } from "./hooks/useAddRecord";
+import { type FC } from "react";
 
 const AddNewRecord: FC = () => {
-  const { currentUser } = useAuth();
-  const formAction = useFetcher();
-  const hasCurrentUser = Boolean(currentUser?.uid);
-
-  const [jobProfiles, setJobProfiles] = useState<JobProfile[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedTitle, setSelectedTitle] = useState<string>("");
-
-  // Actualizamos el estado en lugar de manipular el DOM directamente
-  const handleProfileChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedProfileId = event.target.value;
-    const profile = jobProfiles.find((p) => p.id === selectedProfileId);
-    setSelectedTitle(profile ? profile.title : "");
-  };
-
-  // Efecto para la suscripción a los perfiles
-  useEffect(() => {
-    if (!currentUser?.uid) {
-      return;
-    }
-
-    const unsubscribe = subscribeToJobProfiles(
-      (profiles) => {
-        setJobProfiles(profiles);
-        setLoading(false);
-      },
-      (error) => {
-        console.error("Error al suscribirse a perfiles de trabajo:", error);
-        setJobProfiles([]);
-        setLoading(false);
-      },
-      () => {
-        setLoading(false);
-      }
-    );
-
-    // Cleanup correcto: se ejecuta cuando el componente se desmonta
-    return () => {
-      if (typeof unsubscribe === "function") {
-        unsubscribe();
-      }
-    };
-  }, [currentUser?.uid]);
+  const {
+    jobProfiles,
+    loading,
+    selectedTitle,
+    handleProfileChange,
+    hasCurrentUser,
+    formAction,
+    estimatedHourlyRate,
+  } = useAddRecord();
 
   const formResetKey = formAction.data ? JSON.stringify(formAction.data) : "initial";
 
@@ -76,16 +40,16 @@ const AddNewRecord: FC = () => {
             </select>
           </div>
         )}
-
-        {/* Input oculto ahora controlado por React */}
-        <input
-          id="titleJobProfile"
-          title="Nombre de la empresa"
-          type="hidden"
-          name="titleJobProfile"
-          value={selectedTitle}
-        />
-
+        <>
+          {/* Input oculto ahora controlado por React */}
+          <input id="titleJobProfile" type="hidden" name="titleJobProfile" value={selectedTitle} />
+          <input
+            id="estimatedHourlyRate"
+            type="hidden"
+            name="estimatedHourlyRate"
+            value={estimatedHourlyRate}
+          />
+        </>
         <div className="flex flex-col text-xl gap-4">
           <label htmlFor="dateTimeRecord">Fecha</label>
           <input
@@ -121,14 +85,19 @@ const AddNewRecord: FC = () => {
             required
           />
         </div>
+        <Btn
+          type="submit"
+          label={formAction.state === "submitting" ? "Guardando..." : "Guardar"}
+          formState={formAction.state === "submitting"}
+        />
 
-        <button
+        {/* <button
           type="submit"
           disabled={formAction.state === "submitting"}
           className="bg-blue-500 text-white p-4 rounded-xl disabled:bg-gray-400"
         >
           {formAction.state === "submitting" ? "Guardando..." : "Guardar"}
-        </button>
+        </button> */}
       </formAction.Form>
 
       {/* Mensaje de éxito */}

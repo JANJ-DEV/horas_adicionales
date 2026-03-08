@@ -62,12 +62,20 @@ const JobProfiles = () => {
       )}
       {(hasCurrentUser ? jobs : []).map((jobProfile) => {
         return (
-          <div key={jobProfile.id} className="p-4 border rounded-sm">
+          <div
+            key={jobProfile.id}
+            className="bg-slate-800/50 p-4 border rounded-sm overflow-hidden"
+          >
             <h3 className="text-lg font-semibold">{jobProfile.title}</h3>
             <strong>{jobProfile.branch.name}</strong>
             <p className="font-medium">{jobProfile.branch.description}</p>
             <strong>{jobProfile.jobPosition.name}</strong>
             <p className="font-medium">{jobProfile.jobPosition.description}</p>
+            {jobProfile.estimatedHourlyRate !== undefined && (
+              <p className="font-medium">
+                Tarifa horaria estimada: {jobProfile.estimatedHourlyRate}€/hora
+              </p>
+            )}
           </div>
         );
       })}

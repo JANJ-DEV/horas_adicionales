@@ -55,7 +55,18 @@ const CreateJobProfile: FC = () => {
               {branchId && <SelectJobProfile jobsPositions={jobsPositions} />}
             </>
           )}
-
+          <section className="flex flex-col gap-2">
+            <label htmlFor="estimatedHourlyRate" className="text-2xl">
+              Tarifa horaria estimada:
+            </label>
+            <input
+              type="text"
+              name="estimatedHourlyRate"
+              id="estimatedHourlyRate"
+              placeholder="ej. 20€/hora"
+              className="border py-2 px-4 rounded"
+            />
+          </section>
           <button
             type="submit"
             disabled={formAction.state === "submitting"}
