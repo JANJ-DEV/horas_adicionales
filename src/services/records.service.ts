@@ -83,6 +83,7 @@ export const saveRecord = async (record: RecordService) => {
       workEndTime: record.workEndTime,
       createdAt: serverTimestamp(), // Fecha de creación real
       updatedAt: serverTimestamp(), // Fecha de última actualización
+      estimatedHourlyRate: record.estimatedHourlyRate,
     });
 
     toast.success("Registro guardado con éxito", { containerId: "records" });

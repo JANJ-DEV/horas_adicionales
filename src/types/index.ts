@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
  * Props base para componentes que reciben contenido hijo.
  */
 export type Children = {
-  children: ReactNode;
+  children?: ReactNode;
 };
 /**
  * Puesto de trabajo asociado a una rama/sector en datos operativos.

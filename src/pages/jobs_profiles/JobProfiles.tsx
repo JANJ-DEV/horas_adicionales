@@ -53,7 +53,7 @@ const JobProfiles = () => {
   }, [currentUser?.uid]);
 
   return (
-    <section className="flex flex-col gap-4 bg-slate-800/50">
+    <section className="flex flex-col gap-4">
       {hasCurrentUser && isLoading && <p>Cargando...</p>}
       {hasCurrentUser && isError && errorMessage && (
         <aside className="flex flex-col gap-4 bg-black/50 p-4 rounded">
@@ -62,7 +62,10 @@ const JobProfiles = () => {
       )}
       {(hasCurrentUser ? jobs : []).map((jobProfile) => {
         return (
-          <div key={jobProfile.id} className="p-4 border rounded-sm">
+          <div
+            key={jobProfile.id}
+            className="bg-slate-800/50 p-4 border rounded-sm overflow-hidden"
+          >
             <h3 className="text-lg font-semibold">{jobProfile.title}</h3>
             <strong>{jobProfile.branch.name}</strong>
             <p className="font-medium">{jobProfile.branch.description}</p>
