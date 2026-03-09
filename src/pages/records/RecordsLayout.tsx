@@ -16,12 +16,12 @@ const RecordsLayout = () => {
     <UtilitiesProvider>
       <MainHeader />
       <MainContent>
-        <nav className="flex gap-4 justify-between lg:justify-start  p-4 rounded">
+        <nav className="flex min-w-0  gap-3 rounded p-4 flex-row items-center justify-between lg:justify-start">
           <GoBack />
           <NavLink
             to="/records/add"
             className={({ isActive }) => {
-              return `py-2 px-4 border rounded-sm ${isActive ? "text-green-500" : "text-white"}`;
+              return `self-start py-2 px-4 border rounded-sm ${isActive ? "text-green-500" : "text-white"}`;
             }}
           >
             Registrar Hora

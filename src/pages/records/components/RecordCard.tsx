@@ -57,18 +57,23 @@ const RecordCard: FC<RecordCardProps> = ({
     : [];
 
   return (
-    <div key={record.id} className="flex flex-col gap-4 border p-4 rounded bg-slate-800/50">
+    <article
+      key={record.id}
+      className="group relative flex flex-col gap-4 overflow-hidden rounded-xl border border-cyan-400/25 bg-gradient-to-br from-slate-900/90 via-slate-800/80 to-slate-900/90 p-5 shadow-lg shadow-black/30 transition-all duration-300 hover:-translate-y-1 hover:border-cyan-300/60 hover:shadow-cyan-500/20"
+    >
+      <div className="pointer-events-none absolute -right-12 -top-12 h-28 w-28 rounded-full bg-cyan-400/15 blur-2xl transition-opacity duration-300 group-hover:opacity-100" />
+
       <RecordedTimeInfo record={record} />
 
-      <section className="rounded bg-slate-900/50 p-3 flex flex-col gap-2 text-sm">
-        <p className="truncate" title={branchName || "No especificada"}>
+      <section className="rounded-lg bg-black/20 p-3 ring-1 ring-white/10 flex flex-col gap-2 text-sm text-slate-100">
+        <p title={branchName || "No especificada"}>
           <strong>Rama:</strong> {branchName || "No especificada"}
         </p>
-        <p className="truncate" title={jobPositionName || "No especificado"}>
+        <p title={jobPositionName || "No especificado"}>
           <strong>Puesto:</strong> {jobPositionName || "No especificado"}
         </p>
         <div className="flex items-center justify-between gap-2">
-          <p className="truncate">
+          <p>
             <strong>Utilidades:</strong> {utilityEntries.length}
           </p>
           <InfoTooltip
@@ -116,7 +121,7 @@ const RecordCard: FC<RecordCardProps> = ({
           variant="danger"
         />
       </footer>
-    </div>
+    </article>
   );
 };
 
