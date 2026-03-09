@@ -27,7 +27,7 @@ const SelectJobProfile: FC<SelectJobProfileProps> = ({
           onChange={onChangeSelectJobProfile}
           className="border py-2 rounded"
         >
-          <option value="" disabled selected>
+          <option value="" disabled>
             Ramas
           </option>
           {branches.map((branch) => (
@@ -51,7 +51,7 @@ const SelectJobProfile: FC<SelectJobProfileProps> = ({
         aria-label="Select job position"
         className="border py-2 rounded"
       >
-        <option value="" disabled selected className="text-xl">
+        <option value="" disabled className="text-xl">
           Puesto de trabajo
         </option>
         {jobsPositions?.map((job) => (

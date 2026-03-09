@@ -267,7 +267,10 @@ const AddNewRecord: FC = () => {
           formState={formAction.state === "submitting"}
         />
       </formAction.Form>
-
+      {/* Mensaje de error */}
+      {formAction.data && formAction.data.error && (
+        <p className="text-red-500">{formAction.data.error}</p>
+      )}
       {/* Mensaje de éxito */}
       {formAction.data && formAction.state === "idle" && (
         <p className="text-green-500">

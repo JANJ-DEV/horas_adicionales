@@ -5,6 +5,7 @@ import { ToastContainer } from "react-toastify";
 import SelectJobProfile from "./components/SelectJobProfile";
 import { getBranchById } from "@/services/branches.services";
 import type { JobPosition } from "@/types";
+import Btn from "@/components/Btn";
 // Interface para los puestos de trabajo individuales
 
 const CreateJobProfile: FC = () => {
@@ -66,20 +67,20 @@ const CreateJobProfile: FC = () => {
             className="border py-2 px-4 rounded"
           />
         </section>
-        <button
+
+        <Btn
           type="submit"
-          disabled={formAction.state === "submitting"}
-          className="text-xl border border-green-300 font-bold py-2 px-4 rounded"
-        >
-          {formAction.state === "submitting" ? "Guardando..." : "Guardar"}
-        </button>
-        {/*         
+          label={formAction.state === "submitting" ? "Guardando..." : "Guardar"}
+          formState={formAction.state === "submitting"}
+        />
+        {/* Mensaje de error */}
         {formAction.data && formAction.data.error && (
           <p className="text-red-500">{formAction.data.error}</p>
         )}
+        {/* Mensaje de éxito */}
         {formAction.data && formAction.data.success && (
           <p className="text-green-500">{formAction.data.message}</p>
-        )} */}
+        )}
       </formAction.Form>
 
       <ToastContainer
