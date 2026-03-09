@@ -16,7 +16,7 @@ const RecordsLayout = () => {
     <UtilitiesProvider>
       <MainHeader />
       <MainContent>
-        <nav className="flex min-w-0  gap-3 rounded p-4 flex-row items-center justify-between lg:justify-start">
+        <nav className="flex justify-between gap-4 mt-4">
           <GoBack />
           <NavLink
             to="/records/add"

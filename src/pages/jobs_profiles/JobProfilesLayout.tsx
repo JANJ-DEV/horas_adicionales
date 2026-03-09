@@ -17,7 +17,7 @@ const JobProfilesLayout = () => {
     <BranchesProvider>
       <MainHeader />
       <MainContent>
-        <nav className="flex gap-4 mt-8">
+        <nav className="flex justify-between gap-4 mt-4">
           <GoBack />
           <NavLink
             to="/jobs-profiles/add"
