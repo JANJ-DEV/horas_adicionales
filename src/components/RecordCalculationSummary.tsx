@@ -21,11 +21,11 @@ const RecordCalculationSummary: FC<RecordCalculationSummaryProps> = ({
 
   return (
     <footer
-      className="flex flex-col gap-4"
+      className="flex flex-col bg-slate-900/50 rounded"
       title="Total de horas trabajadas y salario calculado (horas:minutos / decimal)"
     >
       <div className="flex items-center gap-2">
-        <span className="text-info">Informacion del calculo</span>
+        <span className="text-info px-4 py-2">Informacion del calculo</span>
         {hasWorkedTime && startTime && endTime && (
           <HoursCalculationTooltip
             startTime={startTime}
@@ -36,7 +36,7 @@ const RecordCalculationSummary: FC<RecordCalculationSummaryProps> = ({
       </div>
 
       {hasWorkedTime && workedHours && (
-        <div className="flex flex-col ld:flex-row lg:items-center lg:justify-between gap-2 p-4 bg-slate-900/50 rounded">
+        <div className="flex flex-col ld:flex-row  lg:justify-between gap-2 p-4 ">
           <div className="flex items-center gap-2">
             <header
               className="flex gap-2 items-center"

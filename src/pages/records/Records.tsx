@@ -25,20 +25,20 @@ const Records = () => {
           <p className="text-yellow-300">{errorMessage}</p>
         </aside>
       )}
-      <article>
-        {(hasCurrentUser ? records : []) && (
-          <section className="flex flex-col lg:grid lg:grid-cols-3 gap-4">
-            {(hasCurrentUser ? records : []).map((record) => (
-              <RecordCard
-                key={record.id}
-                record={record}
-                handlerViewDetails={handlerViewDetails}
-                handleDeleteRecord={handleDeleteRecord}
-              />
-            ))}
-          </section>
-        )}
-      </article>
+
+      {(hasCurrentUser ? records : []) && (
+        <section className="flex flex-col ">
+          {(hasCurrentUser ? records : []).map((record) => (
+            <RecordCard
+              key={record.id}
+              record={record}
+              handlerViewDetails={handlerViewDetails}
+              handleDeleteRecord={handleDeleteRecord}
+            />
+          ))}
+        </section>
+      )}
+
       <ToastContainer containerId="records" position="top-center" />
     </section>
   );

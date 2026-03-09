@@ -12,7 +12,7 @@ interface RecordCardProps {
 
 const RecordCard: FC<RecordCardProps> = ({ record, handlerViewDetails, handleDeleteRecord }) => {
   return (
-    <div key={record.id} className="flex flex-col gap-5 border p-4 rounded bg-slate-800/50">
+    <div key={record.id} className="w-full max-w-96 lg:max-w-auto flex flex-col gap-4 border p-4 rounded bg-slate-800/50">
       <RecordedTimeInfo record={record} />
       <RecordCalculationSummary
         startTime={record.workStartTime as string | undefined}
