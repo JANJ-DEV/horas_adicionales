@@ -10,7 +10,7 @@ import {
   type UtilitiesCatalog,
   type UtilityDefinition,
 } from "@/services/utilities.service";
-import { useCallback, useEffect, useMemo, useState, type FC } from "react";
+import { useEffect, useState, type FC } from "react";
 import { UtilitiesCtx } from "../UtilitiesCtx";
 import { toast } from "react-toastify";
 
@@ -44,62 +44,56 @@ const UtilitiesProvider: FC<Children> = ({ children }) => {
     return () => unsubscribe();
   }, []);
 
-  const setSelectedProfileContext = useCallback((branchId: string | null, jobId: string | null) => {
-    setSelectedBranchId(branchId);
-    setSelectedJobId(jobId);
-  }, []);
-
-  const getUtilityByIdFromCatalog = useCallback(
-    (utilityId: string) => getUtilityById(utilityId, catalog),
-    [catalog]
+  const [setSelectedProfileContext] = useState(
+    () => (branchId: string | null, jobId: string | null) => {
+      setSelectedBranchId(branchId);
+      setSelectedJobId(jobId);
+    }
   );
 
-  const getUtilityByNameFromCatalog = useCallback(
-    (utilityName: string) => {
-      const found = getUtilityByNameTool(utilityName, catalog);
-      return found instanceof Promise ? null : found;
-    },
-    [catalog]
-  );
+  const getUtilityByIdFromCatalog = (utilityId: string) => getUtilityById(utilityId, catalog);
 
-  const createUtilityFromProvider = useCallback(
-    async (utilityId: string, newData: UtilityDefinition) => {
-      const created = await createUtility(utilityId, newData);
-      setCatalog((prev) => ({
-        ...prev,
-        utility_definitions: {
-          ...prev.utility_definitions,
-          [utilityId]: created,
-        },
-      }));
-      return created;
-    },
-    []
-  );
+  const getUtilityByNameFromCatalog = (utilityName: string) => {
+    const found = getUtilityByNameTool(utilityName, catalog);
+    return found instanceof Promise ? null : found;
+  };
 
-  const updateUtilityFromProvider = useCallback(
-    async (utilityId: string, newData: Partial<UtilityDefinition>) => {
-      const updated = await updateUtilityById(utilityId, newData);
-      if (!updated) return null;
+  const createUtilityFromProvider = async (utilityId: string, newData: UtilityDefinition) => {
+    const created = await createUtility(utilityId, newData);
+    setCatalog((prev) => ({
+      ...prev,
+      utility_definitions: {
+        ...prev.utility_definitions,
+        [utilityId]: created,
+      },
+    }));
+    return created;
+  };
 
-      setCatalog((prev) => ({
-        ...prev,
-        utility_definitions: {
-          ...prev.utility_definitions,
-          [utilityId]: updated,
-        },
-      }));
-      return updated;
-    },
-    []
-  );
+  const updateUtilityFromProvider = async (
+    utilityId: string,
+    newData: Partial<UtilityDefinition>
+  ) => {
+    const updated = await updateUtilityById(utilityId, newData);
+    if (!updated) return null;
 
-  const deleteUtilityFromProvider = useCallback(async (utilityId: string) => {
+    setCatalog((prev) => ({
+      ...prev,
+      utility_definitions: {
+        ...prev.utility_definitions,
+        [utilityId]: updated,
+      },
+    }));
+    return updated;
+  };
+
+  const deleteUtilityFromProvider = async (utilityId: string) => {
     const deleted = await deleteUtilityById(utilityId);
 
     if (deleted) {
       setCatalog((prev) => {
-        const { [utilityId]: _removed, ...rest } = prev.utility_definitions;
+        const rest = { ...prev.utility_definitions };
+        delete rest[utilityId];
         return {
           ...prev,
           utility_definitions: rest,
@@ -108,49 +102,30 @@ const UtilitiesProvider: FC<Children> = ({ children }) => {
     }
 
     return deleted;
-  }, []);
+  };
 
-  const activeUtilityIds = useMemo(() => {
-    return getActiveUtilityIdsForProfile(catalog, selectedBranchId, selectedJobId);
-  }, [catalog, selectedBranchId, selectedJobId]);
+  const activeUtilityIds = getActiveUtilityIdsForProfile(catalog, selectedBranchId, selectedJobId);
 
-  const activeUtilities = useMemo(
-    () => activeUtilityIds.map((id) => ({ id, definition: catalog.utility_definitions[id] ?? null })),
-    [activeUtilityIds, catalog.utility_definitions]
-  );
+  const activeUtilities = activeUtilityIds.map((id) => ({
+    id,
+    definition: catalog.utility_definitions[id] ?? null,
+  }));
 
-  const value = useMemo(
-    () => ({
-      catalog,
-      isLoadingUtilities,
-      isErrorUtilities,
-      selectedBranchId,
-      selectedJobId,
-      activeUtilityIds,
-      activeUtilities,
-      setSelectedProfileContext,
-      getUtilityById: getUtilityByIdFromCatalog,
-      getUtilityByNameTool: getUtilityByNameFromCatalog,
-      createUtility: createUtilityFromProvider,
-      updateUtilityById: updateUtilityFromProvider,
-      deleteUtilityById: deleteUtilityFromProvider,
-    }),
-    [
-      catalog,
-      isLoadingUtilities,
-      isErrorUtilities,
-      selectedBranchId,
-      selectedJobId,
-      activeUtilityIds,
-      activeUtilities,
-      setSelectedProfileContext,
-      getUtilityByIdFromCatalog,
-      getUtilityByNameFromCatalog,
-      createUtilityFromProvider,
-      updateUtilityFromProvider,
-      deleteUtilityFromProvider,
-    ]
-  );
+  const value = {
+    catalog,
+    isLoadingUtilities,
+    isErrorUtilities,
+    selectedBranchId,
+    selectedJobId,
+    activeUtilityIds,
+    activeUtilities,
+    setSelectedProfileContext,
+    getUtilityById: getUtilityByIdFromCatalog,
+    getUtilityByNameTool: getUtilityByNameFromCatalog,
+    createUtility: createUtilityFromProvider,
+    updateUtilityById: updateUtilityFromProvider,
+    deleteUtilityById: deleteUtilityFromProvider,
+  };
 
   return <UtilitiesCtx.Provider value={value}>{children}</UtilitiesCtx.Provider>;
 };

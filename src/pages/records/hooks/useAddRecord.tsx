@@ -12,7 +12,7 @@ export const useAddRecord = () => {
   const hasCurrentUser = Boolean(currentUser?.uid);
 
   const [jobProfiles, setJobProfiles] = useState<JobProfile[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(hasCurrentUser);
   const [selectedTitle, setSelectedTitle] = useState<string>("");
   const [estimatedHourlyRate, setEstimatedHourlyRate] = useState<number | undefined>(undefined);
   const [selectedBranchId, setSelectedBranchId] = useState<string>("");
@@ -31,9 +31,6 @@ export const useAddRecord = () => {
   // Efecto para la suscripción a los perfiles
   useEffect(() => {
     if (!currentUser?.uid) {
-      setLoading(false);
-      setSelectedBranchId("");
-      setSelectedJobPositionId("");
       setSelectedProfileContext(null, null);
       return;
     }

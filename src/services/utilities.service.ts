@@ -116,7 +116,9 @@ export const subscribeToUtilities = (
   return onSnapshot(
     refUtilities,
     (snapshot) => {
-      const rawDocs = Object.fromEntries(snapshot.docs.map((snapshotDoc) => [snapshotDoc.id, snapshotDoc.data()]));
+      const rawDocs = Object.fromEntries(
+        snapshot.docs.map((snapshotDoc) => [snapshotDoc.id, snapshotDoc.data()])
+      );
       callback(normalizeCatalog(rawDocs));
     },
     onError,
@@ -179,9 +181,7 @@ export const updateUtilityById = async (
   return updatedUtility;
 };
 
-export const deleteUtilityById = async (
-  utilityId: string
-): Promise<boolean> => {
+export const deleteUtilityById = async (utilityId: string): Promise<boolean> => {
   const globalRef = doc(firestore, UTILITIES_COLLECTION, GLOBAL_UTILITIES_DOC);
   const branchesRef = doc(firestore, UTILITIES_COLLECTION, BRANCH_UTILITIES_DOC);
   const definitionsRef = doc(firestore, UTILITIES_COLLECTION, UTILITY_DEFINITIONS_DOC);
@@ -213,7 +213,8 @@ export const deleteUtilityById = async (
     utilityId
   );
 
-  const { [utilityId]: _removed, ...restDefinitions } = cleanedCatalog.utility_definitions;
+  const restDefinitions = { ...cleanedCatalog.utility_definitions };
+  delete restDefinitions[utilityId];
 
   await Promise.all([
     setDoc(globalRef, { items: cleanedCatalog.global_utilities }),

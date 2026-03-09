@@ -1,5 +1,3 @@
-
-
 import { useContext } from "react";
 import { UtilitiesCtx } from "../UtilitiesCtx";
 
@@ -9,6 +7,6 @@ const useUtilities = () => {
     throw new Error("useUtilities must be used within a UtilitiesProvider");
   }
   return ctx;
-}
+};
 
 export default useUtilities;

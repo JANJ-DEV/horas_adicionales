@@ -137,7 +137,6 @@ export const deleteRecord = async (recordId: string) => {
       console.error("No hay un usuario autenticado");
       return;
     }
-    toast.info("Eliminando registro... " + recordId, { containerId: "records" });
     const docRef = doc(firestore, "users", userId, NAME_COLLECTION, recordId);
     await deleteDoc(docRef);
     toast.success("Registro eliminado con éxito", { containerId: "records" });

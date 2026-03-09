@@ -1,7 +1,7 @@
 import Btn from "@/components/Btn";
 import useUtilities from "@/context/hooks/useUtilities.hook";
 import { useAddRecord } from "./hooks/useAddRecord";
-import { useEffect, useMemo, useState, type FC } from "react";
+import { useState, type FC } from "react";
 
 const UTILITY_FIELD_PREFIX = "utility__";
 
@@ -20,33 +20,28 @@ const AddNewRecord: FC = () => {
   const { activeUtilities, isLoadingUtilities } = useUtilities();
   const [selectedUtilityIds, setSelectedUtilityIds] = useState<string[]>([]);
 
-  useEffect(() => {
-    // Al cambiar de perfil, el usuario decide de nuevo qué utilidades usar.
-    setSelectedUtilityIds([]);
-  }, [selectedBranchId, selectedJobPositionId]);
-
-  const selectedUtilities = useMemo(
-    () =>
-      activeUtilities.filter(
-        ({ id, definition }) => Boolean(definition) && selectedUtilityIds.includes(id)
-      ),
-    [activeUtilities, selectedUtilityIds]
+  const selectedUtilities = activeUtilities.filter(
+    ({ id, definition }) => Boolean(definition) && selectedUtilityIds.includes(id)
   );
 
-  const genericUtilities = useMemo(
-    () => activeUtilities.filter((utility) => utility.definition && utility.id === "comment_box"),
-    [activeUtilities]
+  const genericUtilities = activeUtilities.filter(
+    (utility) => utility.definition && utility.id === "comment_box"
   );
 
-  const profileSpecificUtilities = useMemo(
-    () => activeUtilities.filter((utility) => utility.definition && utility.id !== "comment_box"),
-    [activeUtilities]
+  const profileSpecificUtilities = activeUtilities.filter(
+    (utility) => utility.definition && utility.id !== "comment_box"
   );
 
   const toggleUtilitySelection = (utilityId: string) => {
     setSelectedUtilityIds((prev) =>
       prev.includes(utilityId) ? prev.filter((id) => id !== utilityId) : [...prev, utilityId]
     );
+  };
+
+  const handleProfileChangeAndReset = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    // Al cambiar de perfil, el usuario decide de nuevo qué utilidades usar.
+    setSelectedUtilityIds([]);
+    handleProfileChange(event);
   };
 
   const formResetKey = formAction.data ? JSON.stringify(formAction.data) : "initial";
@@ -56,7 +51,7 @@ const AddNewRecord: FC = () => {
   return (
     <section>
       {/* La key fuerza un remount tras éxito y limpia el formulario + estado local */}
-      <formAction.Form key={formResetKey} className="flex flex-col gap-4" method="post">
+      <formAction.Form key={formResetKey} className="flex flex-col gap-4 py-4" method="post">
         {hasCurrentUser && loading ? (
           <p>Cargando...</p>
         ) : (
@@ -66,7 +61,7 @@ const AddNewRecord: FC = () => {
               name="jobProfileId"
               id="jobProfileId"
               className="border p-4 rounded-xl"
-              onChange={handleProfileChange}
+              onChange={handleProfileChangeAndReset}
               required // Recomendable hacer requerido el select
             >
               <option value="">Selecciona un perfil de trabajo</option>
@@ -78,6 +73,7 @@ const AddNewRecord: FC = () => {
             </select>
           </div>
         )}
+        {/* Hidden inputs */}
         <>
           {/* Input oculto ahora controlado por React */}
           <input id="titleJobProfile" type="hidden" name="titleJobProfile" value={selectedTitle} />
@@ -130,7 +126,7 @@ const AddNewRecord: FC = () => {
             required
           />
         </div>
-
+        {/* Utilities */}
         <section className="flex flex-col gap-4">
           <h3 className="text-xl">Utilidades</h3>
 
@@ -270,14 +266,6 @@ const AddNewRecord: FC = () => {
           label={formAction.state === "submitting" ? "Guardando..." : "Guardar"}
           formState={formAction.state === "submitting"}
         />
-
-        {/* <button
-          type="submit"
-          disabled={formAction.state === "submitting"}
-          className="bg-blue-500 text-white p-4 rounded-xl disabled:bg-gray-400"
-        >
-          {formAction.state === "submitting" ? "Guardando..." : "Guardar"}
-        </button> */}
       </formAction.Form>
 
       {/* Mensaje de éxito */}
