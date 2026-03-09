@@ -3,6 +3,7 @@ import type { FC } from "react";
 import { Navigate, Outlet } from "react-router";
 import MainHeader from "./MainHeader";
 import MainContent from "./MainContent";
+import UtilitiesProvider from "@/context/providers/UtilitiesProvider";
 
 const PrivateLayout: FC = () => {
   const { isAuthenticated } = useAuth();
@@ -11,12 +12,12 @@ const PrivateLayout: FC = () => {
     return <Navigate to="/" replace />;
   }
   return (
-    <>
+    <UtilitiesProvider>
       <MainHeader />
       <MainContent>
         <Outlet />
       </MainContent>
-    </>
+    </UtilitiesProvider>
   );
 };
 

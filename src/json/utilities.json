@@ -1,0 +1,363 @@
+{
+  "global_utilities": ["comment_box"],
+  "branch_utilities": {
+    "COM-01": {
+      "default": ["motivo_extension_comercial"],
+      "specific_jobs": {
+        "COM-01-02": ["cliente_visitado", "km_recorridos"],
+        "COM-01-04": ["cliente_visitado", "km_recorridos"],
+        "COM-01-08": ["cliente_visitado", "km_recorridos"],
+        "COM-01-03": ["num_caja", "incidencia_cuadre"],
+        "COM-01-06": ["num_caja", "incidencia_cuadre"],
+        "COM-01-01": ["num_ticket_atencion"],
+        "COM-01-09": ["num_ticket_atencion"]
+      }
+    },
+    "FIN-02": {
+      "default": ["num_albaran"],
+      "specific_jobs": {
+        "FIN-02-02": ["ruta_origen_destino", "matricula", "motivo_retraso_transporte"],
+        "FIN-02-06": ["ruta_origen_destino", "matricula", "motivo_retraso_transporte"],
+        "FIN-02-07": ["ruta_origen_destino", "matricula", "motivo_retraso_transporte"],
+        "FIN-02-10": ["ruta_origen_destino", "matricula", "motivo_retraso_transporte"],
+        "FIN-02-01": ["muelle_carga"],
+        "FIN-02-03": ["muelle_carga"],
+        "FIN-02-05": ["muelle_carga"]
+      }
+    },
+    "IT-03": {
+      "default": ["id_proyecto"],
+      "specific_jobs": {
+        "IT-03-01": ["ticket_jira"],
+        "IT-03-02": ["ticket_jira"],
+        "IT-03-03": ["ticket_jira"],
+        "IT-03-04": ["ticket_jira"],
+        "IT-03-09": ["ticket_jira"],
+        "IT-03-06": ["tipo_intervencion_it"],
+        "IT-03-10": ["tipo_intervencion_it"],
+        "IT-03-11": ["tipo_intervencion_it"],
+        "IT-03-12": ["tipo_intervencion_it"]
+      }
+    },
+    "SAN-04": {
+      "default": ["tipo_urgencia"],
+      "specific_jobs": {
+        "SAN-04-01": ["num_historial_paciente"],
+        "SAN-04-02": ["num_historial_paciente"],
+        "SAN-04-03": ["num_historial_paciente"],
+        "SAN-04-04": ["num_historial_paciente"],
+        "SAN-04-05": ["num_historial_paciente"],
+        "SAN-04-06": ["num_historial_paciente"],
+        "SAN-04-11": ["nombre_residente"],
+        "SAN-04-13": ["nombre_residente"]
+      }
+    },
+    "ING-05": {
+      "default": ["orden_fabricacion"],
+      "specific_jobs": {
+        "ING-05-05": ["linea_produccion"],
+        "ING-05-06": ["linea_produccion"],
+        "ING-05-07": ["linea_produccion"],
+        "ING-05-08": ["linea_produccion"],
+        "ING-05-11": ["linea_produccion"],
+        "ING-05-09": ["motivo_parada_maquina"]
+      }
+    },
+    "AGR-06": {
+      "default": ["codigo_obra"],
+      "specific_jobs": {
+        "AGR-06-01": ["fase_proyecto"],
+        "AGR-06-02": ["fase_proyecto"],
+        "AGR-06-03": ["fase_proyecto"],
+        "AGR-06-04": ["zona_trabajo", "motivo_retraso_obra"],
+        "AGR-06-05": ["zona_trabajo", "motivo_retraso_obra"],
+        "AGR-06-06": ["zona_trabajo", "motivo_retraso_obra"],
+        "AGR-06-07": ["zona_trabajo", "motivo_retraso_obra"],
+        "AGR-06-08": ["zona_trabajo", "motivo_retraso_obra"],
+        "AGR-06-09": ["zona_trabajo", "motivo_retraso_obra"],
+        "AGR-06-10": ["zona_trabajo", "motivo_retraso_obra"],
+        "AGR-06-11": ["zona_trabajo", "motivo_retraso_obra"],
+        "AGR-06-12": ["zona_trabajo", "motivo_retraso_obra"],
+        "AGR-06-13": ["zona_trabajo", "motivo_retraso_obra"],
+        "AGR-06-14": ["zona_trabajo", "motivo_retraso_obra"]
+      }
+    },
+    "TUR-07": {
+      "default": ["turno_cubierto"],
+      "specific_jobs": {
+        "TUR-07-02": ["nombre_evento"],
+        "TUR-07-04": ["nombre_evento"],
+        "TUR-07-05": ["nombre_evento"],
+        "TUR-07-06": ["nombre_evento"],
+        "TUR-07-07": ["nombre_evento"],
+        "TUR-07-08": ["nombre_evento"],
+        "TUR-07-01": ["incidencia_huespedes"],
+        "TUR-07-03": ["incidencia_huespedes"],
+        "TUR-07-09": ["nombre_grupo_turistico", "ruta_turistica"],
+        "TUR-07-10": ["nombre_grupo_turistico", "ruta_turistica"]
+      }
+    },
+    "TEC-08": {
+      "default": ["zona_explotacion"],
+      "specific_jobs": {
+        "TEC-08-04": ["kilos_recolectados", "condicion_climatica"],
+        "TEC-08-05": ["kilos_recolectados", "condicion_climatica"],
+        "TEC-08-06": ["kilos_recolectados", "condicion_climatica"],
+        "TEC-08-07": ["kilos_recolectados", "condicion_climatica"],
+        "TEC-08-10": ["aviso_incidencia_forestal"],
+        "TEC-08-11": ["aviso_incidencia_forestal"]
+      }
+    },
+    "EDU-09": {
+      "default": ["tipo_tarea_docente"],
+      "specific_jobs": {
+        "EDU-09-01": ["grupo_clase_afectada"],
+        "EDU-09-02": ["grupo_clase_afectada"],
+        "EDU-09-03": ["grupo_clase_afectada"],
+        "EDU-09-04": ["grupo_clase_afectada"],
+        "EDU-09-05": ["grupo_clase_afectada"]
+      }
+    },
+    "ADM-01": {
+      "default": ["departamento_afectado"],
+      "specific_jobs": {
+        "ADM-01-01": ["cierre_contable"],
+        "ADM-01-05": ["cierre_contable"],
+        "ADM-01-06": ["cierre_contable"],
+        "ADM-01-07": ["num_expediente_legal"],
+        "ADM-01-08": ["num_expediente_legal"]
+      }
+    },
+    "ART-02": {
+      "default": ["nombre_produccion"],
+      "specific_jobs": {
+        "ART-02-04": ["tipo_actividad_artistica"],
+        "ART-02-05": ["tipo_actividad_artistica"],
+        "ART-02-06": ["tipo_actividad_artistica"],
+        "ART-02-07": ["tipo_actividad_artistica"],
+        "ART-02-08": ["tipo_actividad_artistica"]
+      }
+    }
+  },
+  "utility_definitions": {
+    "comment_box": {
+      "type": "textarea",
+      "label": "Comentario / Justificación",
+      "required": false
+    },
+    "motivo_extension_comercial": {
+      "type": "select",
+      "label": "Motivo de la extensión",
+      "required": true,
+      "options": ["Cierre de caja", "Atención a cliente rezagado", "Inventario", "Otro"]
+    },
+    "cliente_visitado": {
+      "type": "text",
+      "label": "Cliente o Empresa visitada",
+      "required": true
+    },
+    "km_recorridos": {
+      "type": "number",
+      "label": "Kilómetros recorridos",
+      "required": false
+    },
+    "num_caja": {
+      "type": "text",
+      "label": "Número de caja",
+      "required": true
+    },
+    "incidencia_cuadre": {
+      "type": "textarea",
+      "label": "Incidencia en el cuadre",
+      "required": false
+    },
+    "num_ticket_atencion": {
+      "type": "text",
+      "label": "Nº de ticket o reclamación",
+      "required": true
+    },
+    "num_albaran": {
+      "type": "text",
+      "label": "Número de albarán o pedido",
+      "required": true
+    },
+    "ruta_origen_destino": {
+      "type": "text",
+      "label": "Ruta (Origen - Destino)",
+      "required": true
+    },
+    "matricula": {
+      "type": "text",
+      "label": "Matrícula del vehículo",
+      "required": true
+    },
+    "motivo_retraso_transporte": {
+      "type": "select",
+      "label": "Motivo del retraso",
+      "required": true,
+      "options": ["Tráfico", "Avería", "Retraso del cliente", "Otro"]
+    },
+    "muelle_carga": {
+      "type": "text",
+      "label": "Muelle de carga/descarga",
+      "required": false
+    },
+    "id_proyecto": {
+      "type": "text",
+      "label": "ID del Proyecto o Cliente",
+      "required": true
+    },
+    "ticket_jira": {
+      "type": "text",
+      "label": "Nº de Ticket (ej. Jira / Trello)",
+      "required": true
+    },
+    "tipo_intervencion_it": {
+      "type": "select",
+      "label": "Tipo de intervención",
+      "required": true,
+      "options": [
+        "Despliegue a producción",
+        "Caída de servidor",
+        "Mantenimiento programado",
+        "Incidencia de seguridad"
+      ]
+    },
+    "tipo_urgencia": {
+      "type": "text",
+      "label": "Tipo de urgencia o emergencia",
+      "required": true
+    },
+    "num_historial_paciente": {
+      "type": "text",
+      "label": "Nº Historial del paciente (Anonimizado)",
+      "required": true
+    },
+    "nombre_residente": {
+      "type": "text",
+      "label": "Nombre del residente/usuario atendido",
+      "required": false
+    },
+    "orden_fabricacion": {
+      "type": "text",
+      "label": "Orden de Fabricación (OF)",
+      "required": true
+    },
+    "linea_produccion": {
+      "type": "text",
+      "label": "Línea de producción o máquina",
+      "required": true
+    },
+    "motivo_parada_maquina": {
+      "type": "textarea",
+      "label": "Motivo de parada o reparación",
+      "required": true
+    },
+    "codigo_obra": {
+      "type": "text",
+      "label": "Código o Nombre de la obra",
+      "required": true
+    },
+    "fase_proyecto": {
+      "type": "select",
+      "label": "Fase del proyecto",
+      "required": true,
+      "options": ["Cimentación", "Estructura", "Acabados", "Entrega"]
+    },
+    "zona_trabajo": {
+      "type": "text",
+      "label": "Zona de trabajo",
+      "required": true
+    },
+    "motivo_retraso_obra": {
+      "type": "select",
+      "label": "Motivo de horas extra",
+      "required": false,
+      "options": ["Retraso de material", "Climatología adversa", "Fallo técnico", "Otro"]
+    },
+    "turno_cubierto": {
+      "type": "text",
+      "label": "Turno o compañero cubierto",
+      "required": false
+    },
+    "nombre_evento": {
+      "type": "text",
+      "label": "Nombre del Evento o Banquete",
+      "required": false
+    },
+    "incidencia_huespedes": {
+      "type": "textarea",
+      "label": "Incidencia (Overbooking, Check-in nocturno)",
+      "required": true
+    },
+    "nombre_grupo_turistico": {
+      "type": "text",
+      "label": "Nombre o ID del grupo",
+      "required": true
+    },
+    "ruta_turistica": {
+      "type": "text",
+      "label": "Ruta realizada",
+      "required": true
+    },
+    "zona_explotacion": {
+      "type": "text",
+      "label": "Finca, Parcela o Zona",
+      "required": true
+    },
+    "kilos_recolectados": {
+      "type": "number",
+      "label": "Kilos/Litros procesados",
+      "required": false
+    },
+    "condicion_climatica": {
+      "type": "text",
+      "label": "Condición climática",
+      "required": false
+    },
+    "aviso_incidencia_forestal": {
+      "type": "text",
+      "label": "Nº Aviso o Incidencia",
+      "required": true
+    },
+    "tipo_tarea_docente": {
+      "type": "select",
+      "label": "Tipo de tarea",
+      "required": true,
+      "options": ["Corrección de exámenes", "Tutoría", "Claustro", "Preparación de clases"]
+    },
+    "grupo_clase_afectada": {
+      "type": "text",
+      "label": "Grupo o Clase afectada",
+      "required": true
+    },
+    "departamento_afectado": {
+      "type": "text",
+      "label": "Departamento",
+      "refquired": false
+    },
+    "cierre_contable": {
+      "type": "select",
+      "label": "Tipo de gestión",
+      "required": true,
+      "options": ["Cierre Mensual", "Cierre Trimestral", "Auditoría", "Otro"]
+    },
+    "num_expediente_legal": {
+      "type": "text",
+      "label": "Número de Expediente o Caso",
+      "required": true
+    },
+    "nombre_produccion": {
+      "type": "text",
+      "label": "Nombre de la producción / Proyecto",
+      "dbKey": "production_name",
+      "required": true
+    },
+    "tipo_actividad_artistica": {
+      "type": "select",
+      "label": "Tipo de actividad",
+      "required": true,
+      "options": ["Ensayo", "Rodaje exterior", "Actuación en vivo", "Montaje"]
+    }
+  }
+}

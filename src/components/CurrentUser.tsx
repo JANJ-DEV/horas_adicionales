@@ -45,7 +45,7 @@ const CurrentUser: FC = () => {
         />
       </header>
       <section
-        className={`absolute -z-50 top-full right-0 flex flex-col pt-12 ${isMenuCurrentUserOpen ? "flex min-w-max" : "hidden"}`}
+        className={`absolute top-full right-0 flex flex-col pt-12 ${isMenuCurrentUserOpen ? "flex min-w-max" : "hidden"} z-10`}
       >
         <article className="flex flex-col gap-2 bg-dark border border-light/20 rounded-md py-4">
           <aside className="px-4 mt-2">
