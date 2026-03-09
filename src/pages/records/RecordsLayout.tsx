@@ -4,19 +4,19 @@ import MainContent from "../layouts/MainContent";
 import MainHeader from "../layouts/MainHeader";
 import GoBack from "@/components/GoBack";
 import { ToastContainer } from "react-toastify";
+import UtilitiesProvider from "@/context/providers/UtilitiesProvider";
 
 const RecordsLayout = () => {
   const { isAuthenticated } = useAuth();
-
   if (!isAuthenticated) {
     return <Navigate to="/" replace />;
   }
 
   return (
-    <>
+    <UtilitiesProvider>
       <MainHeader />
       <MainContent>
-        <nav className="flex gap-4 mt-8">
+        <nav className="flex gap-4 mt-8 sticky top-28 justify-between lg:justify-start bg-black p-4 rounded">
           <GoBack />
           <NavLink
             to="/records/add"
@@ -44,7 +44,7 @@ const RecordsLayout = () => {
           theme="dark"
         />
       </MainContent>
-    </>
+    </UtilitiesProvider>
   );
 };
 

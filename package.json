@@ -11,7 +11,9 @@
     "format:check": "prettier --check .",
     "preview": "vite preview",
     "seed:catalog": "node scripts/seed-catalog.mjs",
-    "seed:catalog:dry": "node scripts/seed-catalog.mjs --dry-run"
+    "seed:catalog:dry": "node scripts/seed-catalog.mjs --dry-run",
+    "seed:utilities": "node scripts/seed-utilities.mjs",
+    "seed:utilities:dry": "node scripts/seed-utilities.mjs --dry-run"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.2.1",

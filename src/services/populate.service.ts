@@ -8,6 +8,7 @@ export interface Collections {
   JOBS_POSITIONS: string;
   RECORDS: string;
   BRANCHES: string;
+  UTILITIES: string;
 }
 
 export const COLLECTIONS: Collections = {
@@ -17,6 +18,7 @@ export const COLLECTIONS: Collections = {
   JOBS_POSITIONS: "jobsPositions",
   RECORDS: "records",
   BRANCHES: "branches",
+  UTILITIES: "utilities",
 };
 
 type JsonObject = Record<string, unknown>;
@@ -105,6 +107,58 @@ export async function populateJobsPositions(db: Firestore, jobsPositionsJson: un
   const jobsPositionsData = isJsonObject(wrapped) ? wrapped : jobsPositionsJson;
 
   await populateCollectionFromFirstLevel(db, COLLECTIONS.JOBS_POSITIONS, jobsPositionsData);
+}
+
+/**
+ * Función específica para utilities.
+ * Soporta dos formas:
+ * 1) JSON raíz con llaves global_utilities, branch_utilities, utility_definitions.
+ * 2) { "utilities": { ... } }.
+ *
+ * Estructura en Firestore:
+ * utilities/global_utilities
+ * utilities/branch_utilities
+ * utilities/utility_definitions
+ */
+export async function populateUtilities(db: Firestore, utilitiesJson: unknown) {
+  if (!isJsonObject(utilitiesJson)) {
+    throw new Error("El JSON de utilities no tiene formato válido.");
+  }
+
+  const wrapped = utilitiesJson.utilities;
+  const utilitiesData = isJsonObject(wrapped) ? wrapped : utilitiesJson;
+
+  const globalUtilities = utilitiesData.global_utilities;
+  const branchUtilities = utilitiesData.branch_utilities;
+  const utilityDefinitions = utilitiesData.utility_definitions;
+
+  if (!Array.isArray(globalUtilities)) {
+    throw new Error("utilities.global_utilities debe ser un arreglo.");
+  }
+
+  if (!isJsonObject(branchUtilities)) {
+    throw new Error("utilities.branch_utilities debe ser un objeto.");
+  }
+
+  if (!isJsonObject(utilityDefinitions)) {
+    throw new Error("utilities.utility_definitions debe ser un objeto.");
+  }
+
+  const utilitiesRef = collection(db, COLLECTIONS.UTILITIES);
+
+  try {
+    await Promise.all([
+      setDoc(doc(utilitiesRef, "global_utilities"), { items: globalUtilities }),
+      setDoc(doc(utilitiesRef, "branch_utilities"), branchUtilities),
+      setDoc(doc(utilitiesRef, "utility_definitions"), utilityDefinitions),
+    ]);
+
+    console.log("Colección utilities poblada correctamente.");
+  } catch (error) {
+    const firebaseError = error as FirebaseError;
+    console.error("Error al poblar utilities:", { ...firebaseError });
+    throw firebaseError;
+  }
 }
 
 function extractBranchIdFromJobId(jobId: string): string | null {

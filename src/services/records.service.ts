@@ -14,14 +14,19 @@ import {
 import { firestore } from "@/apis/firebase";
 import { authFirebase } from "@/apis/firebase";
 import { toast } from "react-toastify";
+import type { UtilityFieldValue } from "./utilities.service";
 
 export interface RecordService {
   id?: string;
+  jobProfileId?: string;
+  branchId?: string;
+  jobPositionId?: string;
   titleJobProfile: string;
   dateTimeRecord: string | Date;
   workStartTime?: string;
   workEndTime?: string;
   estimatedHourlyRate?: number;
+  utilitiesValues?: Record<string, UtilityFieldValue>;
   createdAt?: Timestamp | Date;
   updatedAt?: Timestamp | Date;
 }
@@ -77,6 +82,9 @@ export const saveRecord = async (record: RecordService) => {
 
     await setDoc(newDocRef, {
       id: newDocRef.id, // Guardamos el ID dentro del doc por comodidad
+      jobProfileId: record.jobProfileId,
+      branchId: record.branchId,
+      jobPositionId: record.jobPositionId,
       titleJobProfile: record.titleJobProfile,
       dateTimeRecord: record.dateTimeRecord, // La fecha del registro (la que eligió el usuario)
       workStartTime: record.workStartTime,
@@ -84,6 +92,7 @@ export const saveRecord = async (record: RecordService) => {
       createdAt: serverTimestamp(), // Fecha de creación real
       updatedAt: serverTimestamp(), // Fecha de última actualización
       estimatedHourlyRate: record.estimatedHourlyRate,
+      utilitiesValues: record.utilitiesValues ?? {},
     });
 
     toast.success("Registro guardado con éxito", { containerId: "records" });

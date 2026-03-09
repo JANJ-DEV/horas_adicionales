@@ -1,4 +1,5 @@
 import useAuth from "@/context/hooks/auth.hook";
+import useUtilities from "@/context/hooks/useUtilities.hook";
 import { subscribeToJobProfiles } from "@/services/jobsProfile.service";
 import type { JobProfile } from "@/types";
 import { useEffect, useState } from "react";
@@ -6,6 +7,7 @@ import { useFetcher } from "react-router";
 
 export const useAddRecord = () => {
   const { currentUser } = useAuth();
+  const { setSelectedProfileContext } = useUtilities();
   const formAction = useFetcher();
   const hasCurrentUser = Boolean(currentUser?.uid);
 
@@ -13,17 +15,26 @@ export const useAddRecord = () => {
   const [loading, setLoading] = useState(true);
   const [selectedTitle, setSelectedTitle] = useState<string>("");
   const [estimatedHourlyRate, setEstimatedHourlyRate] = useState<number | undefined>(undefined);
+  const [selectedBranchId, setSelectedBranchId] = useState<string>("");
+  const [selectedJobPositionId, setSelectedJobPositionId] = useState<string>("");
   // Actualizamos el estado en lugar de manipular el DOM directamente
   const handleProfileChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedProfileId = event.target.value;
     const profile = jobProfiles.find((p) => p.id === selectedProfileId);
     setSelectedTitle(profile ? profile.title : "");
     setEstimatedHourlyRate(profile ? profile.estimatedHourlyRate : undefined);
+    setSelectedBranchId(profile?.branch?.id ?? "");
+    setSelectedJobPositionId(profile?.jobPosition?.id ?? "");
+    setSelectedProfileContext(profile?.branch?.id ?? null, profile?.jobPosition?.id ?? null);
   };
 
   // Efecto para la suscripción a los perfiles
   useEffect(() => {
     if (!currentUser?.uid) {
+      setLoading(false);
+      setSelectedBranchId("");
+      setSelectedJobPositionId("");
+      setSelectedProfileContext(null, null);
       return;
     }
 
@@ -48,7 +59,7 @@ export const useAddRecord = () => {
         unsubscribe();
       }
     };
-  }, [currentUser?.uid]);
+  }, [currentUser?.uid, setSelectedProfileContext]);
 
   return {
     jobProfiles,
@@ -58,5 +69,7 @@ export const useAddRecord = () => {
     hasCurrentUser,
     formAction,
     estimatedHourlyRate,
+    selectedBranchId,
+    selectedJobPositionId,
   };
 };
