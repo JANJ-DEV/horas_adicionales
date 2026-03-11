@@ -10,6 +10,7 @@ const PublicLayout = lazy(() => import("../pages/layouts/PublicLayout.tsx"));
 const AddNewRecord = lazy(() => import("../pages/records/AddNewRecord.tsx"));
 const RecordsLayout = lazy(() => import("../pages/records/RecordsLayout.tsx"));
 const JobProfilesLayout = lazy(() => import("../pages/jobs_profiles/JobProfilesLayout.tsx"));
+const JobProfileDetails = lazy(() => import("../pages/jobs_profiles/JobProfileDetails.tsx"));
 const CreateJobProfile = lazy(() => import("../pages/jobs_profiles/CreateJobProfile.tsx"));
 const AccountLayout = lazy(() => import("../pages/account/AccountLayout.tsx"));
 const Account = lazy(() => import("../pages/account/Account.tsx"));
@@ -26,6 +27,7 @@ export {
   PublicLayout,
   AddNewRecord,
   JobProfilesLayout,
+  JobProfileDetails,
   CreateJobProfile,
   AccountLayout,
   Account,
