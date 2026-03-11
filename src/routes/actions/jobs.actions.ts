@@ -5,7 +5,7 @@ import { updateAccount } from "@/services/auth.service";
 import { uploadFile } from "@/services/uploadFile.service";
 import { authFirebase } from "@/apis/firebase";
 import { getBranchById } from "@/services/branches.services";
-import { getJobById } from "@/services/jobsPositions.service";
+import { getJobPositionFromBranchId } from "@/services/jobsPositions.service";
 import { saveJobProfile } from "@/services/jobsProfile.service";
 // import { saveJobProfile } from "@/services/jobsProfile.service";
 
@@ -23,7 +23,7 @@ export const add = async ({ request }: ActionFunctionArgs) => {
   }
 
   const branch = (await getBranchById(idBranch)) as Branch;
-  const jobPositions = (await getJobById(idJobPosition, idBranch)) as JobPosition;
+  const jobPositions = (await getJobPositionFromBranchId(idJobPosition, idBranch)) as JobPosition;
 
   const newJobProfile: JobProfile = {
     title,

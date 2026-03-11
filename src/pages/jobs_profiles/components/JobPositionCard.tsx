@@ -1,9 +1,9 @@
-import type { JobPosition } from "@/types";
+import type { JobProfile } from "@/types";
 import { useState, type FC } from "react";
 import IsUpdatingJobPosition from "./IsUpdatingJobPosition";
 import Btn from "@/components/Btn";
 
-const JobPositionCard: FC<{ jobPosition: JobPosition }> = ({ jobPosition }) => {
+const JobPositionCard: FC<{ jobProfile: JobProfile }> = ({ jobProfile }) => {
   const [isUpdatingJobPosition, setIsUpdatingJobPosition] = useState(false);
   const toggleUpdateJobPosition = () => {
     setIsUpdatingJobPosition(!isUpdatingJobPosition);
@@ -18,17 +18,17 @@ const JobPositionCard: FC<{ jobPosition: JobPosition }> = ({ jobPosition }) => {
           size="xs"
           label={isUpdatingJobPosition ? "x" : "Editar"}
           variant={isUpdatingJobPosition ? "danger" : "outline"}
-          title={`Ver detalles del perfil de trabajo: ${jobPosition.name}`}
+          title={`Ver detalles del perfil de trabajo: ${jobProfile.jobPosition.name}`}
           onClick={toggleUpdateJobPosition}
         />
       </header>
       {!isUpdatingJobPosition && (
         <article className="mt-2">
-          <strong className="text-base text-white">{jobPosition.name}</strong>
-          <p className="mt-1 text-sm text-slate-300">{jobPosition.description}</p>
+          <strong className="text-base text-white">{jobProfile.jobPosition.name}</strong>
+          <p className="mt-1 text-sm text-slate-300">{jobProfile.jobPosition.description}</p>
         </article>
       )}
-      <IsUpdatingJobPosition state={isUpdatingJobPosition} jobPosition={jobPosition} />
+      <IsUpdatingJobPosition state={isUpdatingJobPosition} jobProfile={jobProfile} />
     </section>
   );
 };

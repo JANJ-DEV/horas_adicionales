@@ -1,11 +1,12 @@
 import useBranches from "@/context/hooks/useBranches.hook.";
-import { useState, type FC, useEffect } from "react";
+import { useState, type FC, useEffect, type ChangeEvent } from "react";
 import { useFetcher } from "react-router";
 import { ToastContainer } from "react-toastify";
 import SelectJobProfile from "./components/SelectJobProfile";
 import { getBranchById } from "@/services/branches.services";
 import type { JobPosition } from "@/types";
 import Btn from "@/components/Btn";
+import SelectJobPositionFromBranchId from "./components/SelectJobPosition";
 // Interface para los puestos de trabajo individuales
 
 const CreateJobProfile: FC = () => {
@@ -22,7 +23,7 @@ const CreateJobProfile: FC = () => {
     }
   }, [branchId]);
 
-  const handlerOnChangeSelectedBranch = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const onChangeSelectJobProfile = (e: ChangeEvent<HTMLSelectElement>) => {
     // console.log(e.target.value);
     setBranchId(e.target.value);
   };
@@ -48,11 +49,10 @@ const CreateJobProfile: FC = () => {
             <section>
               <SelectJobProfile
                 branches={branches}
-                jobsPositions={[]}
-                onChangeSelectJobProfile={handlerOnChangeSelectedBranch}
+                onChangeSelectJobProfile={onChangeSelectJobProfile}
               />
             </section>
-            {branchId && <SelectJobProfile jobsPositions={jobsPositions} />}
+            {jobsPositions && branchId && <SelectJobPositionFromBranchId branchId={branchId} />}
           </>
         )}
         <section className="flex flex-col gap-2">

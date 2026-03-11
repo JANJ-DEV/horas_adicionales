@@ -1,35 +1,57 @@
-import { type FC, type SubmitEvent } from "react";
-import type { JobPosition } from "@/types";
+import { useState, type FC, type SubmitEvent } from "react";
+import type { JobProfile } from "@/types";
+import {
+  getJobPositionFromBranchId,
+  updateJobPositionById,
+} from "@/services/jobsPositions.service";
+import SelectJobPositionFromBranchId from "./SelectJobPosition";
 
 type Props = {
   state: boolean;
-  jobPosition: JobPosition;
+  jobProfile: JobProfile;
 };
 
-const IsUpdatingJobPosition: FC<Props> = ({ state, jobPosition }) => {
+const IsUpdatingJobPosition: FC<Props> = ({ state, jobProfile }) => {
+  const [jobPositionDescription, setJobPositionDescription] = useState<string>(
+    jobProfile.jobPosition.description
+  );
+
   const handlerSubmit = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData.entries());
-    console.table(data.title);
+    console.table(jobProfile);
+    updateJobPositionById(jobProfile.id as string, {
+      name: data.title as string,
+      description: jobPositionDescription,
+    });
+    getJobPositionFromBranchId(jobProfile.jobPosition.id, jobProfile.branch.id as string)
+      .then((jobPosition) => {
+        console.log(jobPosition);
+        if (jobPosition) {
+          setJobPositionDescription(jobPosition.description);
+        }
+      })
+      .catch((error) => {
+        console.error("Error al obtener el puesto de trabajo:", error);
+      });
   };
 
   return state ? (
     <form className="bg-dark text-white text-2xl" onSubmit={handlerSubmit}>
-      <input
-        type="text"
+      <SelectJobPositionFromBranchId
         name="title"
-        id="title"
-        defaultValue={jobPosition.name}
-        className="w-full border py-2 px-4 rounded text-sm lg:text-base"
+        variant="name"
+        branchId={jobProfile.branch.id as string}
       />
-      <textarea
+      {jobPositionDescription && jobPositionDescription}
+      {/* {jobPositionDescription && <textarea
         rows={5}
         name="description"
         id="description"
-        defaultValue={jobPosition.description}
+        defaultValue={jobPositionDescription}
         className="w-full border py-2 px-4 rounded text-sm lg:text-base mt-2"
-      />
+      />}  */}
 
       <button
         type="submit"

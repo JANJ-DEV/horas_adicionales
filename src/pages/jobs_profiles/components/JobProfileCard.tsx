@@ -39,7 +39,7 @@ const JobProfileCard: FC<{ jobProfile: JobProfile }> = ({ jobProfile }) => {
       </Header>
       <CardBody variant="card">
         <BranchCard branch={jobProfile.branch} />
-        <JobPositionCard jobPosition={jobProfile.jobPosition} />
+        <JobPositionCard jobProfile={jobProfile} />
         <EstimatedHourlyRate rate={jobProfile.estimatedHourlyRate} />
       </CardBody>
       <CardFooter variant="card">
