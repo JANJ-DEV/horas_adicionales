@@ -28,7 +28,11 @@ const JobPositionCard: FC<{ jobProfile: JobProfile }> = ({ jobProfile }) => {
           <p className="mt-1 text-sm text-slate-300">{jobProfile.jobPosition.description}</p>
         </article>
       )}
-      <IsUpdatingJobPosition state={isUpdatingJobPosition} jobProfile={jobProfile} />
+      <IsUpdatingJobPosition
+        state={isUpdatingJobPosition}
+        jobProfile={jobProfile}
+        onClose={() => setIsUpdatingJobPosition(false)}
+      />
     </section>
   );
 };

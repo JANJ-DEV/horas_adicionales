@@ -8,7 +8,7 @@ type Props = Children & {
 const CardFooter: FC<Props> = ({ children, variant = "default" }) => {
   const variantStyles = {
     default: "",
-    card: "mt-4 flex justify-end",
+    card: "mt-4 flex justify-end gap-4 items-center",
   };
   return <footer className={variantStyles[variant]}>{children}</footer>;
 };

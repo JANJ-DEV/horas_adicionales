@@ -58,8 +58,8 @@ const UpdateAccount: FC = () => {
               previewUrl
                 ? previewUrl
                 : (formAction.data?.photoURL as string)
-                ? formAction.data?.photoURL
-                : (currentUser.photoURL as string)
+                  ? formAction.data?.photoURL
+                  : (currentUser.photoURL as string)
             }
             alt="Vista previa de la foto de perfil"
             width={128}

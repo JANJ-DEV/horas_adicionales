@@ -1,6 +1,7 @@
 import { getBranchById } from "@/services/branches.services";
 import type { JobPosition } from "@/types";
 import { useEffect, useState, type ChangeEvent, type FC } from "react";
+import SelectField from "@/components/SelectField";
 
 type SelectJobPositionProps = {
   branchId?: string;
@@ -28,28 +29,18 @@ const SelectJobPositionFromBranchId: FC<SelectJobPositionProps> = ({
   }, [branchId]);
 
   return (
-    <section className="flex flex-col gap-2">
-      <label htmlFor={name} className="text-2xl">
-        Selecciona un puesto de trabajo:
-      </label>
-      <select
-        name={name}
-        id={name}
-        aria-label="Select job position"
-        onChange={onChangeSelectJobPosition}
-        className="border py-2 rounded"
-        value={value}
-      >
-        <option value="" disabled>
-          Puesto de trabajo
-        </option>
-        {jobsPositions.map((jobPosition) => (
-          <option key={jobPosition.id} value={variant === "id" ? jobPosition.id : jobPosition.name}>
-            {jobPosition.name}
-          </option>
-        ))}
-      </select>
-    </section>
+    <SelectField
+      label="Selecciona un puesto de trabajo:"
+      name={name}
+      id={name}
+      value={value}
+      onChange={onChangeSelectJobPosition}
+      placeholder="Puesto de trabajo"
+      options={jobsPositions.map((jobPosition) => ({
+        value: variant === "id" ? jobPosition.id : jobPosition.name,
+        label: jobPosition.name,
+      }))}
+    />
   );
 };
 

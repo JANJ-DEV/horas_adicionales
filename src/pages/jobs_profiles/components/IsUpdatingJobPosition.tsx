@@ -1,64 +1,113 @@
-import { useState, type FC, type SubmitEvent } from "react";
-import type { JobProfile } from "@/types";
-import {
-  getJobPositionFromBranchId,
-  updateJobPositionById,
-} from "@/services/jobsPositions.service";
+import { useEffect, useState, type ChangeEvent, type FC, type SubmitEvent } from "react";
+import type { JobPosition, JobProfile } from "@/types";
+import { getBranchById } from "@/services/branches.services";
+import { updateJobProfile } from "@/services/jobsProfile.service";
+import { toast } from "react-toastify";
 import SelectJobPositionFromBranchId from "./SelectJobPosition";
+import Btn from "@/components/Btn";
+import CardFooter from "./CardFooter";
 
 type Props = {
   state: boolean;
   jobProfile: JobProfile;
+  onClose: () => void;
 };
 
-const IsUpdatingJobPosition: FC<Props> = ({ state, jobProfile }) => {
-  const [jobPositionDescription, setJobPositionDescription] = useState<string>(
-    jobProfile.jobPosition.description
-  );
+const IsUpdatingJobPosition: FC<Props> = ({ state, jobProfile, onClose }) => {
+  const [isSaving, setIsSaving] = useState(false);
+  const [jobsPositionsFromBranch, setJobsPositionsFromBranch] = useState<JobPosition[]>([]);
+  const [selectedJobPositionId, setSelectedJobPositionId] = useState(jobProfile.jobPosition.id);
 
-  const handlerSubmit = (e: SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries());
-    console.table(jobProfile);
-    updateJobPositionById(jobProfile.id as string, {
-      name: data.title as string,
-      description: jobPositionDescription,
-    });
-    getJobPositionFromBranchId(jobProfile.jobPosition.id, jobProfile.branch.id as string)
-      .then((jobPosition) => {
-        console.log(jobPosition);
-        if (jobPosition) {
-          setJobPositionDescription(jobPosition.description);
-        }
+  useEffect(() => {
+    if (!state) return;
+
+    getBranchById(jobProfile.branch.id)
+      .then((branch) => {
+        setJobsPositionsFromBranch(branch?.jobsPositions ?? []);
       })
       .catch((error) => {
-        console.error("Error al obtener el puesto de trabajo:", error);
+        console.error("Error al obtener puestos de la rama", error);
       });
+  }, [state, jobProfile.branch.id]);
+
+  const handleChangeSelectJobPosition = (event: ChangeEvent<HTMLSelectElement>) => {
+    setSelectedJobPositionId(event.target.value);
+  };
+
+  const selectedJobPosition =
+    jobsPositionsFromBranch.find((job) => job.id === selectedJobPositionId) ??
+    jobProfile.jobPosition;
+
+  const handlerSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!jobProfile.id) {
+      toast.error("No se encontró el identificador del perfil", { containerId: "profile" });
+      return;
+    }
+
+    if (!selectedJobPositionId) {
+      toast.error("Debes seleccionar un puesto de trabajo", { containerId: "profile" });
+      return;
+    }
+
+    if (selectedJobPositionId === jobProfile.jobPosition.id) {
+      toast.info("No hay cambios para guardar", { containerId: "profile" });
+      onClose();
+      return;
+    }
+
+    try {
+      setIsSaving(true);
+      await updateJobProfile(jobProfile.id, {
+        jobPosition: {
+          id: selectedJobPosition.id,
+          name: selectedJobPosition.name,
+          description: selectedJobPosition.description,
+        },
+      });
+      toast.success("Puesto actualizado correctamente", { containerId: "profile" });
+      onClose();
+    } catch (error) {
+      console.error("Error al actualizar el puesto del perfil", error);
+      toast.error("No se pudo actualizar el puesto", { containerId: "profile" });
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return state ? (
     <form className="bg-dark text-white text-2xl" onSubmit={handlerSubmit}>
       <SelectJobPositionFromBranchId
-        name="title"
-        variant="name"
-        branchId={jobProfile.branch.id as string}
+        name={`job-position-${jobProfile.id ?? "unknown"}`}
+        variant="id"
+        branchId={jobProfile.branch.id}
+        value={selectedJobPositionId}
+        onChangeSelectJobPosition={handleChangeSelectJobPosition}
       />
-      {jobPositionDescription && jobPositionDescription}
-      {/* {jobPositionDescription && <textarea
-        rows={5}
-        name="description"
-        id="description"
-        defaultValue={jobPositionDescription}
-        className="w-full border py-2 px-4 rounded text-sm lg:text-base mt-2"
-      />}  */}
+      {selectedJobPosition.description && (
+        <p className="mt-2 text-sm text-slate-300">{selectedJobPosition.description}</p>
+      )}
 
-      <button
-        type="submit"
-        className="mt-4 flex justify-end bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors"
-      >
-        Enviar
-      </button>
+      <CardFooter variant="card">
+        <Btn
+          size="xs"
+          label="Cancelar"
+          variant="danger"
+          title={`Cancelar cambios del puesto: ${jobProfile.jobPosition.name}`}
+          type="button"
+          onClick={onClose}
+          formState={isSaving}
+        />
+        <Btn
+          size="xs"
+          label={isSaving ? "Guardando..." : "Guardar"}
+          variant={isSaving ? "loading" : "success"}
+          title={`Guardar cambios del puesto: ${jobProfile.jobPosition.name}`}
+          type="submit"
+          formState={isSaving}
+        />
+      </CardFooter>
     </form>
   ) : null;
 };
