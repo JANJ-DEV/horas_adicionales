@@ -1,10 +1,37 @@
 import useAuth from "@/context/hooks/auth.hook";
-import type { FC } from "react";
+import { useEffect, useState, type FC } from "react";
 import { useFetcher } from "react-router";
 
 const UpdateAccount: FC = () => {
   const { currentUser } = useAuth();
   const formAction = useFetcher();
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
+
+  const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+      setPreviewUrl(null);
+      return;
+    }
+
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+
+    const objectUrl = URL.createObjectURL(file);
+    setPreviewUrl(objectUrl);
+  };
 
   if (!currentUser) {
     return <p>No hay un usuario autenticado</p>;
@@ -28,7 +55,9 @@ const UpdateAccount: FC = () => {
           <img
             id="preview"
             src={
-              (formAction.data?.photoURL as string)
+              previewUrl
+                ? previewUrl
+                : (formAction.data?.photoURL as string)
                 ? formAction.data?.photoURL
                 : (currentUser.photoURL as string)
             }
@@ -44,6 +73,7 @@ const UpdateAccount: FC = () => {
             accept="image/*"
             name="uploadPhoto"
             title="Seleccionar foto de perfil"
+            onChange={handlePhotoChange}
             className="font-bold text-orange-300 hidden"
           />
         </label>

@@ -8,7 +8,6 @@ import {
 } from "firebase/auth";
 import { authFirebase, firestore } from "../apis/firebase";
 import { doc, setDoc } from "firebase/firestore";
-import { toast } from "react-toastify";
 
 const signInWithGoogle = () => {
   const provider = new GoogleAuthProvider();
@@ -61,28 +60,32 @@ const updateAccount = async ({
     console.error("No hay un usuario autenticado");
     return;
   }
-  await updateProfile(user, {
-    displayName,
-    photoURL,
-  });
+  const profilePayload: { displayName?: string; photoURL?: string } = {};
+  if (displayName !== undefined) profilePayload.displayName = displayName;
+  if (photoURL !== undefined) profilePayload.photoURL = photoURL;
+
+  await updateProfile(user, profilePayload);
   try {
     // Aquí puedes realizar la lógica para actualizar la cuenta del usuario
     // Ejemplo, podrías enviar una solicitud a tu backend para actualizar la información del usuario
     const refUserAccount = doc(firestore, "users", user.uid);
-    setDoc(
-      refUserAccount,
-      {
-        uid: user.uid,
-        displayName,
-        photoURL,
-        email: user.email,
-      },
-      { merge: true }
-    );
-    toast.success("Cuenta actualizada correctamente", { containerId: "auth-toast" });
+    const userDocPayload: {
+      uid: string;
+      email: string | null;
+      displayName?: string;
+      photoURL?: string;
+    } = {
+      uid: user.uid,
+      email: user.email,
+    };
+
+    if (displayName !== undefined) userDocPayload.displayName = displayName;
+    if (photoURL !== undefined) userDocPayload.photoURL = photoURL;
+
+    await setDoc(refUserAccount, userDocPayload, { merge: true });
   } catch (error) {
     console.error("Error al actualizar el documento de usuario:", error);
-    toast.error("Error al actualizar el documento de usuario", { containerId: "auth-toast" });
+    throw error;
   }
 };
 

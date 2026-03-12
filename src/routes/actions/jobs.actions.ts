@@ -28,12 +28,12 @@ export const add = async ({ request }: ActionFunctionArgs) => {
   const newJobProfile: JobProfile = {
     title,
     branch: {
-      id: branch.id,
+      id: idBranch,
       name: branch.name,
       description: branch.description,
     },
     jobPosition: {
-      id: jobPositions.id,
+      id: idJobPosition,
       name: jobPositions.name,
       description: jobPositions.description,
     },
@@ -62,25 +62,23 @@ export const update = async ({ request }: ActionFunctionArgs) => {
     };
   }
 
-  if (!uploadPhoto || uploadPhoto.size === 0) {
-    updateAccount({ displayName });
-    data.set("photoURL", authFirebase.currentUser?.photoURL || "");
+  try {
+    if (!uploadPhoto || uploadPhoto.size === 0) {
+      await updateAccount({ displayName });
+      data.set("photoURL", authFirebase.currentUser?.photoURL || "");
+    } else {
+      const url = await uploadFile(uploadPhoto);
+      console.log("URL de la foto subida:", url);
+      await updateAccount({ displayName, photoURL: url });
+      data.set("photoURL", url);
+    }
     toast.success("Cuenta actualizada correctamente", { containerId: "global" });
-  } else {
-    const url = await uploadFile(uploadPhoto);
-    console.log("URL de la foto subida:", url);
-    updateAccount({ displayName, photoURL: url });
-    data.set("photoURL", url);
-    toast.success("Cuenta actualizada correctamente", { containerId: "global" });
-    //   uploadFile(uploadPhoto).then((url) => {
-    //   console.log("URL de la foto subida:", url);
-    //   updateAccount({ displayName, photoURL: url });
-    //   data.set("photoURL", url);
-    //   toast.success("Cuenta actualizada correctamente", { containerId: "global" });
-    // }).catch((error: FirebaseError) => {
-    //   console.error("Error al subir la foto:", error);
-    //   toast.error("Error al subir la foto", { containerId: "global" });
-    // });
+  } catch (error) {
+    console.error("Error al actualizar la cuenta:", error);
+    toast.error("Error al actualizar la cuenta", { containerId: "global" });
+    return {
+      error: "Error al actualizar la cuenta",
+    };
   }
 
   const photoURL = data.get("photoURL") as string;
