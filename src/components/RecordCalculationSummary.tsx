@@ -21,11 +21,11 @@ const RecordCalculationSummary: FC<RecordCalculationSummaryProps> = ({
 
   return (
     <footer
-      className="flex flex-col bg-slate-900/50 rounded"
+      className="flex min-w-0 flex-col rounded bg-slate-900/50"
       title="Total de horas trabajadas y salario calculado (horas:minutos / decimal)"
     >
-      <div className="flex items-center gap-2">
-        <span className="text-info px-4 py-2">Informacion del calculo</span>
+      <div className="flex items-center gap-2 px-4 py-2">
+        <span className="min-w-0 break-words text-info">Informacion del calculo</span>
         {hasWorkedTime && startTime && endTime && (
           <HoursCalculationTooltip
             startTime={startTime}
@@ -36,25 +36,25 @@ const RecordCalculationSummary: FC<RecordCalculationSummaryProps> = ({
       </div>
 
       {hasWorkedTime && workedHours && (
-        <div className="flex flex-col ld:flex-row  lg:justify-between gap-2 p-4 ">
-          <div className="flex items-center gap-2">
+        <div className="flex flex-col gap-3 p-4 lg:flex-row lg:justify-between">
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
             <header
-              className="flex gap-2 items-center"
+              className="flex min-w-0 flex-wrap items-center gap-2"
               title="Horas trabajadas en formato horas:minutos"
             >
               <strong className="text-violet-400">Total:</strong>
-              <span>{workedHours.formatted}</span>
+              <span className="break-words">{workedHours.formatted}</span>
             </header>
-            <section title="Horas trabajadas en formato decimal">
+            <section className="shrink-0" title="Horas trabajadas en formato decimal">
               (<small className="text-orange-300"> {workedHours.decimal}</small>)
             </section>
           </div>
           <div
-            className="flex items-center gap-2"
+            className="flex min-w-0 flex-wrap items-center gap-2"
             title="Calculos basados en horas trabajadas y tarifa horaria, configurable en el perfil de trabajo"
           >
             <strong className="text-warning">Salario estimado:</strong>
-            <span className="text-success">{salary}</span>
+            <span className="break-words text-success">{salary}</span>
           </div>
         </div>
       )}

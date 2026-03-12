@@ -42,7 +42,7 @@ const Records = () => {
   }, {});
 
   return (
-    <section className="flex flex-col gap-4">
+    <section className="flex min-w-0 flex-col gap-4 overflow-x-hidden">
       {hasCurrentUser && isLoading && (
         <aside className="flex flex-col gap-4 bg-black/50 p-4 rounded">
           <p className="text-yellow-300">Cargando registros...</p>
@@ -55,7 +55,7 @@ const Records = () => {
       )}
 
       {(hasCurrentUser ? records : []) && (
-        <section className="flex flex-col sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <section className="flex min-w-0 flex-col gap-4 sm:grid sm:grid-cols-2 lg:grid-cols-3">
           {(hasCurrentUser ? records : []).map((record) => (
             <RecordCard
               key={record.id}

@@ -1,84 +1,39 @@
-import useAuth from "@/context/hooks/auth.hook";
-import { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
-// import {  toast, ToastContainer} from 'react-toastify';
-import { subscribeToJobProfiles } from "@/services/jobsProfile.service";
-import type { JobProfile } from "@/types";
+import { useJobsProfiles } from "./hooks/useJobsProfiles";
+import { lazy, Suspense } from "react";
+import ErrorApp from "@/components/Error";
+import CardsLayout from "./components/CardsLayout";
+import ProfileCardSkeleton from "./components/ProfileCardSkeleton";
 
-const JobProfiles = () => {
-  const { currentUser } = useAuth();
-  const [isLoading, setIsLoading] = useState(true);
-  const [isError, setIsError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>("");
-  const customErrorMessage = "No tienes registros";
-  const [jobs, setJobs] = useState<JobProfile[]>([]);
-  const hasCurrentUser = Boolean(currentUser?.uid);
+const JobProfileCard = lazy(() => import("./components/JobProfileCard"));
 
-  useEffect(() => {
-    if (!currentUser?.uid) {
-      return;
-    }
+type PropsJobProfiles = {
+  variant?: "default";
+};
 
-    const unsubscribe = subscribeToJobProfiles(
-      (profiles) => {
-        if (!profiles || profiles.length === 0) {
-          setJobs([]);
-          setIsError(true);
-          setErrorMessage(customErrorMessage);
-          setIsLoading(false);
-        } else {
-          setJobs(profiles);
-          setIsError(false);
-          setErrorMessage("");
-          setIsLoading(false);
-        }
-      },
-      (error) => {
-        console.error("Error al suscribirse a perfiles de trabajo:", error);
-        setJobs([]);
-        setIsError(true);
-        setErrorMessage("Error al cargar los perfiles de trabajo");
-        setIsLoading(false);
-      },
-      () => {
-        setIsLoading(false);
-      }
-    );
+const JobProfiles = ({ variant = "default" }: PropsJobProfiles) => {
+  const { isLoading, isError, errorMessage, jobs, hasCurrentUser } = useJobsProfiles();
+  const skeletonCards = Array.from({ length: 3 }, (_, index) => (
+    <ProfileCardSkeleton key={`job-profile-skeleton-${index}`} variant="skeleton" />
+  ));
 
-    return () => {
-      if (typeof unsubscribe === "function") {
-        unsubscribe();
-      }
-    };
-  }, [currentUser?.uid]);
+  const variantsStyles = {
+    default: "flex flex-col gap-4",
+  };
 
   return (
-    <section className="flex flex-col gap-4">
-      {hasCurrentUser && isLoading && <p>Cargando...</p>}
-      {hasCurrentUser && isError && errorMessage && (
-        <aside className="flex flex-col gap-4 bg-black/50 p-4 rounded">
-          <p className="text-yellow-300">{errorMessage}</p>
-        </aside>
+    <section className={variantsStyles[variant]}>
+      {hasCurrentUser && isLoading && <CardsLayout variant="default">{skeletonCards}</CardsLayout>}
+      {hasCurrentUser && !isLoading && <ErrorApp isError={isError} errorMessage={errorMessage} />}
+      {hasCurrentUser && !isLoading && !isError && (
+        <Suspense fallback={<CardsLayout variant="default">{skeletonCards}</CardsLayout>}>
+          <CardsLayout variant="default">
+            {jobs.map((jobProfile) => {
+              return <JobProfileCard key={jobProfile.id} jobProfile={jobProfile} />;
+            })}
+          </CardsLayout>
+        </Suspense>
       )}
-      {(hasCurrentUser ? jobs : []).map((jobProfile) => {
-        return (
-          <div
-            key={jobProfile.id}
-            className="bg-slate-800/50 p-4 border rounded-sm overflow-hidden"
-          >
-            <h3 className="text-lg font-semibold">{jobProfile.title}</h3>
-            <strong>{jobProfile.branch.name}</strong>
-            <p className="font-medium">{jobProfile.branch.description}</p>
-            <strong>{jobProfile.jobPosition.name}</strong>
-            <p className="font-medium">{jobProfile.jobPosition.description}</p>
-            {jobProfile.estimatedHourlyRate !== undefined && (
-              <p className="font-medium">
-                Tarifa horaria estimada: {jobProfile.estimatedHourlyRate}€/hora
-              </p>
-            )}
-          </div>
-        );
-      })}
       <ToastContainer containerId="profile" position="top-right" />
     </section>
   );

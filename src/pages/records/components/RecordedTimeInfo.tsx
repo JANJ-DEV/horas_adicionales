@@ -8,19 +8,19 @@ interface RecordedTimeInfoProps {
 const RecordedTimeInfo: FC<RecordedTimeInfoProps> = ({ record }) => {
   return (
     <>
-      <div className="flex justify-between">
-        <p>
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+        <p className="min-w-0 break-all">
           <strong>Empresa:</strong> {record.titleJobProfile}
         </p>
-        <p>
+        <p className="shrink-0 sm:pl-3">
           <strong>Fecha:</strong> {new Date(record.dateTimeRecord).toLocaleDateString()}
         </p>
       </div>
-      <div className="flex justify-between">
-        <p>
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+        <p className="min-w-0 break-all">
           <strong>Entrada:</strong> {record.workStartTime}
         </p>
-        <p>
+        <p className="sm:pl-3">
           <strong>Salida:</strong> {record.workEndTime}
         </p>
       </div>

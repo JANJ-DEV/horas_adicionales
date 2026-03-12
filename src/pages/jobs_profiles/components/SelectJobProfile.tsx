@@ -1,66 +1,42 @@
-import type { Branch, JobPosition } from "@/types";
-import type { FC } from "react";
+import type { Branch } from "@/types";
+import type { ChangeEvent, FC } from "react";
+import SelectField from "@/components/SelectField";
 
 type SelectJobProfileProps = {
   branches?: Branch[];
-  jobsPositions?: JobPosition[];
-  onChangeSelectJobProfile?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  onChangeSelectJobProfile?: (event: ChangeEvent<HTMLSelectElement>) => void;
+  name?: string;
+  id?: string;
+  value?: string;
+  disabled?: boolean;
+  label?: string;
 };
-// import { useFilterBranches } from "@/hooks/useFilterBranches"; --- IGNORE ---
-// Este componente tiene que devolver un select con las ramas o puestos de trabajo dependiendo de lo que se le pase por props
 
 const SelectJobProfile: FC<SelectJobProfileProps> = ({
   branches,
-  jobsPositions,
   onChangeSelectJobProfile,
+  name = "branch",
+  id = "branch",
+  value,
+  disabled,
+  label = "Selecciona una rama:",
 }) => {
-  if (branches) {
-    return (
-      <section className="flex flex-col gap-2">
-        <label htmlFor="branch" className="text-2xl">
-          Selecciona una rama:
-        </label>
-        <select
-          name="branch"
-          id="branch"
-          aria-label="Select branch"
-          onChange={onChangeSelectJobProfile}
-          className="border py-2 rounded"
-        >
-          <option value="" disabled selected>
-            Ramas
-          </option>
-          {branches.map((branch) => (
-            <option key={branch.id} value={branch.id}>
-              {branch.name}
-            </option>
-          ))}
-        </select>
-      </section>
-    );
-  }
+  if (!branches) return null;
 
   return (
-    <section className="flex flex-col gap-2">
-      <label htmlFor="jobPosition" className="text-2xl">
-        Selecciona un puesto de trabajo:
-      </label>
-      <select
-        name="jobPosition"
-        id="jobPosition"
-        aria-label="Select job position"
-        className="border py-2 rounded"
-      >
-        <option value="" disabled selected className="text-xl">
-          Puesto de trabajo
-        </option>
-        {jobsPositions?.map((job) => (
-          <option key={job.id} value={job.id}>
-            {job.name}
-          </option>
-        ))}
-      </select>
-    </section>
+    <SelectField
+      label={label}
+      name={name}
+      id={id}
+      value={value}
+      disabled={disabled}
+      onChange={onChangeSelectJobProfile}
+      placeholder="Ramas"
+      options={branches.map((branch) => ({
+        value: branch.id,
+        label: branch.name,
+      }))}
+    />
   );
 };
 

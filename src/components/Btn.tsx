@@ -7,6 +7,7 @@ interface BtnProps {
   type?: "button" | "submit" | "reset";
   formState?: boolean;
   title?: string;
+  size?: "xs" | "sm" | "md" | "lg" | "xl";
   variant?:
     | "primary"
     | "secondary"
@@ -30,6 +31,7 @@ const Btn: FC<BtnProps> = ({
   formState,
   type = "button",
   title = "",
+  size = "md",
 }) => {
   const [variantStyles] = useState({
     primary: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded",
@@ -46,11 +48,18 @@ const Btn: FC<BtnProps> = ({
     disabled: "bg-gray-500 cursor-not-allowed",
     loading: "bg-gray-500 cursor-not-allowed",
   });
+  const [sizeStyles] = useState({
+    xs: "text-xs py-1 px-2",
+    sm: "text-sm py-2 px-3",
+    md: "text-md py-2 px-4",
+    lg: "text-lg py-3 px-5",
+    xl: "text-xl py-4 px-6",
+  });
 
   return (
     <button
       type={type}
-      className={`${variantStyles[variant]} transition-colors duration-300`}
+      className={`${variantStyles[variant]} ${sizeStyles[size]} transition-colors duration-300`}
       onClick={onClick}
       disabled={formState}
       title={title}
