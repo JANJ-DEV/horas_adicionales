@@ -1,6 +1,6 @@
 import { FirebaseError } from "firebase/app";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { handleAppError } from "./error.service";
+import { handleAppError } from "@/services/error.service";
 
 describe("handleAppError", () => {
   afterEach(() => {

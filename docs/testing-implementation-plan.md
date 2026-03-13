@@ -181,6 +181,7 @@ Si una fase falla:
 | 2026-03-13 | Fase 1 | Setup Vitest + jsdom + scripts de test + setup global | OK | Validado con lint, build y test |
 | 2026-03-13 | Fase 2 | Tests de logica en `src/utils/index.test.ts` (8 casos) | OK | Cobertura inicial de funciones puras |
 | 2026-03-13 | Fase 2 | Tests de logica en `src/services/error.service.test.ts` (4 casos) | OK | Manejo de FirebaseError, Error y error desconocido |
+| 2026-03-13 | Fase 2 | Migracion de tests a `test/` con estructura espejo de `src/` | OK | Vitest actualizado: include y setup en `test/` |
 
 ## Decisiones tecnicas
 

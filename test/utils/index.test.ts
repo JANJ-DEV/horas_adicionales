@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { calculateSalary, calculateWorkedHours, lastLoginAt, obtenerFechaActual } from "./index";
+import { calculateSalary, calculateWorkedHours, lastLoginAt, obtenerFechaActual } from "@/utils/index";
 
 describe("utils", () => {
   describe("lastLoginAt", () => {
