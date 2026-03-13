@@ -180,6 +180,7 @@ Si una fase falla:
 | 2026-03-13 | Fase 0 | Rama creada + plan inicial | OK | Base lista para arrancar Fase 1 |
 | 2026-03-13 | Fase 1 | Setup Vitest + jsdom + scripts de test + setup global | OK | Validado con lint, build y test |
 | 2026-03-13 | Fase 2 | Tests de logica en `src/utils/index.test.ts` (8 casos) | OK | Cobertura inicial de funciones puras |
+| 2026-03-13 | Fase 2 | Tests de logica en `src/services/error.service.test.ts` (4 casos) | OK | Manejo de FirebaseError, Error y error desconocido |
 
 ## Decisiones tecnicas
 
@@ -189,4 +190,4 @@ Si una fase falla:
 
 ## Proximo paso
 
-- Continuar Fase 2 con mas logica pura (prioridad: `src/services/error.service.ts` y funciones puras adicionales).
+- Continuar Fase 2 con logica pura adicional en servicios/utilidades sin dependencias externas.
