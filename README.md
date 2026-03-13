@@ -36,15 +36,22 @@ Casos de uso principales:
 
 ## Capturas
 
-### Home
-
-![Home desktop](public/img/readme/desktop/home-desktop.png)
-![Home mobile](public/img/readme/mobile/home-mobile.png)
+Capturas con sesion iniciada para mostrar el flujo privado principal de la app.
 
 ### Records
 
-![Records desktop](public/img/readme/desktop/records-desktop.png)
-![Records mobile](public/img/readme/mobile/records-mobile.png)
+![Records auth desktop](public/img/readme/desktop/records-auth-desktop.png)
+![Records auth mobile](public/img/readme/mobile/records-auth-mobile.png)
+
+### Job Profiles
+
+![Job profiles auth desktop](public/img/readme/desktop/job-profiles-auth-desktop.png)
+![Job profiles auth mobile](public/img/readme/mobile/job-profiles-auth-mobile.png)
+
+### Account
+
+![Account auth desktop](public/img/readme/desktop/account-auth-desktop.png)
+![Account auth mobile](public/img/readme/mobile/account-auth-mobile.png)
 
 ## Funcionalidades
 
