@@ -19,7 +19,7 @@ import {
   populateCollectionFromFirstLevel,
   populateJobsPositions,
   populateUtilities,
-} from "@/services/populate.service";
+} from "../../src/services/populate.service";
 
 describe("populate.service", () => {
   const fakeDb = {} as Firestore;

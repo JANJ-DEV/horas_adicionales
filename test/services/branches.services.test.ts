@@ -24,7 +24,7 @@ vi.mock("firebase/firestore", () => ({
   getDoc: vi.fn(),
 }));
 
-import { addBranch, removeBranchById, updateBranchById } from "@/services/branches.services";
+import { addBranch, removeBranchById, updateBranchById } from "../../src/services/branches.services";
 
 describe("branches.services (logic without firestore)", () => {
   it("addBranch lanza toast informativo con nombre de rama", () => {
