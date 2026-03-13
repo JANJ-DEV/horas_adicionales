@@ -73,7 +73,7 @@ Mitigacion:
 
 Estado:
 
-- Pendiente.
+- Completado.
 
 ### Fase 2: Tests de utilidades y logica pura
 
@@ -102,7 +102,7 @@ Mitigacion:
 
 Estado:
 
-- Pendiente.
+- En progreso.
 
 ### Fase 3: Componentes UI clave
 
@@ -178,6 +178,8 @@ Si una fase falla:
 | Fecha | Fase | Cambio | Resultado | Observaciones |
 | --- | --- | --- | --- | --- |
 | 2026-03-13 | Fase 0 | Rama creada + plan inicial | OK | Base lista para arrancar Fase 1 |
+| 2026-03-13 | Fase 1 | Setup Vitest + jsdom + scripts de test + setup global | OK | Validado con lint, build y test |
+| 2026-03-13 | Fase 2 | Tests de logica en `src/utils/index.test.ts` (8 casos) | OK | Cobertura inicial de funciones puras |
 
 ## Decisiones tecnicas
 
@@ -187,4 +189,4 @@ Si una fase falla:
 
 ## Proximo paso
 
-- Iniciar Fase 1: setup de Vitest, script de test y test de humo.
+- Continuar Fase 2 con mas logica pura (prioridad: `src/services/error.service.ts` y funciones puras adicionales).
