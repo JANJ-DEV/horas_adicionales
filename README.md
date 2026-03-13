@@ -1,47 +1,56 @@
 # Horas Adicionales
 
-Aplicación web para registrar horas trabajadas por jornada y gestionar perfiles de trabajo por usuario autenticado.
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-7-646CFF?logo=vite&logoColor=white)
+![Firebase](https://img.shields.io/badge/Firebase-Auth%20%26%20Firestore-FFCA28?logo=firebase&logoColor=black)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)
+![License](https://img.shields.io/badge/license-Private-informational)
+
+Aplicacion web para registrar horas trabajadas por jornada y gestionar perfiles de trabajo por usuario autenticado.
 
 ## Resumen
 
-Este proyecto está construido con **React + TypeScript + Vite** y usa:
+Este proyecto esta construido con React + TypeScript + Vite y utiliza:
 
-- **Firebase Authentication** (inicio de sesión con Google).
-- **Cloud Firestore** para persistir datos por usuario.
-- **React Router** para navegación y acciones de formularios.
-- **Tailwind CSS** para estilos.
-- **React Toastify** para notificaciones.
+- Firebase Authentication para inicio de sesion con Google.
+- Cloud Firestore para persistencia de datos por usuario.
+- React Router para navegacion y acciones de formularios.
+- Tailwind CSS para estilos.
+- React Toastify para notificaciones.
 
 ## Funcionalidades actuales
 
-- Inicio de sesión y cierre de sesión con cuenta de Google.
-- Protección de rutas privadas (`/records`, `/job-profiles`, `/account`).
-- Alta de registros de jornada (empresa, fecha, hora de entrada y salida).
-- Listado de registros guardados del usuario.
-- Creación y listado en tiempo real de perfiles de trabajo.
-- Gestión completa (CRUD) de perfiles de trabajo desde el servicio.
-- Vista de datos básicos de la cuenta autenticada.
+- Inicio y cierre de sesion con Google.
+- Rutas privadas para records, job-profiles y account.
+- Alta y listado de registros de jornada.
+- Creacion y listado en tiempo real de perfiles de trabajo.
+- CRUD de perfiles de trabajo desde servicios.
+- Vista de datos basicos de cuenta autenticada.
 
-## Stack técnico
+## Stack tecnico
 
 - React 19
 - TypeScript 5
 - Vite 7
-- Vite 6
-- Firebase 11 (Auth + Firestore)
+- Firebase 12 (Auth + Firestore)
 - React Router 7
 - Tailwind CSS 4
+- React Toastify 11
 
 ## Requisitos
 
-- Node.js 20+ recomendado
+- Node.js 20+
 - npm 10+
-- Proyecto de Firebase con Authentication (Google) y Firestore habilitados
+- Proyecto Firebase con Authentication (Google) y Firestore habilitados
 
-## Configuración de entorno
+## Configuracion de entorno
 
-1. Crea un archivo `.env.local` en la raíz del proyecto.
-2. Añade las variables de tu app de Firebase:
+1. Crear un archivo .env.local en la raiz del proyecto.
+2. Copiar las variables desde [.env.example](.env.example).
+3. Completar con las credenciales de tu proyecto Firebase.
+
+Variables requeridas:
 
 ```env
 VITE_API_KEY=
@@ -53,83 +62,63 @@ VITE_MESSAGING_SENDER_ID=
 VITE_APP_ID=
 ```
 
-> Nota: todas las variables del frontend deben comenzar por `VITE_` para que Vite las exponga en `import.meta.env`.
+Nota: en Vite, las variables expuestas al frontend deben empezar por VITE_.
 
-## Instalación y ejecución
+## Instalacion y ejecucion
 
 ```bash
 npm install
 npm run dev
 ```
 
-La app quedará disponible en la URL local que muestre Vite (normalmente `http://localhost:5173`).
+La app quedara disponible en la URL que muestre Vite (normalmente http://localhost:5173).
 
 ## Scripts disponibles
 
-- `npm run dev`: inicia servidor de desarrollo.
-- `npm run build`: compila TypeScript y genera build de producción.
-- `npm run preview`: sirve localmente la build generada.
-- `npm run lint`: ejecuta ESLint.
+- npm run dev: inicia servidor de desarrollo.
+- npm run build: compila TypeScript y genera build de produccion.
+- npm run preview: sirve localmente la build generada.
+- npm run lint: ejecuta ESLint.
+- npm run lint:fix: ejecuta ESLint con autofix.
+- npm run format: aplica Prettier.
+- npm run format:check: valida formato con Prettier.
+- npm run seed:catalog: pobla catalogos en Firestore.
+- npm run seed:utilities: pobla utilidades en Firestore.
 
 ## Estructura principal
 
 ```text
 src/
-  apis/                # Configuración de Firebase
-  components/          # Componentes reutilizables UI
-  context/             # Contextos globales (auth, toast, estado global)
-  json/                # Catálogos estáticos (sectores y puestos)
-  pages/               # Vistas y layouts por módulo
-    account/           # Cuenta de usuario
-    jobs_profiles/     # Perfiles de trabajo
-    records/           # Registros de horas
-    layouts/           # Layouts públicos/privados y estructura común
-  routes/              # Definición de rutas y acciones de formularios
-  services/            # Lógica de negocio (Auth, Firestore y Errores)
-  types/               # Definiciones de interfaces TypeScript
+  apis/                # Configuracion de Firebase
+  components/          # Componentes reutilizables de UI
+  context/             # Contextos globales y providers
+  hooks/               # Hooks de aplicacion
+  pages/               # Vistas, modulos y layouts
+  routes/              # Definicion de rutas y actions
+  services/            # Logica de negocio y acceso a datos
+  types/               # Tipos TypeScript
   utils/               # Utilidades compartidas
+scripts/               # Scripts de poblado de catalogos
+public/                # Recursos estaticos
 ```
 
-## Modelo de datos (Firestore)
+## Documentacion oficial
 
-Los datos se guardan por usuario autenticado en:
+- React: https://react.dev/
+- TypeScript: https://www.typescriptlang.org/docs/
+- Vite: https://vite.dev/guide/
+- Firebase: https://firebase.google.com/docs
+- React Router: https://reactrouter.com/home
+- Tailwind CSS: https://tailwindcss.com/docs
+- React Toastify: https://fkhadra.github.io/react-toastify/introduction/
 
-- `users/{uid}/records`
-- `users/{uid}/job_profiles`
+## Demo
 
-Ejemplo de documento en `records`:
+- Demo en vivo: pendiente de publicacion.
 
-```json
-{
-  "id": "auto-id",
-  "nombreEmpresa": "Empresa X",
-  "fecha": "2026-03-03",
-  "hora_entrada": "08:00",
-  "hora_salida": "17:00",
-  "createdAt": "serverTimestamp",
-  "updatedAt": "serverTimestamp"
-}
-```
+## Proximas mejoras sugeridas
 
-## Rutas principales
-
-- `/` y `/home`: inicio público.
-- `/records`: listado de registros.
-- `/records/add`: formulario para nuevo registro.
-- `/job-profiles`: listado de perfiles de trabajo.
-- `/job-profiles/add`: formulario para nuevo perfil.
-- `/account`: información de cuenta.
-- `/account/update`: vista de actualización (placeholder).
-
-## Notas de desarrollo
-
-- Alias de importación configurado: `@` → `src`.
-- Se usa `babel-plugin-react-compiler` en la configuración de Vite.
-- El proyecto compila correctamente con `npm run build`.
-
-## Próximas mejoras sugeridas
-
-- Edición y borrado funcional de perfiles de trabajo (botones ya visibles en UI).
-- Filtros por fecha/empresa para registros.
-- Tests de servicios y componentes críticos.
-- Reglas de seguridad de Firestore documentadas por entorno.
+- Filtros avanzados por fecha/empresa en registros.
+- Tests de servicios y componentes criticos.
+- Documentar reglas de seguridad de Firestore por entorno.
+- Pipeline CI con checks de lint, format y build.
