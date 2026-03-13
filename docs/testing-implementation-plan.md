@@ -102,7 +102,7 @@ Mitigacion:
 
 Estado:
 
-- En progreso.
+- Completado.
 
 ### Fase 3: Componentes UI clave
 
@@ -132,7 +132,7 @@ Mitigacion:
 
 Estado:
 
-- Pendiente.
+- En progreso.
 
 ### Fase 4: Consolidacion y documentacion final
 
@@ -184,6 +184,8 @@ Si una fase falla:
 | 2026-03-13 | Fase 2 | Migracion de tests a `test/` con estructura espejo de `src/` | OK | Vitest actualizado: include y setup en `test/` |
 | 2026-03-13 | Fase 2 | Tests de logica en `test/services/populate.service.test.ts` (6 casos) | OK | Validaciones de estructura y persistencia con mocks de Firestore |
 | 2026-03-13 | Fase 2 | Tests de logica en `test/services/branches.services.test.ts` (3 casos) | OK | Verificacion de toasts y retornos en funciones deterministas |
+| 2026-03-13 | Fase 3 | Piloto de componente en `test/components/Btn.test.tsx` (5 casos) | OK | Render, interaccion y estado disabled |
+| 2026-03-13 | Fase 3 | Segundo piloto en `test/components/Loading.test.tsx` (3 casos) | OK | Variantes visuales y prop size |
 
 ## Decisiones tecnicas
 
@@ -193,4 +195,4 @@ Si una fase falla:
 
 ## Proximo paso
 
-- Continuar Fase 2 con logica pura adicional en servicios/utilidades sin dependencias externas.
+- Continuar Fase 3 con un componente que use contexto ligero, manteniendo mocks controlados.
