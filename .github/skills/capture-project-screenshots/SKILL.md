@@ -1,6 +1,6 @@
 ---
 name: capture-project-screenshots
-description: "Generar screenshots o gifs del proyecto para README o documentacion. USE FOR: screenshot, screenshots, capturas, imagenes del proyecto, gif demo, actualizar README con imagenes, evidencia visual de UI."
+description: "Generar screenshots o gifs del proyecto para README o documentacion con estructura repetible. USE FOR: screenshot, screenshots, capturas, imagenes del proyecto, gif demo, actualizar README con imagenes, evidencia visual de UI."
 ---
 
 # Capture Project Screenshots
@@ -28,6 +28,15 @@ Usar cuando el usuario pida:
 2. App ejecutandose en local (normalmente npm run dev).
 3. Rutas o vistas objetivo definidas por el usuario.
 4. Si hay autenticacion, tener cuenta de prueba o flujo de acceso habilitado.
+
+## Rutas sugeridas para este proyecto
+
+- /
+- /records
+- /records/add
+- /job-profiles
+- /job-profiles/add
+- /account
 
 ## Estandar de salida
 
@@ -62,6 +71,16 @@ Si se captura una secuencia, agregar indice:
 6. Actualizar README con rutas relativas.
 7. Verificar que las imagenes se renderizan en Markdown.
 
+## Modo operativo recomendado
+
+1. Manual rapido: capturas del SO + convencion de nombres.
+2. Automatizado: Playwright para capturas reproducibles.
+
+Si se usa modo automatizado, guardar siempre en:
+
+- public/img/readme/desktop/
+- public/img/readme/mobile/
+
 ## Viewports sugeridos
 
 - Desktop: 1440x900
@@ -85,8 +104,25 @@ Ejemplo de estructura:
 - Detalle o formulario
 - Perfiles de trabajo
 
+Snippet sugerido:
+
+```md
+## Capturas
+
+![Home desktop](public/img/readme/desktop/home-desktop.png)
+![Home mobile](public/img/readme/mobile/home-mobile.png)
+![Records desktop](public/img/readme/desktop/records-list-desktop.png)
+```
+
 ## Notas operativas
 
 - No requiere MCP para capturas basicas.
 - Se puede usar automatizacion con Playwright para repetir capturas de forma confiable.
 - Si no hay automatizacion disponible, capturar manualmente y seguir la misma convencion de nombres.
+
+## Criterio de salida
+
+- Imagenes creadas y versionadas en ruta estable.
+- README actualizado con referencias validas.
+- Sin datos sensibles visibles en capturas.
+- Cobertura minima: 1 pantalla principal desktop + mobile.

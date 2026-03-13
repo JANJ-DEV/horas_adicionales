@@ -1,57 +1,70 @@
 ---
 name: clean-proyect
-description: "Pasar los scripts para la limpieza de codigo antes de subir a GitHub. Pasar el linter, format y arreglar errores de compilacion. Eliminar codigo comentado, logs y archivos innecesarios, finalizando con el buidl de producción para verificar que no hay errores."
+description: "Ejecutar limpieza tecnica antes de subir cambios: lint, format, verificacion, limpieza de logs/comentarios de depuracion y build final. USE FOR: cleaner, limpiar proyecto, pasar linter, pasar prettier, preparar para GitHub, limpieza pre-commit."
 ---
 
-# Horas Adicionales
+# Clean Proyect
 
-Aplicación web para registrar horas trabajadas por jornada y gestionar perfiles de trabajo por usuario autenticado.
+Workflow estandar para dejar el repo en estado listo para commit y PR.
 
-## Stack técnico
+## Objetivo
 
-- React 19
-- TypeScript 5
-- Vite 7
-- Vite 6
-- Firebase 11 (Auth + Firestore)
-- React Router 7
-- Tailwind CSS 4
+- Ejecutar limpieza automatica y validacion final.
+- Reducir errores de estilo/compilacion antes de subir cambios.
+- Evitar que queden logs o codigo comentado de depuracion.
 
-## Requisitos
+## Cuándo usar esta skill
 
-- Node.js 20+ recomendado
-- npm 10+
-- Proyecto de Firebase con Authentication (Google) y Firestore habilitados
+- Antes de commit o push.
+- Antes de abrir PR.
+- Cuando se pida "pasa el cleaner" o equivalente.
 
-## Configuración de entorno
+## Prerrequisitos
 
-1. Crea un archivo `.env.local` en la raíz del proyecto.
-2. Añade las variables de tu app de Firebase:
+1. Dependencias instaladas (`npm install`).
+2. Estar en la raiz del repositorio.
 
-```env
-VITE_API_KEY=
-VITE_AUTH_DOMAIN=
-VITE_DATABASE_URL=
-VITE_PROJECT_ID=
-VITE_STORAGE_BUCKET=
-VITE_MESSAGING_SENDER_ID=
-VITE_APP_ID=
-```
+## Secuencia obligatoria
 
-> Nota: todas las variables del frontend deben comenzar por `VITE_` para que Vite las exponga en `import.meta.env`.
+1. `npm run lint:fix`
+2. `npm run format`
+3. `npm run lint`
+4. `npm run format:check`
+5. `npm run build`
 
-## Instalación y ejecución
+## Limpieza de depuracion (despues de secuencia)
 
-```bash
-npm install
-npm run dev
-```
+Buscar en `src/`:
 
-La app quedará disponible en la URL local que muestre Vite (normalmente `http://localhost:5173`).
+- `console.log`
+- `console.table`
+- `debugger`
+- comentarios temporales (`TODO/FIXME/HACK` no planeados)
 
-## Scripts disponibles
+### Comando recomendado (si hay `rg`)
 
-- `npm run dev`: inicia servidor de desarrollo.
-- `npm run build`: compila TypeScript y genera build de producción.
-- `npm run preview`: sirve localmente la build generada.
-- `npm run lint`: ejecuta ESLint.
+`rg -n "console\\.log|console\\.table|debugger" src`
+
+### Fallback Windows PowerShell (si no hay `rg`)
+
+`Get-ChildItem -Path src -Recurse -Include *.ts,*.tsx,*.js,*.jsx | Select-String -Pattern 'console\\.log|console\\.table|debugger' -CaseSensitive:$false`
+
+## Criterio de exito
+
+- Todos los comandos de la secuencia terminan con codigo 0.
+- No hay errores de lint.
+- No hay errores de build.
+- No quedan trazas de depuracion no justificadas.
+
+## Manejo de errores
+
+1. Si falla `lint:fix`, correr `npm run lint` y corregir errores manuales.
+2. Si falla `format:check`, correr de nuevo `npm run format`.
+3. Si falla build, corregir errores de TypeScript/Vite y repetir secuencia.
+4. No hacer cambios destructivos en git (sin reset hard) para "limpiar".
+
+## Resultado esperado
+
+- Repo consistente para commit.
+- Cambios acotados a limpieza/estilo/compilacion.
+- Estado final validado con evidencia de comandos.
