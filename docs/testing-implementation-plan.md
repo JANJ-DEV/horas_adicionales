@@ -182,6 +182,7 @@ Si una fase falla:
 | 2026-03-13 | Fase 2 | Tests de logica en `src/utils/index.test.ts` (8 casos) | OK | Cobertura inicial de funciones puras |
 | 2026-03-13 | Fase 2 | Tests de logica en `src/services/error.service.test.ts` (4 casos) | OK | Manejo de FirebaseError, Error y error desconocido |
 | 2026-03-13 | Fase 2 | Migracion de tests a `test/` con estructura espejo de `src/` | OK | Vitest actualizado: include y setup en `test/` |
+| 2026-03-13 | Fase 2 | Tests de logica en `test/services/populate.service.test.ts` (6 casos) | OK | Validaciones de estructura y persistencia con mocks de Firestore |
 
 ## Decisiones tecnicas
 
