@@ -38,7 +38,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     } catch (error) {
       // Handle Errors here.
       const firebaseError = error as FirebaseError;
-      // console.log("Error signing in with Google", error);
       toast.error(firebaseError.message || "Error signing in with Google", {
         containerId: "global",
       });

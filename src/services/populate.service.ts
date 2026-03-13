@@ -63,10 +63,6 @@ export async function populateCollectionFromFirstLevel(
         await setDoc(doc(ref, documentId), content);
       })
     );
-
-    console.log(
-      `Colección ${collectionName} poblada correctamente con ${entries.length} documentos.`
-    );
   } catch (error) {
     const firebaseError = error as FirebaseError;
     console.error("Error al poblar la colección:", { ...firebaseError });
@@ -152,8 +148,6 @@ export async function populateUtilities(db: Firestore, utilitiesJson: unknown) {
       setDoc(doc(utilitiesRef, "branch_utilities"), branchUtilities),
       setDoc(doc(utilitiesRef, "utility_definitions"), utilityDefinitions),
     ]);
-
-    console.log("Colección utilities poblada correctamente.");
   } catch (error) {
     const firebaseError = error as FirebaseError;
     console.error("Error al poblar utilities:", { ...firebaseError });
@@ -226,8 +220,4 @@ export async function populateBranchesCatalog(
       `Se encontraron ${invalidRelations.length} jobs sin rama válida: ${invalidRelations.join(", ")}`
     );
   }
-
-  console.log(
-    `Catálogo de branches poblado con ${Object.keys(branchesData).length} ramas y ${Object.keys(jobsData).length} puestos.`
-  );
 }

@@ -1,5 +1,4 @@
 // Pages
-import type { ActionFunctionArgs } from "react-router";
 import { recordActions } from "./actions";
 import { AddNewRecord, Records, RecordsLayout, DetailsRecord } from "./lazy.load";
 
@@ -21,9 +20,6 @@ export const recordsRouter = [
       {
         path: "details/:id",
         element: <DetailsRecord />,
-        action: async ({ request }: ActionFunctionArgs) => {
-          console.log(request);
-        },
       },
     ],
   },

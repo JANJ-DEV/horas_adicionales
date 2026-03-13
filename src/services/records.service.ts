@@ -57,7 +57,6 @@ export const subscribeToRecords = (
       onError(error);
     },
     () => {
-      console.log("Suscripción a registros completada");
       onComplete();
     }
   );

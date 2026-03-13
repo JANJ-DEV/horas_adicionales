@@ -24,7 +24,6 @@ const CreateJobProfile: FC = () => {
   }, [branchId]);
 
   const onChangeSelectJobProfile = (e: ChangeEvent<HTMLSelectElement>) => {
-    // console.log(e.target.value);
     setBranchId(e.target.value);
   };
 

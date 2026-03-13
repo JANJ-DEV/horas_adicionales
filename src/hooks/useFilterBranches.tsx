@@ -11,18 +11,14 @@ export const useFilterBranches = () => {
 
   const handlerOnChangeBranch = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const branchId = e.target.value;
-    console.log(branchId);
     setSelectedBranch(branchId);
     toast.info(`Rama seleccionada: ${branchId}`, { containerId: "profile" });
-    // Aquí podrías filtrar los perfiles de trabajo según la rama seleccionada
   };
 
   const handlerOnChangeJobPosition = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const jobPositionId = e.target.value;
-    console.log(jobPositionId);
     setSelectedJobPosition(jobPositionId);
     toast.info(`Puesto de trabajo seleccionado: ${jobPositionId}`, { containerId: "profile" });
-    // Aquí podrías filtrar los perfiles de trabajo según el puesto de trabajo seleccionado
   };
 
   const getJobPositionByBranch = (selectedJobPosition: string) => {

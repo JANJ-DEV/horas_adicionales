@@ -42,7 +42,6 @@ export const subscribeToJobProfiles = (
       onError(error);
     },
     () => {
-      console.log("Suscripción a perfiles de trabajo completada");
       onComplete();
     }
   );

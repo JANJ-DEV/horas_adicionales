@@ -17,7 +17,6 @@ const JobProfileDetails: React.FC = () => {
     getJobProfileById(id)
       .then((jobProfile) => {
         if (jobProfile) {
-          console.log("Detalles del perfil de trabajo:", jobProfile);
           setDetails(jobProfile as JobProfile);
         } else {
           toast.error("No se encontró el perfil de trabajo con el ID proporcionado", {
@@ -28,9 +27,6 @@ const JobProfileDetails: React.FC = () => {
       .catch((error) => {
         console.error("Error al obtener el perfil de trabajo:", error);
       });
-    // Aquí puedes implementar la lógica para obtener los detalles del perfil de trabajo usando el ID
-    // Por ejemplo, podrías hacer una llamada a una API para obtener los datos del perfil de trabajo
-    console.log(`Obteniendo detalles para el perfil de trabajo con ID: ${id}`);
   }, [id]);
 
   if (!id || typeof id !== "string" || id.trim() === "") {

@@ -7,7 +7,6 @@ import { authFirebase } from "@/apis/firebase";
 import { getBranchById } from "@/services/branches.services";
 import { getJobPositionFromBranchId } from "@/services/jobsPositions.service";
 import { saveJobProfile } from "@/services/jobsProfile.service";
-// import { saveJobProfile } from "@/services/jobsProfile.service";
 
 export const add = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
@@ -15,7 +14,6 @@ export const add = async ({ request }: ActionFunctionArgs) => {
   const idBranch = formData.get("branch") as string;
   const idJobPosition = formData.get("jobPosition") as string;
   const estimatedHourlyRate = formData.get("estimatedHourlyRate") as string;
-  // console.table({ title, idBranch, idJobPosition, estimatedHourlyRate });
 
   if (!title || !idBranch || !idJobPosition) {
     toast.error("Todos los campos son requeridos", { containerId: "jobs-profiles" });
@@ -68,7 +66,6 @@ export const update = async ({ request }: ActionFunctionArgs) => {
       data.set("photoURL", authFirebase.currentUser?.photoURL || "");
     } else {
       const url = await uploadFile(uploadPhoto);
-      console.log("URL de la foto subida:", url);
       await updateAccount({ displayName, photoURL: url });
       data.set("photoURL", url);
     }
