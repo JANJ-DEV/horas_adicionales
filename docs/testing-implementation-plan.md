@@ -186,6 +186,7 @@ Si una fase falla:
 | 2026-03-13 | Fase 2 | Tests de logica en `test/services/branches.services.test.ts` (3 casos) | OK | Verificacion de toasts y retornos en funciones deterministas |
 | 2026-03-13 | Fase 3 | Piloto de componente en `test/components/Btn.test.tsx` (5 casos) | OK | Render, interaccion y estado disabled |
 | 2026-03-13 | Fase 3 | Segundo piloto en `test/components/Loading.test.tsx` (3 casos) | OK | Variantes visuales y prop size |
+| 2026-03-13 | Fase 3 | Tercer piloto en `test/components/CurrentUser.test.tsx` (5 casos) | OK | Contexto mockeado, login/logout y cierre de menu por click externo |
 
 ## Decisiones tecnicas
 
@@ -195,4 +196,4 @@ Si una fase falla:
 
 ## Proximo paso
 
-- Continuar Fase 3 con un componente que use contexto ligero, manteniendo mocks controlados.
+- Continuar Fase 3 con 1 componente adicional de layout/navegacion para cerrar la fase y pasar a consolidacion.
