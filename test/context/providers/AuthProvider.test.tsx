@@ -97,7 +97,7 @@ describe("AuthProvider", () => {
         return vi.fn();
       }
     );
-    mocks.signInWithPopup.mockRejectedValue({ message: "boom" });
+    mocks.signInWithPopup.mockRejectedValue({ code: "auth/network-request-failed", message: "Network error" });
     mocks.signOut.mockResolvedValue(undefined);
 
     const { result } = renderHook(() => useAuth(), { wrapper });
@@ -107,9 +107,10 @@ describe("AuthProvider", () => {
     });
 
     expect(result.current.isError).toBe(true);
-    expect(mocks.toastError).toHaveBeenCalledWith("boom", {
-      containerId: "global",
-    });
+    expect(mocks.toastError).toHaveBeenCalledWith(
+      "No se pudo iniciar sesión con Google. Inténtalo de nuevo.",
+      { containerId: "global" }
+    );
 
     await act(async () => {
       result.current.signOutGoogle();

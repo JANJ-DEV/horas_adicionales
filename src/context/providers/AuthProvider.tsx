@@ -36,12 +36,18 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         delay: 1500,
       });
     } catch (error) {
-      // Handle Errors here.
       const firebaseError = error as FirebaseError;
-      toast.error(firebaseError.message || "Error signing in with Google", {
-        containerId: "global",
-      });
-      setIsError(true);
+      // El usuario cerró el popup voluntariamente — no es un error, solo restaurar estado
+      const ignoredCodes = ["auth/popup-closed-by-user", "auth/cancelled-popup-request"];
+      if (!ignoredCodes.includes(firebaseError.code)) {
+        toast.error(
+          firebaseError.code === "auth/popup-blocked"
+            ? "El navegador bloqueó el popup. Permite las ventanas emergentes e inténtalo de nuevo."
+            : "No se pudo iniciar sesión con Google. Inténtalo de nuevo.",
+          { containerId: "global" }
+        );
+        setIsError(true);
+      }
     } finally {
       setIsLoading(false);
     }
