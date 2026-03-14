@@ -71,6 +71,14 @@ const CurrentUser: FC = () => {
           <span className="hidden max-w-[8rem] truncate text-xs font-medium text-slate-200 lg:inline">
             {currentUser.displayName ?? currentUser.email}
           </span>
+          <span className="text-xs font-medium text-slate-200 sm:inline lg:hidden">
+            {(currentUser.displayName ?? currentUser.email ?? "")
+              .split(" ")
+              .filter(Boolean)
+              .slice(0, 2)
+              .map((w) => w[0].toUpperCase())
+              .join("")}
+          </span>
         </button>
 
         {/* Dropdown */}
