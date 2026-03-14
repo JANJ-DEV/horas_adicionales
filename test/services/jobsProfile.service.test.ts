@@ -134,8 +134,8 @@ describe("jobsProfile.service", () => {
         updatedAt: "SERVER_TIMESTAMP",
       }
     );
-    expect(mocks.toastSuccess).toHaveBeenCalledWith("Perfil de trabajo guardado correctamente ", {
-      containerId: "job-profiles",
+    expect(mocks.toastSuccess).toHaveBeenCalledWith("Perfil de trabajo guardado correctamente", {
+      containerId: "jobs-profiles",
     });
     expect(result).toEqual({
       id: "profile-123",

@@ -7,7 +7,7 @@ const mocks = vi.hoisted(() => ({
   getBranchById: vi.fn(),
 }));
 
-vi.mock("../../../src/pages/records/hooks/useDeyailsRecord", () => ({
+vi.mock("../../../src/pages/records/hooks/useDetailsRecord", () => ({
   useDetailRecord: mocks.useDetailRecord,
 }));
 
