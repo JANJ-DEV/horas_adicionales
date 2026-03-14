@@ -73,6 +73,32 @@ Si no se cumple, mantenerlo local al modulo.
 - Enrutado y actions en `src/routes`.
 - Hooks para encapsular logica repetida.
 
+## Convencion obligatoria de tests
+
+Todos los tests deben centralizarse en el directorio raiz `test/`.
+
+Reglas:
+
+1. No crear tests nuevos dentro de `src/`.
+2. Organizar `test/` replicando la estructura de `src/`.
+3. Cada caso de uso debe vivir en su carpeta equivalente.
+
+Ejemplos de mapeo:
+
+- `src/utils/index.ts` -> `test/utils/index.test.ts`
+- `src/services/error.service.ts` -> `test/services/error.service.test.ts`
+- `src/routes/actions/jobs.actions.ts` -> `test/routes/actions/jobs.actions.test.ts`
+
+Convencion de nombres:
+
+- Archivos: `*.test.ts` o `*.test.tsx`.
+- Un archivo de test por modulo o caso de uso principal.
+- Tests de setup global en `test/setup/`.
+
+Regla de migracion:
+
+- Si existen tests en `src/`, se debe planificar su migracion progresiva a `test/` sin mezclar refactors funcionales en el mismo commit.
+
 ## Politica de tests (estado actual del repo)
 
 Actualmente no hay suite de tests consolidada, por lo que:
@@ -80,6 +106,7 @@ Actualmente no hay suite de tests consolidada, por lo que:
 1. No bloquear cambios por ausencia de tests.
 2. Validar siempre con lint y build.
 3. Proponer tests como mejora incremental, no como requisito absoluto.
+4. Mantener estandar de ubicacion: tests centralizados en `test/` con estructura espejo de `src/`.
 
 Cuando conviene proponer tests ahora:
 
