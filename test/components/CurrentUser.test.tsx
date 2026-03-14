@@ -19,6 +19,7 @@ const buildAuthState = (overrides = {}) => ({
   signInWithGoogle: vi.fn(),
   signOutGoogle: vi.fn(),
   isLoading: false,
+  isCancelling: false,
   isAuthenticated: false,
   ...overrides,
 });
@@ -100,11 +101,12 @@ describe("CurrentUser component", () => {
 
     renderCurrentUser();
 
-    const avatar = screen.getByAltText("User profile");
+    const avatar = screen.getByAltText("Foto de perfil");
     expect(avatar).toBeInTheDocument();
-    expect(avatar.className).toContain("border-green-500");
+    expect(avatar.className).toContain("border-cyan-500");
 
-    fireEvent.click(avatar);
+    const trigger = screen.getByRole("button", { name: /Abrir menú de usuario/i });
+    fireEvent.click(trigger);
 
     expect(toggleMenuCurrentUser).toHaveBeenCalledTimes(1);
     expect(closeMenuBars).toHaveBeenCalledTimes(1);
@@ -136,7 +138,7 @@ describe("CurrentUser component", () => {
 
     renderCurrentUser();
 
-    fireEvent.click(screen.getByText("Salir"));
+    fireEvent.click(screen.getByText("Cerrar sesión"));
     expect(signOutGoogle).toHaveBeenCalledTimes(1);
   });
 

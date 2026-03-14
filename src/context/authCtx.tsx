@@ -5,6 +5,7 @@ export type AuthContextType = {
   isAuthenticated: boolean;
   isError: boolean;
   isLoading: boolean;
+  isCancelling: boolean;
   currentUser: User | null;
   setCurrentUser: (user: User | null) => void;
   signInWithGoogle: () => void;

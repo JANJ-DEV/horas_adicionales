@@ -15,35 +15,53 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isCancelling, setIsCancelling] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   const signInWithGoogle = async () => {
+    let cancellingTimer: ReturnType<typeof setTimeout> | null = null;
+    let safetyTimer: ReturnType<typeof setTimeout> | null = null;
     try {
       setIsLoading(true);
+      setIsCancelling(false);
+      // Tras 3 s sin respuesta, asumimos que el usuario cerró el popup → icono "Cancelando"
+      cancellingTimer = setTimeout(() => {
+        setIsLoading(false);
+        setIsCancelling(true);
+      }, 3_000);
+      // Fallback de seguridad absoluto a los 12 s
+      safetyTimer = setTimeout(() => {
+        setIsLoading(false);
+        setIsCancelling(false);
+      }, 12_000);
       const provider = new GoogleAuthProvider();
       provider.setCustomParameters({
         prompt: "select_account",
       });
       const user = await signInWithPopup(authFirebase, provider);
       if (user)
-        toast.success("Signed in with Google successfully", {
-          containerId: "global",
-          autoClose: 1500,
-        });
-      toast.info("Bienvenido " + user.user.displayName, {
+        toast.info("Bienvenido " + user.user.displayName, {
         containerId: "global",
         autoClose: 3000,
-        delay: 1500,
       });
     } catch (error) {
-      // Handle Errors here.
       const firebaseError = error as FirebaseError;
-      toast.error(firebaseError.message || "Error signing in with Google", {
-        containerId: "global",
-      });
-      setIsError(true);
+      // El usuario cerró el popup voluntariamente — no es un error, solo restaurar estado
+      const ignoredCodes = ["auth/popup-closed-by-user", "auth/cancelled-popup-request"];
+      if (!ignoredCodes.includes(firebaseError.code)) {
+        toast.error(
+          firebaseError.code === "auth/popup-blocked"
+            ? "El navegador bloqueó el popup. Permite las ventanas emergentes e inténtalo de nuevo."
+            : "No se pudo iniciar sesión con Google. Inténtalo de nuevo.",
+          { containerId: "global" }
+        );
+        setIsError(true);
+      }
     } finally {
+      if (cancellingTimer !== null) clearTimeout(cancellingTimer);
+      if (safetyTimer !== null) clearTimeout(safetyTimer);
       setIsLoading(false);
+      setIsCancelling(false);
     }
   };
 
@@ -85,6 +103,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         isAuthenticated,
         isError,
         isLoading,
+        isCancelling,
         currentUser,
         setCurrentUser: () => {},
         signInWithGoogle,
