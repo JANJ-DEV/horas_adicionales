@@ -78,14 +78,10 @@ describe("AuthProvider", () => {
       prompt: "select_account",
     });
     expect(mocks.signInWithPopup).toHaveBeenCalled();
-    expect(mocks.toastSuccess).toHaveBeenCalledWith("Signed in with Google successfully", {
-      containerId: "global",
-      autoClose: 1500,
-    });
+    expect(mocks.toastSuccess).not.toHaveBeenCalled();
     expect(mocks.toastInfo).toHaveBeenCalledWith("Bienvenido Juan", {
       containerId: "global",
       autoClose: 3000,
-      delay: 1500,
     });
     expect(result.current.isLoading).toBe(false);
   });

@@ -40,14 +40,9 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       });
       const user = await signInWithPopup(authFirebase, provider);
       if (user)
-        toast.success("Signed in with Google successfully", {
-          containerId: "global",
-          autoClose: 1500,
-        });
-      toast.info("Bienvenido " + user.user.displayName, {
+        toast.info("Bienvenido " + user.user.displayName, {
         containerId: "global",
         autoClose: 3000,
-        delay: 1500,
       });
     } catch (error) {
       const firebaseError = error as FirebaseError;
