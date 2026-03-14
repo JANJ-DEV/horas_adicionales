@@ -132,7 +132,7 @@ Mitigacion:
 
 Estado:
 
-- En progreso.
+- Completado.
 
 ### Fase 4: Consolidacion y documentacion final
 
@@ -152,7 +152,7 @@ Validacion:
 
 Estado:
 
-- Pendiente.
+- Completado.
 
 ## Criterio de no rotura
 
@@ -187,6 +187,23 @@ Si una fase falla:
 | 2026-03-13 | Fase 3 | Piloto de componente en `test/components/Btn.test.tsx` (5 casos) | OK | Render, interaccion y estado disabled |
 | 2026-03-13 | Fase 3 | Segundo piloto en `test/components/Loading.test.tsx` (3 casos) | OK | Variantes visuales y prop size |
 | 2026-03-13 | Fase 3 | Tercer piloto en `test/components/CurrentUser.test.tsx` (5 casos) | OK | Contexto mockeado, login/logout y cierre de menu por click externo |
+| 2026-03-14 | Fase 3 | Componente de navegacion en `test/components/MainMenu.test.tsx` (5 casos) | OK | Render condicional por auth, navegacion y cierre de menu dentro/fuera de nav |
+| 2026-03-14 | Fase 4 | README actualizado con seccion de testing y convenciones | OK | Comandos, estructura en `test/` y buenas practicas documentadas |
+| 2026-03-14 | Fase 4 | Backlog priorizado de cobertura futura definido por riesgo | OK | Priorizacion centrada en actions, servicios con Firestore/Auth y rutas |
+| 2026-03-14 | Fase 4 | Tests en `test/routes/actions/records.actions.test.ts` (6 casos) | OK | Validaciones de utilidades, sesion y payload del flujo principal de registros |
+| 2026-03-14 | Fase 4 | Tests en `test/routes/actions/jobs.actions.test.ts` (6 casos) | OK | Alta de perfil y actualizacion de cuenta con/sin upload y manejo de error |
+| 2026-03-14 | Fase 4 | Tests en `test/services/records.service.test.ts` (8 casos) | OK | Suscripcion, guardado, lectura puntual y mutaciones con mocks de Firestore |
+| 2026-03-14 | Fase 4 | Tests en `test/services/jobsProfile.service.test.ts` (6 casos) | OK | CRUD y suscripcion de perfiles con usuario autenticado mockeado |
+| 2026-03-14 | Fase 4 | Tests en `test/services/auth.service.test.ts` (5 casos) | OK | Login Google, logout, updateAccount y escucha de auth state |
+| 2026-03-14 | Fase 4 | Tests en `test/routes/router.test.tsx` (4 casos) | OK | Composicion de routers, actions enlazadas y fallback 404 |
+| 2026-03-14 | Fase 4 | Tests en `test/context/providers/GlobalProvider.test.tsx` (2 casos) | OK | Estado y acciones de menus globales |
+| 2026-03-14 | Fase 4 | Tests en `test/context/providers/UtilitiesProvider.test.tsx` (2 casos) | OK | Suscripcion, estado derivado y mutaciones locales de catalogo |
+| 2026-03-14 | Fase 4 | Tests en `test/context/providers/AuthProvider.test.tsx` (2 casos) | OK | Sync de auth state, login y logout con toasts |
+| 2026-03-14 | Fase 4 | Tests en `test/hooks/useFilterBranches.test.tsx` (2 casos) | OK | Seleccion de rama/puesto y resolucion de datos derivados |
+| 2026-03-14 | Fase 4 | Tests en `test/pages/records/AddNewRecord.test.tsx` (3 casos) | OK | Carga inicial, utilidades dinamicas y feedback del fetcher |
+| 2026-03-14 | Fase 4 | Tests en `test/pages/jobs_profiles/CreateJobProfile.test.tsx` (2 casos) | OK | Render base, seleccion de rama y estado del submit |
+| 2026-03-14 | Fase 4 | Tests en `test/pages/records/DetailsRecord.test.tsx` (2 casos) | OK | Empty state, contexto de perfil y utilidades mapeadas |
+| 2026-03-14 | Fase 4 | Tests en `test/pages/jobs_profiles/JobProfileDetails.test.tsx` (3 casos) | OK | ID invalido, carga de detalle y manejo de perfil inexistente |
 
 ## Decisiones tecnicas
 
@@ -194,6 +211,39 @@ Si una fase falla:
 - Se evitara introducir e2e en la fase inicial.
 - Se prioriza mantener velocidad de desarrollo sin bloquear por cobertura.
 
+## Backlog priorizado de cobertura futura
+
+### Prioridad 1
+
+1. `src/routes/actions/records.actions.ts`
+   - Motivo: concentra validaciones de formulario, autenticacion, utilidades dinamicas y persistencia del flujo principal de negocio.
+   - Casos objetivo: faltantes requeridos, utilidades invalidas, conversion numerica, usuario no autenticado y payload final enviado a `saveRecord`.
+2. `src/routes/actions/jobs.actions.ts`
+   - Motivo: maneja alta de perfiles y actualizacion de cuenta, incluyendo upload opcional y toasts de error/exito.
+   - Casos objetivo: validacion de campos, flujo con/sin foto, error en upload y error en `updateAccount`.
+3. `src/services/records.service.ts`
+   - Motivo: concentra lectura/escritura de registros y suscripciones a Firestore, con alto impacto si hay regresiones.
+   - Casos objetivo: guardado sin usuario, mapeo de snapshots, error en `onSnapshot`, `getRecordById` inexistente y operaciones `update/delete`.
+
+### Prioridad 2
+
+1. `src/services/jobsProfile.service.ts`
+   - Motivo: CRUD y suscripcion de perfiles de trabajo con dependencia directa de usuario autenticado.
+   - Casos objetivo: save/update/delete, ausencia de usuario, `getJobProfileById` sin documento y callback de suscripcion.
+2. `src/services/auth.service.ts`
+   - Motivo: encapsula integracion con Firebase Auth y actualizacion del documento de usuario.
+   - Casos objetivo: wrapper de `signInWithPopup`, `signOut`, `authStateChanged` y `updateAccount` con/ sin usuario autenticado.
+3. Configuracion de rutas en `src/routes/*.tsx`
+   - Motivo: la navegacion privada/publica define acceso a vistas criticas y pagina 404.
+   - Casos objetivo: composicion de rutas, paths esperados y presencia de fallback `*`.
+
+### Prioridad 3
+
+1. Hooks y providers con logica derivada en `src/context` y `src/hooks`
+   - Motivo: hoy sostienen estado transversal y pueden ganar valor de test cuando el flujo privado crezca.
+2. Componentes de formularios complejos en `src/pages/records` y `src/pages/jobs_profiles`
+   - Motivo: alta combinatoria de estados; conviene abordarlos despues de cubrir actions/servicios para reducir mocks fragiles.
+
 ## Proximo paso
 
-- Continuar Fase 3 con 1 componente adicional de layout/navegacion para cerrar la fase y pasar a consolidacion.
+- Fase de estabilizacion recomendada: pipeline CI para `lint + build + test` y luego evaluar cobertura e2e puntual por flujo critico.

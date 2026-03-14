@@ -19,6 +19,8 @@ Aplicacion web para registrar horas trabajadas por jornada, gestionar perfiles d
 - [Configuracion de entorno](#configuracion-de-entorno)
 - [Instalacion y ejecucion](#instalacion-y-ejecucion)
 - [Scripts disponibles](#scripts-disponibles)
+- [Testing](#testing)
+- [CI](#ci)
 - [Estructura del proyecto](#estructura-del-proyecto)
 - [Documentacion oficial](#documentacion-oficial)
 - [Roadmap corto](#roadmap-corto)
@@ -126,6 +128,62 @@ Servidor local esperado:
 | `npm run seed:utilities` | Poblado de utilidades en Firestore |
 | `npm run seed:utilities:dry` | Simulacion de poblado de utilidades |
 
+## Testing
+
+Base actual de testing:
+
+- Vitest como runner.
+- Testing Library para componentes React.
+- jsdom para entorno de navegador en tests.
+
+Comandos principales:
+
+| Script | Descripcion |
+| --- | --- |
+| `npm run test` | Ejecuta toda la suite de tests |
+| `npm run test -- test/components` | Ejecuta un subconjunto puntual de tests |
+| `npm run test:watch` | Mantiene Vitest en modo watch |
+| `npm run test:coverage` | Genera reporte de cobertura |
+
+Convenciones del proyecto:
+
+- Todos los tests viven en `test/`.
+- La estructura de `test/` replica la estructura principal de `src/`.
+- Los archivos siguen la forma `*.test.ts` o `*.test.tsx`.
+- El setup compartido se mantiene en `test/setup/`.
+
+Cobertura inicial incorporada:
+
+- Utilidades puras en `test/utils/`.
+- Servicios deterministas y con mocks de Firebase en `test/services/`.
+- Componentes base de UI y navegacion en `test/components/`.
+
+Buenas practicas aplicadas en este repo:
+
+- Priorizar comportamiento observable sobre detalles internos.
+- Evitar dependencias de Firebase real; usar mocks aislados.
+- Empezar por servicios, actions y componentes estables antes de formularios complejos o e2e.
+
+## CI
+
+El repositorio incluye pipeline de GitHub Actions en [.github/workflows/ci.yml](.github/workflows/ci.yml).
+
+Eventos cubiertos:
+
+- Pull requests.
+- Push a ramas main, develop, feature/*, chore/* y fix/*.
+
+Checks automáticos:
+
+- npm run lint
+- npm run build
+- npm run test
+
+Recomendacion de proteccion de rama:
+
+- Exigir este workflow en estado exitoso antes de permitir merge a main.
+- Activar "Require branches to be up to date" para evitar merge de commits desfasados.
+
 ## Estructura del proyecto
 
 ```text
@@ -159,4 +217,4 @@ public/                # Recursos estaticos
 - Mejorar filtros de registros por fecha y perfil.
 - Incrementar cobertura de tests en servicios y hooks.
 - Documentar reglas de seguridad de Firestore por entorno.
-- Añadir pipeline CI para lint, format y build.
+- Endurecer reglas de branch protection y checks requeridos en CI.
