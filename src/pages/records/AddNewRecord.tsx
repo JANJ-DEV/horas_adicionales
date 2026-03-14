@@ -32,9 +32,6 @@ const AddNewRecord: FC = () => {
   const [endTime, setEndTime] = useState("");
 
   const isSubmitting = formAction.state === "submitting";
-  const wasJustSubmitted = Boolean(
-    formAction.data && formAction.state === "idle" && !formAction.data?.error
-  );
 
   const selectedUtilities = activeUtilities.filter(
     ({ id, definition }) => Boolean(definition) && selectedUtilityIds.includes(id)
@@ -66,8 +63,7 @@ const AddNewRecord: FC = () => {
   const showLivePreview =
     Boolean(estimatedHourlyRate) &&
     startTime.length > 0 &&
-    endTime.length > 0 &&
-    !wasJustSubmitted;
+    endTime.length > 0;
 
   return (
     <section className="mx-auto w-full max-w-2xl pb-6">
