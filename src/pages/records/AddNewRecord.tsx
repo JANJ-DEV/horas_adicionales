@@ -7,7 +7,13 @@ import { useState, type FC } from "react";
 
 const UTILITY_FIELD_PREFIX = "utility__";
 
-const todayISO = () => new Date().toISOString().split("T")[0];
+const todayISO = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
 
 const fieldCls = "flex flex-col gap-1.5";
 const labelCls = "text-sm font-semibold text-slate-300";
