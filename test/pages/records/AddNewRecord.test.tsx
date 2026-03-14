@@ -40,7 +40,7 @@ describe("AddNewRecord", () => {
 
     render(<AddNewRecord />);
 
-    expect(screen.getByText("Cargando...")).toBeInTheDocument();
+    expect(screen.getByText("Cargando perfiles...")).toBeInTheDocument();
     expect(screen.getByText("Cargando utilidades...")).toBeInTheDocument();
   });
 
@@ -72,7 +72,7 @@ describe("AddNewRecord", () => {
 
     const { container } = render(<AddNewRecord />);
 
-    fireEvent.change(screen.getByLabelText("Perfiles de trabajo guardados"), {
+    fireEvent.change(screen.getByRole("combobox", { name: /Perfil/ }), {
       target: { value: "profile-1" },
     });
 
@@ -117,7 +117,10 @@ describe("AddNewRecord", () => {
     const { rerender } = render(<AddNewRecord />);
 
     expect(screen.getByText("Todos los campos son requeridos")).toBeInTheDocument();
-    expect(screen.getByText("Registro para Perfil demo guardado con éxito.")).toBeInTheDocument();
+    // Cuando hay error, el mensaje de éxito no debe aparecer
+    expect(
+      screen.queryByText("Registro para Perfil demo guardado con éxito.")
+    ).not.toBeInTheDocument();
 
     mocks.useAddRecord.mockReturnValue({
       jobProfiles: [],
