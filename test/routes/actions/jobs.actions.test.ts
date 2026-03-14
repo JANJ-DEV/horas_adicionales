@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { ActionFunctionArgs } from "react-router";
 
 const mocks = vi.hoisted(() => ({
@@ -80,6 +80,8 @@ const setUploadInput = (file?: File) => {
 };
 
 describe("jobs.actions", () => {
+  afterEach(() => vi.restoreAllMocks());
+
   beforeEach(() => {
     vi.clearAllMocks();
     document.body.innerHTML = "";
@@ -151,7 +153,7 @@ describe("jobs.actions", () => {
       },
       estimatedHourlyRate: 12.5,
     });
-    expect(mocks.toastSuccess).toHaveBeenCalledWith("Perfil de trabajo guardado correctamente ", {
+    expect(mocks.toastSuccess).toHaveBeenCalledWith("Perfil de trabajo guardado correctamente", {
       containerId: "jobs-profiles",
     });
     expect(result).toEqual({

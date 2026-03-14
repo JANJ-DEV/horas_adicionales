@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => {
   const providerInstances: Array<{ setCustomParameters: ReturnType<typeof vi.fn> }> = [];
@@ -61,6 +61,8 @@ import {
 } from "../../src/services/auth.service";
 
 describe("auth.service", () => {
+  afterEach(() => vi.restoreAllMocks());
+
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.providerInstances.length = 0;

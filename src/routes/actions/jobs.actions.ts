@@ -39,7 +39,7 @@ export const add = async ({ request }: ActionFunctionArgs) => {
   };
 
   const jobProfile = (await saveJobProfile(newJobProfile)) as JobProfile;
-  toast.success("Perfil de trabajo guardado correctamente ", { containerId: "jobs-profiles" });
+  toast.success("Perfil de trabajo guardado correctamente", { containerId: "jobs-profiles" });
   return {
     success: true,
     message: "Perfil de trabajo guardado correctamente",

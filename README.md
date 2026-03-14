@@ -179,7 +179,7 @@ Checks automáticos:
 - npm run build
 - npm run test
 
-Recomendacion de proteccion de rama:
+Recomendación de protección de rama:
 
 - Exigir este workflow en estado exitoso antes de permitir merge a main.
 - Activar "Require branches to be up to date" para evitar merge de commits desfasados.

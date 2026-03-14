@@ -68,7 +68,7 @@ export const saveJobProfile = async (payload: JobProfile) => {
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     });
-    toast.success("Perfil de trabajo guardado correctamente ", { containerId: "job-profiles" });
+    toast.success("Perfil de trabajo guardado correctamente", { containerId: "jobs-profiles" });
     return { ...payload, id: newDocRef.id } as JobProfile;
   } catch (error) {
     console.error("Error al crear el perfil de trabajo:", error);

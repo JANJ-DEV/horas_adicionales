@@ -1,4 +1,4 @@
-import useBranches from "@/context/hooks/useBranches.hook.";
+import useBranches from "@/context/hooks/useBranches.hook";
 import { useState, type FC, useEffect, type ChangeEvent } from "react";
 import { useFetcher } from "react-router";
 import { ToastContainer } from "react-toastify";

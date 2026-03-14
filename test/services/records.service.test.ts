@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   collection: vi.fn(),
@@ -52,6 +52,8 @@ import {
 } from "../../src/services/records.service";
 
 describe("records.service", () => {
+  afterEach(() => vi.restoreAllMocks());
+
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.authFirebase.currentUser = { uid: "user-123" };

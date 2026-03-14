@@ -12,7 +12,7 @@ vi.mock("react-toastify", () => ({
   },
 }));
 
-vi.mock("@/context/hooks/useBranches.hook.", () => ({
+vi.mock("@/context/hooks/useBranches.hook", () => ({
   default: mocks.useBranches,
 }));
 

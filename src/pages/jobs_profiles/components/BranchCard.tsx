@@ -3,7 +3,7 @@ import Btn from "@/components/Btn";
 import { useState, type ChangeEvent, type FC, type SubmitEvent } from "react";
 import { toast } from "react-toastify";
 import { updateJobProfile } from "@/services/jobsProfile.service";
-import useBranches from "@/context/hooks/useBranches.hook.";
+import useBranches from "@/context/hooks/useBranches.hook";
 import SelectJobProfile from "./SelectJobProfile";
 
 const BranchCard: FC<{ branch: Branch; jobProfileId: string }> = ({ branch, jobProfileId }) => {
