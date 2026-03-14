@@ -57,7 +57,7 @@ const CurrentUser: FC = () => {
             toggleMenuCurrentUser();
             closeMenuBars();
           }}
-          className="flex items-center gap-2 rounded-full border border-slate-700 bg-slate-800/60 p-0.5 pr-2.5 transition hover:border-slate-500 hover:bg-slate-700/60"
+          className="flex items-center gap-2 rounded-full bg-slate-800/60 p-0.5 pr-2.5 transition hover:bg-slate-700/60"
         >
           {currentUser.photoURL ? (
             <img
