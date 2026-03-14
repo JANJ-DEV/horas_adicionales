@@ -15,15 +15,25 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isCancelling, setIsCancelling] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   const signInWithGoogle = async () => {
-    // Timeout de seguridad: si Firebase tarda más de 12 s en detectar el cierre del popup,
-    // restauramos el estado manualmente para no dejar el spinner colgado.
+    let cancellingTimer: ReturnType<typeof setTimeout> | null = null;
     let safetyTimer: ReturnType<typeof setTimeout> | null = null;
     try {
       setIsLoading(true);
-      safetyTimer = setTimeout(() => setIsLoading(false), 12_000);
+      setIsCancelling(false);
+      // Tras 3 s sin respuesta, asumimos que el usuario cerró el popup → icono "Cancelando"
+      cancellingTimer = setTimeout(() => {
+        setIsLoading(false);
+        setIsCancelling(true);
+      }, 3_000);
+      // Fallback de seguridad absoluto a los 12 s
+      safetyTimer = setTimeout(() => {
+        setIsLoading(false);
+        setIsCancelling(false);
+      }, 12_000);
       const provider = new GoogleAuthProvider();
       provider.setCustomParameters({
         prompt: "select_account",
@@ -53,8 +63,10 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setIsError(true);
       }
     } finally {
+      if (cancellingTimer !== null) clearTimeout(cancellingTimer);
       if (safetyTimer !== null) clearTimeout(safetyTimer);
       setIsLoading(false);
+      setIsCancelling(false);
     }
   };
 
@@ -96,6 +108,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         isAuthenticated,
         isError,
         isLoading,
+        isCancelling,
         currentUser,
         setCurrentUser: () => {},
         signInWithGoogle,

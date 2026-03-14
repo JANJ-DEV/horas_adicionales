@@ -1,6 +1,6 @@
 import useAuth from "@/context/hooks/auth.hook";
 import { type FC, useEffect } from "react";
-import { FaRegUserCircle, FaSignOutAlt } from "react-icons/fa";
+import { FaRegUserCircle, FaSignOutAlt, FaTimesCircle } from "react-icons/fa";
 import Loading from "./Loading";
 import { NavLink } from "react-router";
 import useGlobal from "@/context/hooks/useGlobal.hook";
@@ -8,7 +8,7 @@ import useGlobal from "@/context/hooks/useGlobal.hook";
 const CurrentUser: FC = () => {
   const { menuCurrentUser, menuBars } = useGlobal();
   const { isMenuCurrentUserOpen, toggleMenuCurrentUser, closeMenuCurrentUser } = menuCurrentUser;
-  const { currentUser, signInWithGoogle, signOutGoogle, isLoading, isAuthenticated } = useAuth();
+  const { currentUser, signInWithGoogle, signOutGoogle, isLoading, isAuthenticated, isCancelling } = useAuth();
   const { closeMenuBars } = menuBars;
 
   useEffect(() => {
@@ -29,6 +29,19 @@ const CurrentUser: FC = () => {
   }, [isAuthenticated, closeMenuCurrentUser]);
 
   if (isLoading) return <Loading variant="auth" />;
+
+  if (isCancelling)
+    return (
+      <button
+        disabled
+        aria-label="Cancelando inicio de sesión"
+        title="Cancelando..."
+        className="flex items-center gap-1.5 text-sm text-slate-400 animate-pulse cursor-default"
+      >
+        <FaTimesCircle size={22} className="text-slate-500" />
+        <span className="hidden sm:inline text-xs">Cancelando...</span>
+      </button>
+    );
 
   return isAuthenticated && currentUser ? (
     <article className="flex flex-col group relative text-xl">
