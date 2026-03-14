@@ -81,7 +81,10 @@ describe("jobsProfile.service", () => {
     const unsubscribe = vi.fn();
 
     mocks.onSnapshot.mockImplementation(
-      (_ref: unknown, next: (snapshot: { docs: Array<{ id: string; data: () => unknown }> }) => void) => {
+      (
+        _ref: unknown,
+        next: (snapshot: { docs: Array<{ id: string; data: () => unknown }> }) => void
+      ) => {
         next({
           docs: [
             { id: "profile-1", data: () => ({ title: "Uno" }) },
@@ -130,7 +133,7 @@ describe("jobsProfile.service", () => {
       }
     );
     expect(mocks.toastSuccess).toHaveBeenCalledWith("Perfil de trabajo guardado correctamente ", {
-      containerId: "jobs-profiles",
+      containerId: "job-profiles",
     });
     expect(result).toEqual({
       id: "profile-123",

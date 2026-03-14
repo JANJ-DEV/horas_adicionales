@@ -53,7 +53,12 @@ vi.mock("../../src/apis/firebase", () => ({
   firestore: mocks.firestore,
 }));
 
-import { authStateChanged, signInWithGoogle, signOutGoogle, updateAccount } from "../../src/services/auth.service";
+import {
+  authStateChanged,
+  signInWithGoogle,
+  signOutGoogle,
+  updateAccount,
+} from "../../src/services/auth.service";
 
 describe("auth.service", () => {
   beforeEach(() => {

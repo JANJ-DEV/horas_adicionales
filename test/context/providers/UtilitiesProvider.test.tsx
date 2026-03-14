@@ -56,10 +56,12 @@ const wrapper = ({ children }: PropsWithChildren) => (
 
 describe("UtilitiesProvider", () => {
   it("carga catalogo, deriva utilidades activas y permite crear/actualizar/borrar", async () => {
-    mocks.subscribeToUtilities.mockImplementation((onSuccess: (catalog: UtilitiesCatalog) => void) => {
-      onSuccess(baseCatalog);
-      return vi.fn();
-    });
+    mocks.subscribeToUtilities.mockImplementation(
+      (onSuccess: (catalog: UtilitiesCatalog) => void) => {
+        onSuccess(baseCatalog);
+        return vi.fn();
+      }
+    );
     mocks.getActiveUtilityIdsForProfile.mockImplementation(
       (catalog, branchId: string | null, jobId: string | null) => {
         const ids = [...catalog.global_utilities];
@@ -73,9 +75,11 @@ describe("UtilitiesProvider", () => {
     mocks.getUtilityById.mockImplementation((utilityId: string, catalog: UtilitiesCatalog) => {
       return catalog.utility_definitions[utilityId] ?? null;
     });
-    mocks.getUtilityByNameTool.mockImplementation((utilityName: string, catalog: UtilitiesCatalog) => {
-      return catalog.utility_definitions[utilityName] ?? null;
-    });
+    mocks.getUtilityByNameTool.mockImplementation(
+      (utilityName: string, catalog: UtilitiesCatalog) => {
+        return catalog.utility_definitions[utilityName] ?? null;
+      }
+    );
     mocks.createUtility.mockResolvedValue({ label: "Peaje", type: "number" });
     mocks.updateUtilityById.mockResolvedValue({ label: "Ruta editada", type: "text" });
     mocks.deleteUtilityById.mockResolvedValue(true);
@@ -126,12 +130,10 @@ describe("UtilitiesProvider", () => {
   });
 
   it("marca error cuando falla la suscripcion", async () => {
-    mocks.subscribeToUtilities.mockImplementation(
-      (_onSuccess: unknown, onError: () => void) => {
-        onError();
-        return vi.fn();
-      }
-    );
+    mocks.subscribeToUtilities.mockImplementation((_onSuccess: unknown, onError: () => void) => {
+      onError();
+      return vi.fn();
+    });
     mocks.getActiveUtilityIdsForProfile.mockReturnValue([]);
 
     const { result } = renderHook(() => useUtilities(), { wrapper });

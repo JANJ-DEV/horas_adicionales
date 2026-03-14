@@ -54,10 +54,9 @@ describe("useFilterBranches", () => {
     });
 
     expect(result.current.selectedJobPosition).toBe("job-2");
-    expect(mocks.toastInfo).toHaveBeenCalledWith(
-      "Puesto de trabajo seleccionado: job-2",
-      { containerId: "profile" }
-    );
+    expect(mocks.toastInfo).toHaveBeenCalledWith("Puesto de trabajo seleccionado: job-2", {
+      containerId: "profile",
+    });
   });
 
   it("resuelve nombres y puestos segun la rama seleccionada", () => {

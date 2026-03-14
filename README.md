@@ -114,19 +114,19 @@ Servidor local esperado:
 
 ## Scripts disponibles
 
-| Script | Descripcion |
-| --- | --- |
-| `npm run dev` | Inicia servidor de desarrollo |
-| `npm run build` | Compila TypeScript y genera build de produccion |
-| `npm run preview` | Sirve la build de produccion localmente |
-| `npm run lint` | Ejecuta ESLint |
-| `npm run lint:fix` | Ejecuta ESLint con autofix |
-| `npm run format` | Formatea con Prettier |
-| `npm run format:check` | Verifica formato con Prettier |
-| `npm run seed:catalog` | Poblado de catalogos en Firestore |
-| `npm run seed:catalog:dry` | Simulacion de poblado de catalogos |
-| `npm run seed:utilities` | Poblado de utilidades en Firestore |
-| `npm run seed:utilities:dry` | Simulacion de poblado de utilidades |
+| Script                       | Descripcion                                     |
+| ---------------------------- | ----------------------------------------------- |
+| `npm run dev`                | Inicia servidor de desarrollo                   |
+| `npm run build`              | Compila TypeScript y genera build de produccion |
+| `npm run preview`            | Sirve la build de produccion localmente         |
+| `npm run lint`               | Ejecuta ESLint                                  |
+| `npm run lint:fix`           | Ejecuta ESLint con autofix                      |
+| `npm run format`             | Formatea con Prettier                           |
+| `npm run format:check`       | Verifica formato con Prettier                   |
+| `npm run seed:catalog`       | Poblado de catalogos en Firestore               |
+| `npm run seed:catalog:dry`   | Simulacion de poblado de catalogos              |
+| `npm run seed:utilities`     | Poblado de utilidades en Firestore              |
+| `npm run seed:utilities:dry` | Simulacion de poblado de utilidades             |
 
 ## Testing
 
@@ -138,12 +138,12 @@ Base actual de testing:
 
 Comandos principales:
 
-| Script | Descripcion |
-| --- | --- |
-| `npm run test` | Ejecuta toda la suite de tests |
+| Script                            | Descripcion                             |
+| --------------------------------- | --------------------------------------- |
+| `npm run test`                    | Ejecuta toda la suite de tests          |
 | `npm run test -- test/components` | Ejecuta un subconjunto puntual de tests |
-| `npm run test:watch` | Mantiene Vitest en modo watch |
-| `npm run test:coverage` | Genera reporte de cobertura |
+| `npm run test:watch`              | Mantiene Vitest en modo watch           |
+| `npm run test:coverage`           | Genera reporte de cobertura             |
 
 Convenciones del proyecto:
 
@@ -171,7 +171,7 @@ El repositorio incluye pipeline de GitHub Actions en [.github/workflows/ci.yml](
 Eventos cubiertos:
 
 - Pull requests.
-- Push a ramas main, develop, feature/*, chore/* y fix/*.
+- Push a ramas main, develop, feature/_, chore/_ y fix/\*.
 
 Checks automáticos:
 
