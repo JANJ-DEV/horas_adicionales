@@ -1,0 +1,1 @@
+import{r as t,A as e}from"./index-BK3p98bF.js";const u=()=>{try{const r=t.useContext(e);if(!r)throw new Error("useAuth must be used within an AuthProvider");return r}catch(r){throw console.error(r),new Error("useAuth must be used within an AuthProvider")}};export{u};

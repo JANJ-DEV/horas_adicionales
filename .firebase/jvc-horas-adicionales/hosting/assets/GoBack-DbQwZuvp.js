@@ -1,0 +1,1 @@
+import{c as s,u as r,j as c}from"./index-BK3p98bF.js";const a=()=>{const e=s.c(2),o=r();let t;return e[0]!==o?(t=c.jsx("button",{type:"button",onClick:()=>o(-1),className:"focus:text-green-500 active:text-green-900 border rounded-sm py-2 px-4",children:"Volver"}),e[0]=o,e[1]=t):t=e[1],t};export{a as G};
