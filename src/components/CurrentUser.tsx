@@ -57,7 +57,7 @@ const CurrentUser: FC = () => {
             toggleMenuCurrentUser();
             closeMenuBars();
           }}
-          className="flex items-center gap-2 rounded-full bg-slate-800/60 p-0.5 pr-2.5 transition hover:bg-slate-700/60"
+          className="flex items-center gap-2 rounded-full border border-orange-300/30 bg-orange-400/10 p-0.5 pr-2.5 text-orange-200 transition hover:bg-orange-400/20"
         >
           {currentUser.photoURL ? (
             <img
@@ -68,10 +68,10 @@ const CurrentUser: FC = () => {
           ) : (
             <FaRegUserCircle size={28} className="text-slate-400" />
           )}
-          <span className="hidden max-w-[8rem] truncate text-xs font-medium text-slate-200 lg:inline">
+          <span className="hidden max-w-[8rem] truncate text-xs font-medium text-orange-200 lg:inline">
             {currentUser.displayName ?? currentUser.email}
           </span>
-          <span className="text-xs font-medium text-slate-200 sm:inline lg:hidden">
+          <span className="text-xs font-medium text-orange-200 sm:inline lg:hidden">
             {(currentUser.displayName ?? currentUser.email ?? "")
               .split(" ")
               .filter(Boolean)
