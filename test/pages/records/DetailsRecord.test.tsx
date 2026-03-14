@@ -7,7 +7,7 @@ const mocks = vi.hoisted(() => ({
   getBranchById: vi.fn(),
 }));
 
-vi.mock("../../../src/pages/records/hooks/useDetailsRecord", () => ({
+vi.mock("../../../src/pages/records/hooks/useDeyailsRecord", () => ({
   useDetailRecord: mocks.useDetailRecord,
 }));
 
@@ -20,8 +20,18 @@ vi.mock("@/services/branches.services", () => ({
 }));
 
 vi.mock("../../../src/components/RecordCalculationSummary", () => ({
-  default: ({ startTime, endTime, hourlyRate }: { startTime?: string; endTime?: string; hourlyRate: number }) => (
-    <div>Resumen {startTime}-{endTime}-{hourlyRate}</div>
+  default: ({
+    startTime,
+    endTime,
+    hourlyRate,
+  }: {
+    startTime?: string;
+    endTime?: string;
+    hourlyRate: number;
+  }) => (
+    <div>
+      Resumen {startTime}-{endTime}-{hourlyRate}
+    </div>
   ),
 }));
 
@@ -91,9 +101,7 @@ describe("DetailsRecord", () => {
       id: "branch-1",
       name: "Comercial",
       description: "Rama comercial",
-      jobsPositions: [
-        { id: "job-2", name: "Supervisor", description: "Coordina" },
-      ],
+      jobsPositions: [{ id: "job-2", name: "Supervisor", description: "Coordina" }],
     });
 
     render(<DetailsRecord />);

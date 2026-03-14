@@ -29,8 +29,12 @@ describe("JobProfileDetails", () => {
 
     render(<JobProfileDetails />);
 
-    expect(screen.getByRole("heading", { name: "Perfil de Trabajo no encontrado" })).toBeInTheDocument();
-    expect(screen.getByText("No se ha proporcionado un ID de perfil de trabajo válido.")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Perfil de Trabajo no encontrado" })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("No se ha proporcionado un ID de perfil de trabajo válido.")
+    ).toBeInTheDocument();
     expect(mocks.getJobProfileById).not.toHaveBeenCalled();
   });
 

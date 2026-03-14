@@ -175,35 +175,35 @@ Si una fase falla:
 
 ## Registro de avances
 
-| Fecha | Fase | Cambio | Resultado | Observaciones |
-| --- | --- | --- | --- | --- |
-| 2026-03-13 | Fase 0 | Rama creada + plan inicial | OK | Base lista para arrancar Fase 1 |
-| 2026-03-13 | Fase 1 | Setup Vitest + jsdom + scripts de test + setup global | OK | Validado con lint, build y test |
-| 2026-03-13 | Fase 2 | Tests de logica en `src/utils/index.test.ts` (8 casos) | OK | Cobertura inicial de funciones puras |
-| 2026-03-13 | Fase 2 | Tests de logica en `src/services/error.service.test.ts` (4 casos) | OK | Manejo de FirebaseError, Error y error desconocido |
-| 2026-03-13 | Fase 2 | Migracion de tests a `test/` con estructura espejo de `src/` | OK | Vitest actualizado: include y setup en `test/` |
-| 2026-03-13 | Fase 2 | Tests de logica en `test/services/populate.service.test.ts` (6 casos) | OK | Validaciones de estructura y persistencia con mocks de Firestore |
-| 2026-03-13 | Fase 2 | Tests de logica en `test/services/branches.services.test.ts` (3 casos) | OK | Verificacion de toasts y retornos en funciones deterministas |
-| 2026-03-13 | Fase 3 | Piloto de componente en `test/components/Btn.test.tsx` (5 casos) | OK | Render, interaccion y estado disabled |
-| 2026-03-13 | Fase 3 | Segundo piloto en `test/components/Loading.test.tsx` (3 casos) | OK | Variantes visuales y prop size |
-| 2026-03-13 | Fase 3 | Tercer piloto en `test/components/CurrentUser.test.tsx` (5 casos) | OK | Contexto mockeado, login/logout y cierre de menu por click externo |
-| 2026-03-14 | Fase 3 | Componente de navegacion en `test/components/MainMenu.test.tsx` (5 casos) | OK | Render condicional por auth, navegacion y cierre de menu dentro/fuera de nav |
-| 2026-03-14 | Fase 4 | README actualizado con seccion de testing y convenciones | OK | Comandos, estructura en `test/` y buenas practicas documentadas |
-| 2026-03-14 | Fase 4 | Backlog priorizado de cobertura futura definido por riesgo | OK | Priorizacion centrada en actions, servicios con Firestore/Auth y rutas |
-| 2026-03-14 | Fase 4 | Tests en `test/routes/actions/records.actions.test.ts` (6 casos) | OK | Validaciones de utilidades, sesion y payload del flujo principal de registros |
-| 2026-03-14 | Fase 4 | Tests en `test/routes/actions/jobs.actions.test.ts` (6 casos) | OK | Alta de perfil y actualizacion de cuenta con/sin upload y manejo de error |
-| 2026-03-14 | Fase 4 | Tests en `test/services/records.service.test.ts` (8 casos) | OK | Suscripcion, guardado, lectura puntual y mutaciones con mocks de Firestore |
-| 2026-03-14 | Fase 4 | Tests en `test/services/jobsProfile.service.test.ts` (6 casos) | OK | CRUD y suscripcion de perfiles con usuario autenticado mockeado |
-| 2026-03-14 | Fase 4 | Tests en `test/services/auth.service.test.ts` (5 casos) | OK | Login Google, logout, updateAccount y escucha de auth state |
-| 2026-03-14 | Fase 4 | Tests en `test/routes/router.test.tsx` (4 casos) | OK | Composicion de routers, actions enlazadas y fallback 404 |
-| 2026-03-14 | Fase 4 | Tests en `test/context/providers/GlobalProvider.test.tsx` (2 casos) | OK | Estado y acciones de menus globales |
-| 2026-03-14 | Fase 4 | Tests en `test/context/providers/UtilitiesProvider.test.tsx` (2 casos) | OK | Suscripcion, estado derivado y mutaciones locales de catalogo |
-| 2026-03-14 | Fase 4 | Tests en `test/context/providers/AuthProvider.test.tsx` (2 casos) | OK | Sync de auth state, login y logout con toasts |
-| 2026-03-14 | Fase 4 | Tests en `test/hooks/useFilterBranches.test.tsx` (2 casos) | OK | Seleccion de rama/puesto y resolucion de datos derivados |
-| 2026-03-14 | Fase 4 | Tests en `test/pages/records/AddNewRecord.test.tsx` (3 casos) | OK | Carga inicial, utilidades dinamicas y feedback del fetcher |
-| 2026-03-14 | Fase 4 | Tests en `test/pages/jobs_profiles/CreateJobProfile.test.tsx` (2 casos) | OK | Render base, seleccion de rama y estado del submit |
-| 2026-03-14 | Fase 4 | Tests en `test/pages/records/DetailsRecord.test.tsx` (2 casos) | OK | Empty state, contexto de perfil y utilidades mapeadas |
-| 2026-03-14 | Fase 4 | Tests en `test/pages/jobs_profiles/JobProfileDetails.test.tsx` (3 casos) | OK | ID invalido, carga de detalle y manejo de perfil inexistente |
+| Fecha      | Fase   | Cambio                                                                    | Resultado | Observaciones                                                                 |
+| ---------- | ------ | ------------------------------------------------------------------------- | --------- | ----------------------------------------------------------------------------- |
+| 2026-03-13 | Fase 0 | Rama creada + plan inicial                                                | OK        | Base lista para arrancar Fase 1                                               |
+| 2026-03-13 | Fase 1 | Setup Vitest + jsdom + scripts de test + setup global                     | OK        | Validado con lint, build y test                                               |
+| 2026-03-13 | Fase 2 | Tests de logica en `src/utils/index.test.ts` (8 casos)                    | OK        | Cobertura inicial de funciones puras                                          |
+| 2026-03-13 | Fase 2 | Tests de logica en `src/services/error.service.test.ts` (4 casos)         | OK        | Manejo de FirebaseError, Error y error desconocido                            |
+| 2026-03-13 | Fase 2 | Migracion de tests a `test/` con estructura espejo de `src/`              | OK        | Vitest actualizado: include y setup en `test/`                                |
+| 2026-03-13 | Fase 2 | Tests de logica en `test/services/populate.service.test.ts` (6 casos)     | OK        | Validaciones de estructura y persistencia con mocks de Firestore              |
+| 2026-03-13 | Fase 2 | Tests de logica en `test/services/branches.services.test.ts` (3 casos)    | OK        | Verificacion de toasts y retornos en funciones deterministas                  |
+| 2026-03-13 | Fase 3 | Piloto de componente en `test/components/Btn.test.tsx` (5 casos)          | OK        | Render, interaccion y estado disabled                                         |
+| 2026-03-13 | Fase 3 | Segundo piloto en `test/components/Loading.test.tsx` (3 casos)            | OK        | Variantes visuales y prop size                                                |
+| 2026-03-13 | Fase 3 | Tercer piloto en `test/components/CurrentUser.test.tsx` (5 casos)         | OK        | Contexto mockeado, login/logout y cierre de menu por click externo            |
+| 2026-03-14 | Fase 3 | Componente de navegacion en `test/components/MainMenu.test.tsx` (5 casos) | OK        | Render condicional por auth, navegacion y cierre de menu dentro/fuera de nav  |
+| 2026-03-14 | Fase 4 | README actualizado con seccion de testing y convenciones                  | OK        | Comandos, estructura en `test/` y buenas practicas documentadas               |
+| 2026-03-14 | Fase 4 | Backlog priorizado de cobertura futura definido por riesgo                | OK        | Priorizacion centrada en actions, servicios con Firestore/Auth y rutas        |
+| 2026-03-14 | Fase 4 | Tests en `test/routes/actions/records.actions.test.ts` (6 casos)          | OK        | Validaciones de utilidades, sesion y payload del flujo principal de registros |
+| 2026-03-14 | Fase 4 | Tests en `test/routes/actions/jobs.actions.test.ts` (6 casos)             | OK        | Alta de perfil y actualizacion de cuenta con/sin upload y manejo de error     |
+| 2026-03-14 | Fase 4 | Tests en `test/services/records.service.test.ts` (8 casos)                | OK        | Suscripcion, guardado, lectura puntual y mutaciones con mocks de Firestore    |
+| 2026-03-14 | Fase 4 | Tests en `test/services/jobsProfile.service.test.ts` (6 casos)            | OK        | CRUD y suscripcion de perfiles con usuario autenticado mockeado               |
+| 2026-03-14 | Fase 4 | Tests en `test/services/auth.service.test.ts` (5 casos)                   | OK        | Login Google, logout, updateAccount y escucha de auth state                   |
+| 2026-03-14 | Fase 4 | Tests en `test/routes/router.test.tsx` (4 casos)                          | OK        | Composicion de routers, actions enlazadas y fallback 404                      |
+| 2026-03-14 | Fase 4 | Tests en `test/context/providers/GlobalProvider.test.tsx` (2 casos)       | OK        | Estado y acciones de menus globales                                           |
+| 2026-03-14 | Fase 4 | Tests en `test/context/providers/UtilitiesProvider.test.tsx` (2 casos)    | OK        | Suscripcion, estado derivado y mutaciones locales de catalogo                 |
+| 2026-03-14 | Fase 4 | Tests en `test/context/providers/AuthProvider.test.tsx` (2 casos)         | OK        | Sync de auth state, login y logout con toasts                                 |
+| 2026-03-14 | Fase 4 | Tests en `test/hooks/useFilterBranches.test.tsx` (2 casos)                | OK        | Seleccion de rama/puesto y resolucion de datos derivados                      |
+| 2026-03-14 | Fase 4 | Tests en `test/pages/records/AddNewRecord.test.tsx` (3 casos)             | OK        | Carga inicial, utilidades dinamicas y feedback del fetcher                    |
+| 2026-03-14 | Fase 4 | Tests en `test/pages/jobs_profiles/CreateJobProfile.test.tsx` (2 casos)   | OK        | Render base, seleccion de rama y estado del submit                            |
+| 2026-03-14 | Fase 4 | Tests en `test/pages/records/DetailsRecord.test.tsx` (2 casos)            | OK        | Empty state, contexto de perfil y utilidades mapeadas                         |
+| 2026-03-14 | Fase 4 | Tests en `test/pages/jobs_profiles/JobProfileDetails.test.tsx` (3 casos)  | OK        | ID invalido, carga de detalle y manejo de perfil inexistente                  |
 
 ## Decisiones tecnicas
 

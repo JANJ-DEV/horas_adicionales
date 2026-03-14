@@ -64,14 +64,18 @@ describe("records.actions add", () => {
   it("rechaza utilidades no habilitadas para el perfil", async () => {
     mocks.getActiveUtilityIdsForProfile.mockReturnValue(["valid_utility"]);
 
-    const result = await add(buildActionArgs(buildRequest([
-        ["titleJobProfile", "Turno noche"],
-        ["dateTimeRecord", "2026-03-14"],
-        ["workStartTime", "08:00"],
-        ["workEndTime", "17:00"],
-        ["estimatedHourlyRate", "15"],
-        ["selectedUtilityIds", "invalid_utility"],
-      ])));
+    const result = await add(
+      buildActionArgs(
+        buildRequest([
+          ["titleJobProfile", "Turno noche"],
+          ["dateTimeRecord", "2026-03-14"],
+          ["workStartTime", "08:00"],
+          ["workEndTime", "17:00"],
+          ["estimatedHourlyRate", "15"],
+          ["selectedUtilityIds", "invalid_utility"],
+        ])
+      )
+    );
 
     expect(result).toEqual({
       error: "La selección de utilidades no es válida para el perfil seleccionado.",
@@ -90,17 +94,21 @@ describe("records.actions add", () => {
     );
     mocks.getActiveUtilityIdsForProfile.mockReturnValue(["utility_a", "utility_b"]);
 
-    const result = await add(buildActionArgs(buildRequest([
-        ["titleJobProfile", "Turno noche"],
-        ["dateTimeRecord", "2026-03-14"],
-        ["workStartTime", "08:00"],
-        ["workEndTime", "17:00"],
-        ["estimatedHourlyRate", "15"],
-        ["selectedUtilityIds", "utility_a"],
-        ["selectedUtilityIds", "utility_b"],
-        ["utility__utility_a", ""],
-        ["utility__utility_b", "   "],
-      ])));
+    const result = await add(
+      buildActionArgs(
+        buildRequest([
+          ["titleJobProfile", "Turno noche"],
+          ["dateTimeRecord", "2026-03-14"],
+          ["workStartTime", "08:00"],
+          ["workEndTime", "17:00"],
+          ["estimatedHourlyRate", "15"],
+          ["selectedUtilityIds", "utility_a"],
+          ["selectedUtilityIds", "utility_b"],
+          ["utility__utility_a", ""],
+          ["utility__utility_b", "   "],
+        ])
+      )
+    );
 
     expect(result).toEqual({
       error: "Faltan utilidades requeridas: Producción, Ruta",
@@ -118,15 +126,19 @@ describe("records.actions add", () => {
     );
     mocks.getActiveUtilityIdsForProfile.mockReturnValue(["extra_hours"]);
 
-    const result = await add(buildActionArgs(buildRequest([
-        ["titleJobProfile", "Turno noche"],
-        ["dateTimeRecord", "2026-03-14"],
-        ["workStartTime", "08:00"],
-        ["workEndTime", "17:00"],
-        ["estimatedHourlyRate", "15"],
-        ["selectedUtilityIds", "extra_hours"],
-        ["utility__extra_hours", "no-numero"],
-      ])));
+    const result = await add(
+      buildActionArgs(
+        buildRequest([
+          ["titleJobProfile", "Turno noche"],
+          ["dateTimeRecord", "2026-03-14"],
+          ["workStartTime", "08:00"],
+          ["workEndTime", "17:00"],
+          ["estimatedHourlyRate", "15"],
+          ["selectedUtilityIds", "extra_hours"],
+          ["utility__extra_hours", "no-numero"],
+        ])
+      )
+    );
 
     expect(result).toEqual({
       error: "Las siguientes utilidades deben tener un número válido: Horas extra",
@@ -135,13 +147,17 @@ describe("records.actions add", () => {
   });
 
   it("falla si faltan campos obligatorios del registro", async () => {
-    const result = await add(buildActionArgs(buildRequest([
-        ["titleJobProfile", ""],
-        ["dateTimeRecord", "2026-03-14"],
-        ["workStartTime", "08:00"],
-        ["workEndTime", "17:00"],
-        ["estimatedHourlyRate", "15"],
-      ])));
+    const result = await add(
+      buildActionArgs(
+        buildRequest([
+          ["titleJobProfile", ""],
+          ["dateTimeRecord", "2026-03-14"],
+          ["workStartTime", "08:00"],
+          ["workEndTime", "17:00"],
+          ["estimatedHourlyRate", "15"],
+        ])
+      )
+    );
 
     expect(result).toEqual({
       error: "Todos los campos son requeridos",
@@ -152,14 +168,18 @@ describe("records.actions add", () => {
   it("falla si no hay usuario autenticado", async () => {
     mocks.authFirebase.currentUser = null;
 
-    const result = await add(buildActionArgs(buildRequest([
-        ["jobProfileId", "profile-1"],
-        ["titleJobProfile", "Turno noche"],
-        ["dateTimeRecord", "2026-03-14"],
-        ["workStartTime", "08:00"],
-        ["workEndTime", "17:00"],
-        ["estimatedHourlyRate", "15"],
-      ])));
+    const result = await add(
+      buildActionArgs(
+        buildRequest([
+          ["jobProfileId", "profile-1"],
+          ["titleJobProfile", "Turno noche"],
+          ["dateTimeRecord", "2026-03-14"],
+          ["workStartTime", "08:00"],
+          ["workEndTime", "17:00"],
+          ["estimatedHourlyRate", "15"],
+        ])
+      )
+    );
 
     expect(result).toEqual({
       error: "No hay un usuario autenticado",
@@ -183,23 +203,27 @@ describe("records.actions add", () => {
       "comments",
     ]);
 
-    const result = await add(buildActionArgs(buildRequest([
-        ["jobProfileId", "profile-1"],
-        ["titleJobProfile", "Turno noche"],
-        ["dateTimeRecord", "2026-03-14"],
-        ["workStartTime", "08:00"],
-        ["workEndTime", "17:00"],
-        ["estimatedHourlyRate", "15.5"],
-        ["branchId", "branch-1"],
-        ["jobPositionId", "job-9"],
-        ["selectedUtilityIds", "extra_hours"],
-        ["selectedUtilityIds", "nombre_produccion"],
-        ["selectedUtilityIds", "comments"],
-        ["selectedUtilityIds", "comments"],
-        ["utility__extra_hours", "3"],
-        ["utility__nombre_produccion", "Proyecto Atlas"],
-        ["utility__comments", "Cobertura completa"],
-      ])));
+    const result = await add(
+      buildActionArgs(
+        buildRequest([
+          ["jobProfileId", "profile-1"],
+          ["titleJobProfile", "Turno noche"],
+          ["dateTimeRecord", "2026-03-14"],
+          ["workStartTime", "08:00"],
+          ["workEndTime", "17:00"],
+          ["estimatedHourlyRate", "15.5"],
+          ["branchId", "branch-1"],
+          ["jobPositionId", "job-9"],
+          ["selectedUtilityIds", "extra_hours"],
+          ["selectedUtilityIds", "nombre_produccion"],
+          ["selectedUtilityIds", "comments"],
+          ["selectedUtilityIds", "comments"],
+          ["utility__extra_hours", "3"],
+          ["utility__nombre_produccion", "Proyecto Atlas"],
+          ["utility__comments", "Cobertura completa"],
+        ])
+      )
+    );
 
     expect(mocks.getActiveUtilityIdsForProfile).toHaveBeenCalledWith(
       expect.objectContaining({

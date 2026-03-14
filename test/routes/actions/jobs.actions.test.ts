@@ -104,12 +104,17 @@ describe("jobs.actions", () => {
   });
 
   it("add valida campos requeridos antes de consultar servicios", async () => {
-    const result = await add(buildActionArgs(buildRequest([
-        ["title", ""],
-        ["branch", "branch-1"],
-        ["jobPosition", "job-1"],
-        ["estimatedHourlyRate", "12.5"],
-      ]), "/jobs-profiles/add"));
+    const result = await add(
+      buildActionArgs(
+        buildRequest([
+          ["title", ""],
+          ["branch", "branch-1"],
+          ["jobPosition", "job-1"],
+          ["estimatedHourlyRate", "12.5"],
+        ]),
+        "/jobs-profiles/add"
+      )
+    );
 
     expect(result).toBeUndefined();
     expect(mocks.toastError).toHaveBeenCalledWith("Todos los campos son requeridos", {
@@ -120,12 +125,17 @@ describe("jobs.actions", () => {
   });
 
   it("add construye el perfil y devuelve success", async () => {
-    const result = await add(buildActionArgs(buildRequest([
-        ["title", "Turno noche"],
-        ["branch", "branch-1"],
-        ["jobPosition", "job-1"],
-        ["estimatedHourlyRate", "12.5"],
-      ]), "/jobs-profiles/add"));
+    const result = await add(
+      buildActionArgs(
+        buildRequest([
+          ["title", "Turno noche"],
+          ["branch", "branch-1"],
+          ["jobPosition", "job-1"],
+          ["estimatedHourlyRate", "12.5"],
+        ]),
+        "/jobs-profiles/add"
+      )
+    );
 
     expect(mocks.getBranchById).toHaveBeenCalledWith("branch-1");
     expect(mocks.getJobPositionFromBranchId).toHaveBeenCalledWith("job-1", "branch-1");
@@ -167,7 +177,9 @@ describe("jobs.actions", () => {
   });
 
   it("update rechaza displayName vacio", async () => {
-    const result = await update(buildActionArgs(buildRequest([["displayName", ""]]), "/account/update"));
+    const result = await update(
+      buildActionArgs(buildRequest([["displayName", ""]]), "/account/update")
+    );
 
     expect(result).toEqual({
       error: "El nombre de usuario es requerido",
@@ -182,7 +194,13 @@ describe("jobs.actions", () => {
     setUploadInput();
 
     const result = await update(
-      buildActionArgs(buildRequest([["displayName", "Juan"], ["photoURL", ""]]), "/account/update")
+      buildActionArgs(
+        buildRequest([
+          ["displayName", "Juan"],
+          ["photoURL", ""],
+        ]),
+        "/account/update"
+      )
     );
 
     expect(mocks.updateAccount).toHaveBeenCalledWith({ displayName: "Juan" });
@@ -203,7 +221,13 @@ describe("jobs.actions", () => {
     setUploadInput(file);
 
     const result = await update(
-      buildActionArgs(buildRequest([["displayName", "Juan"], ["photoURL", ""]]), "/account/update")
+      buildActionArgs(
+        buildRequest([
+          ["displayName", "Juan"],
+          ["photoURL", ""],
+        ]),
+        "/account/update"
+      )
     );
 
     expect(mocks.uploadFile).toHaveBeenCalledWith(file);
@@ -225,7 +249,13 @@ describe("jobs.actions", () => {
     mocks.updateAccount.mockRejectedValue(new Error("boom"));
 
     const result = await update(
-      buildActionArgs(buildRequest([["displayName", "Juan"], ["photoURL", ""]]), "/account/update")
+      buildActionArgs(
+        buildRequest([
+          ["displayName", "Juan"],
+          ["photoURL", ""],
+        ]),
+        "/account/update"
+      )
     );
 
     expect(result).toEqual({

@@ -132,11 +132,7 @@ describe("records.service", () => {
     const firestoreError = new Error("boom");
 
     mocks.onSnapshot.mockImplementation(
-      (
-        _ref: unknown,
-        _next: unknown,
-        error: (reason: Error) => void
-      ) => {
+      (_ref: unknown, _next: unknown, error: (reason: Error) => void) => {
         error(firestoreError);
         return vi.fn();
       }

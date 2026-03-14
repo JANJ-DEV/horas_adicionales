@@ -27,9 +27,7 @@ describe("handleAppError", () => {
     handleAppError(error, "records");
 
     expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      "Error general en records: Algo fallo"
-    );
+    expect(consoleErrorSpy).toHaveBeenCalledWith("Error general en records: Algo fallo");
   });
 
   it("reporta error desconocido cuando no es instancia de Error", () => {
@@ -39,10 +37,7 @@ describe("handleAppError", () => {
     handleAppError(error, "unknown");
 
     expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      "Error desconocido en unknown:",
-      error
-    );
+    expect(consoleErrorSpy).toHaveBeenCalledWith("Error desconocido en unknown:", error);
   });
 
   it("usa contexto por defecto cuando no se proporciona", () => {

@@ -137,7 +137,9 @@ describe("AddNewRecord", () => {
 
     rerender(<AddNewRecord />);
 
-    expect(screen.queryByText("Registro para Perfil demo guardado con éxito.")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Registro para Perfil demo guardado con éxito.")
+    ).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Guardando..." })).toBeDisabled();
   });
 });

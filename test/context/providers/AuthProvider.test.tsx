@@ -54,10 +54,12 @@ describe("AuthProvider", () => {
   it("sincroniza auth state y permite login exitoso", async () => {
     const fakeUser = { uid: "user-1", displayName: "Juan" };
 
-    mocks.onAuthStateChanged.mockImplementation((_auth: unknown, callback: (user: unknown) => void) => {
-      callback(fakeUser);
-      return vi.fn();
-    });
+    mocks.onAuthStateChanged.mockImplementation(
+      (_auth: unknown, callback: (user: unknown) => void) => {
+        callback(fakeUser);
+        return vi.fn();
+      }
+    );
     mocks.signInWithPopup.mockResolvedValue({ user: fakeUser });
 
     const { result } = renderHook(() => useAuth(), { wrapper });
@@ -89,10 +91,12 @@ describe("AuthProvider", () => {
   });
 
   it("marca error cuando falla el login y delega signOut", async () => {
-    mocks.onAuthStateChanged.mockImplementation((_auth: unknown, callback: (user: unknown) => void) => {
-      callback(null);
-      return vi.fn();
-    });
+    mocks.onAuthStateChanged.mockImplementation(
+      (_auth: unknown, callback: (user: unknown) => void) => {
+        callback(null);
+        return vi.fn();
+      }
+    );
     mocks.signInWithPopup.mockRejectedValue({ message: "boom" });
     mocks.signOut.mockResolvedValue(undefined);
 
