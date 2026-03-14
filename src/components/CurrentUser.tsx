@@ -8,7 +8,8 @@ import useGlobal from "@/context/hooks/useGlobal.hook";
 const CurrentUser: FC = () => {
   const { menuCurrentUser, menuBars } = useGlobal();
   const { isMenuCurrentUserOpen, toggleMenuCurrentUser, closeMenuCurrentUser } = menuCurrentUser;
-  const { currentUser, signInWithGoogle, signOutGoogle, isLoading, isAuthenticated, isCancelling } = useAuth();
+  const { currentUser, signInWithGoogle, signOutGoogle, isLoading, isAuthenticated, isCancelling } =
+    useAuth();
   const { closeMenuBars } = menuBars;
 
   useEffect(() => {
@@ -28,7 +29,7 @@ const CurrentUser: FC = () => {
     closeMenuCurrentUser();
   }, [isAuthenticated, closeMenuCurrentUser]);
 
-  if (isLoading) return <Loading variant="auth" />;
+  if (isLoading) return <Loading variant="auth" size={22} />;
 
   if (isCancelling)
     return (
@@ -36,36 +37,53 @@ const CurrentUser: FC = () => {
         disabled
         aria-label="Cancelando inicio de sesión"
         title="Cancelando..."
-        className="flex items-center gap-1.5 text-sm text-slate-400 animate-pulse cursor-default"
+        className="flex cursor-default animate-pulse items-center gap-1.5 rounded-full border border-slate-700 bg-slate-800/60 px-2.5 py-1.5 text-slate-400"
       >
-        <FaTimesCircle size={22} className="text-slate-500" />
-        <span className="hidden sm:inline text-xs">Cancelando...</span>
+        <FaTimesCircle size={16} />
+        <span className="hidden text-xs sm:inline">Cancelando...</span>
       </button>
     );
 
-  return isAuthenticated && currentUser ? (
-    <article className="flex flex-col group relative text-xl">
-      <header className="flex">
-        <img
+  if (isAuthenticated && currentUser) {
+    return (
+      <article className="relative flex flex-col">
+        {/* Trigger: avatar + nombre en lg+ */}
+        <button
+          type="button"
+          aria-label="Abrir menú de usuario"
+          aria-expanded={isMenuCurrentUserOpen}
           onClick={(e) => {
             e.stopPropagation();
             toggleMenuCurrentUser();
             closeMenuBars();
           }}
-          src={currentUser.photoURL || ""}
-          alt="User profile"
-          className={`w-10 h-10 rounded-full border-2 ${currentUser.emailVerified ? "border-green-500" : "border-red-500"}`}
-        />
-      </header>
-      <section
-        className={`absolute top-full right-0 flex flex-col pt-12 ${isMenuCurrentUserOpen ? "flex min-w-max" : "hidden"} z-10`}
-      >
-        <article className="flex flex-col gap-2 bg-dark border border-light/20 rounded-md py-4">
-          <aside className="px-4 mt-2">
-            <span className="text-green-300 font-bold">{currentUser.displayName}</span>
-          </aside>
-          <section className="flex flex-col gap-2 my-2 cursor-pointer">
-            <nav className="px-4">
+          className="flex items-center gap-2 rounded-full border border-slate-700 bg-slate-800/60 p-0.5 pr-2.5 transition hover:border-slate-500 hover:bg-slate-700/60"
+        >
+          {currentUser.photoURL ? (
+            <img
+              src={currentUser.photoURL}
+              alt="Foto de perfil"
+              className={`h-7 w-7 rounded-full border-2 ${currentUser.emailVerified ? "border-cyan-500" : "border-red-500"}`}
+            />
+          ) : (
+            <FaRegUserCircle size={28} className="text-slate-400" />
+          )}
+          <span className="hidden max-w-[8rem] truncate text-xs font-medium text-slate-200 lg:inline">
+            {currentUser.displayName ?? currentUser.email}
+          </span>
+        </button>
+
+        {/* Dropdown */}
+        {isMenuCurrentUserOpen && (
+          <section className="absolute right-0 top-full z-20 mt-2 min-w-max rounded-xl border border-slate-700 bg-slate-900 py-2 shadow-xl">
+            {/* Cabecera del menú */}
+            <div className="border-b border-slate-700 px-4 py-2">
+              <p className="text-xs text-slate-400">Conectado como</p>
+              <p className="truncate text-sm font-semibold text-cyan-300">
+                {currentUser.displayName ?? currentUser.email}
+              </p>
+            </div>
+            <nav className="flex flex-col py-1">
               <NavLink
                 onClick={(e) => {
                   e.stopPropagation();
@@ -73,44 +91,43 @@ const CurrentUser: FC = () => {
                   closeMenuBars();
                 }}
                 to="/account"
-                className={({ isActive }) => (isActive ? "text-green-500" : "text-white")}
+                className={({ isActive }) =>
+                  `px-4 py-2 text-sm transition hover:bg-slate-800 ${isActive ? "text-cyan-400" : "text-slate-200"}`
+                }
               >
                 Mi cuenta
               </NavLink>
-            </nav>
-            <footer className="flex justify-between gap-2 items-center px-4">
-              <span
+              <button
+                type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   signOutGoogle();
                 }}
+                className="flex items-center gap-2 px-4 py-2 text-sm text-red-400 transition hover:bg-slate-800"
               >
-                Salir
-              </span>{" "}
-              <FaSignOutAlt
-                size={20}
-                className="text-red-300"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  signOutGoogle();
-                }}
-              />
-            </footer>
+                <FaSignOutAlt size={14} />
+                Cerrar sesión
+              </button>
+            </nav>
           </section>
-        </article>
-      </section>
-    </article>
-  ) : (
-    <>
-      <FaRegUserCircle
-        size={40}
-        className="text-blue-500"
-        onClick={(e) => {
-          e.stopPropagation();
-          signInWithGoogle();
-        }}
-      />
-    </>
+        )}
+      </article>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      aria-label="Iniciar sesión con Google"
+      onClick={(e) => {
+        e.stopPropagation();
+        signInWithGoogle();
+      }}
+      className="flex items-center gap-2 rounded-full border border-slate-700 bg-slate-800/60 px-2.5 py-1.5 text-slate-300 transition hover:border-cyan-600 hover:bg-slate-700/60 hover:text-cyan-300"
+    >
+      <FaRegUserCircle size={18} />
+      <span className="hidden text-xs font-medium sm:inline">Iniciar sesión</span>
+    </button>
   );
 };
 
