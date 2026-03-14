@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Firestore } from "firebase/firestore";
 
 const firestoreMocks = vi.hoisted(() => ({
@@ -23,6 +23,8 @@ import {
 
 describe("populate.service", () => {
   const fakeDb = {} as Firestore;
+
+  afterEach(() => vi.restoreAllMocks());
 
   beforeEach(() => {
     vi.clearAllMocks();

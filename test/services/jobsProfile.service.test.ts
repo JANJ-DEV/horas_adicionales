@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   collection: vi.fn(),
@@ -47,6 +47,8 @@ import {
 } from "../../src/services/jobsProfile.service";
 
 describe("jobsProfile.service", () => {
+  afterEach(() => vi.restoreAllMocks());
+
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.authFirebase.currentUser = { uid: "user-123" };
@@ -129,7 +131,7 @@ describe("jobsProfile.service", () => {
         updatedAt: "SERVER_TIMESTAMP",
       }
     );
-    expect(mocks.toastSuccess).toHaveBeenCalledWith("Perfil de trabajo guardado correctamente ", {
+    expect(mocks.toastSuccess).toHaveBeenCalledWith("Perfil de trabajo guardado correctamente", {
       containerId: "jobs-profiles",
     });
     expect(result).toEqual({

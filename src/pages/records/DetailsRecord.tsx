@@ -1,6 +1,6 @@
 import Btn from "@/components/Btn";
 import RecordCalculationSummary from "@/components/RecordCalculationSummary";
-import { useDetailRecord } from "./hooks/useDeyailsRecord";
+import { useDetailRecord } from "./hooks/useDetailsRecord";
 import EmptyState from "@/components/EmptyState";
 import { useEffect, useState } from "react";
 import useUtilities from "@/context/hooks/useUtilities.hook";

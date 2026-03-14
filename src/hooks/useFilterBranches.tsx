@@ -1,4 +1,4 @@
-import useBranches from "@/context/hooks/useBranches.hook.";
+import useBranches from "@/context/hooks/useBranches.hook";
 import type { Branch, JobPosition } from "@/types";
 import { useState } from "react";
 import { toast } from "react-toastify";

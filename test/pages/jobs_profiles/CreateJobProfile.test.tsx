@@ -11,7 +11,7 @@ vi.mock("react-router", () => ({
   useFetcher: mocks.useFetcher,
 }));
 
-vi.mock("@/context/hooks/useBranches.hook.", () => ({
+vi.mock("@/context/hooks/useBranches.hook", () => ({
   default: mocks.useBranches,
 }));
 
