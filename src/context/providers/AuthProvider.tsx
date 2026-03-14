@@ -18,8 +18,12 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   const signInWithGoogle = async () => {
+    // Timeout de seguridad: si Firebase tarda más de 12 s en detectar el cierre del popup,
+    // restauramos el estado manualmente para no dejar el spinner colgado.
+    let safetyTimer: ReturnType<typeof setTimeout> | null = null;
     try {
       setIsLoading(true);
+      safetyTimer = setTimeout(() => setIsLoading(false), 12_000);
       const provider = new GoogleAuthProvider();
       provider.setCustomParameters({
         prompt: "select_account",
@@ -49,6 +53,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setIsError(true);
       }
     } finally {
+      if (safetyTimer !== null) clearTimeout(safetyTimer);
       setIsLoading(false);
     }
   };
