@@ -1,7 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
+  calculateRecordsSummary,
   calculateSalary,
   calculateWorkedHours,
+  filterRecordsByPeriod,
+  getRecordReferenceDate,
+  isDateInPeriod,
   lastLoginAt,
   obtenerFechaActual,
 } from "@/utils/index";
@@ -57,6 +61,63 @@ describe("utils", () => {
     it("devuelve cero si faltan datos", () => {
       expect(calculateSalary(0, 10)).toBe(0);
       expect(calculateSalary(8, 0)).toBe(0);
+    });
+  });
+
+  describe("records period helpers", () => {
+    const referenceDate = new Date("2026-03-14T10:00:00.000Z");
+
+    it("resuelve la fecha del registro usando dateTimeRecord y fallback a createdAt", () => {
+      const directDate = getRecordReferenceDate({ dateTimeRecord: "2026-03-14" });
+      const fromCreatedAt = getRecordReferenceDate({
+        createdAt: { toDate: () => new Date("2026-03-10T08:00:00.000Z") },
+      });
+
+      expect(directDate).toBeInstanceOf(Date);
+      expect(directDate?.toISOString().startsWith("2026-03-14")).toBe(true);
+      expect(fromCreatedAt).toBeInstanceOf(Date);
+      expect(fromCreatedAt?.toISOString()).toBe("2026-03-10T08:00:00.000Z");
+    });
+
+    it("evalua correctamente si una fecha cae en dia, semana o mes", () => {
+      expect(isDateInPeriod(new Date("2026-03-14T12:00:00.000Z"), "day", referenceDate)).toBe(true);
+      expect(isDateInPeriod(new Date("2026-03-13T12:00:00.000Z"), "day", referenceDate)).toBe(false);
+      expect(isDateInPeriod(new Date("2026-03-10T12:00:00.000Z"), "week", referenceDate)).toBe(true);
+      expect(isDateInPeriod(new Date("2026-03-01T12:00:00.000Z"), "week", referenceDate)).toBe(false);
+      expect(isDateInPeriod(new Date("2026-03-01T12:00:00.000Z"), "month", referenceDate)).toBe(true);
+      expect(isDateInPeriod(new Date("2026-02-28T12:00:00.000Z"), "month", referenceDate)).toBe(false);
+    });
+
+    it("filtra registros por periodo y calcula resumen acumulado", () => {
+      const records = [
+        {
+          dateTimeRecord: "2026-03-14",
+          workStartTime: "08:00",
+          workEndTime: "12:00",
+          estimatedHourlyRate: 10,
+        },
+        {
+          dateTimeRecord: "2026-03-12",
+          workStartTime: "09:00",
+          workEndTime: "18:00",
+          estimatedHourlyRate: 20,
+        },
+        {
+          dateTimeRecord: "2026-02-01",
+          workStartTime: "09:00",
+          workEndTime: "10:00",
+          estimatedHourlyRate: 100,
+        },
+      ];
+
+      const weeklyRecords = filterRecordsByPeriod(records, "week", referenceDate);
+      expect(weeklyRecords).toHaveLength(2);
+
+      const summary = calculateRecordsSummary(weeklyRecords);
+      expect(summary).toEqual({
+        totalHoursDecimal: 13,
+        totalSalary: 220,
+      });
     });
   });
 });
