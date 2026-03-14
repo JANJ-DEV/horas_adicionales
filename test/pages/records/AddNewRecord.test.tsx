@@ -93,6 +93,70 @@ describe("AddNewRecord", () => {
     expect(screen.getByRole("option", { name: "Camión" })).toBeInTheDocument();
   });
 
+  it("muestra RecordCalculationSummary cuando se ingresan horas de entrada y salida con perfil seleccionado", () => {
+    mocks.useAddRecord.mockReturnValue({
+      jobProfiles: [{ id: "profile-1", title: "Turno noche" }],
+      loading: false,
+      selectedTitle: "Turno noche",
+      handleProfileChange: vi.fn(),
+      hasCurrentUser: true,
+      formAction: { Form: MockFetcherForm, state: "idle", data: null },
+      estimatedHourlyRate: 18.5,
+      selectedBranchId: "branch-1",
+      selectedJobPositionId: "job-1",
+    });
+    mocks.useUtilities.mockReturnValue({
+      activeUtilities: [],
+      isLoadingUtilities: false,
+    });
+
+    render(<AddNewRecord />);
+
+    // Antes de ingresar horas, el resumen no debe aparecer
+    expect(screen.queryByText("Informacion del calculo")).not.toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText(/Hora de entrada/), { target: { value: "08:00" } });
+    fireEvent.change(screen.getByLabelText(/Hora de salida/), { target: { value: "16:00" } });
+
+    // Tras ingresar ambas horas con perfil con tarifa, el resumen debe aparecer
+    expect(screen.getByText("Informacion del calculo")).toBeInTheDocument();
+  });
+
+  it("muestra mensaje de ayuda cuando hay horas ingresadas pero no hay perfil con tarifa seleccionado", () => {
+    mocks.useAddRecord.mockReturnValue({
+      jobProfiles: [],
+      loading: false,
+      selectedTitle: "",
+      handleProfileChange: vi.fn(),
+      hasCurrentUser: true,
+      formAction: { Form: MockFetcherForm, state: "idle", data: null },
+      estimatedHourlyRate: undefined,
+      selectedBranchId: "",
+      selectedJobPositionId: "",
+    });
+    mocks.useUtilities.mockReturnValue({
+      activeUtilities: [],
+      isLoadingUtilities: false,
+    });
+
+    render(<AddNewRecord />);
+
+    // Antes de ingresar horas, el mensaje de ayuda no debe aparecer
+    expect(
+      screen.queryByText("Selecciona un perfil para ver el cálculo estimado.")
+    ).not.toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText(/Hora de entrada/), { target: { value: "09:00" } });
+
+    // Al ingresar horas sin perfil seleccionado, debe aparecer el mensaje de ayuda
+    expect(
+      screen.getByText("Selecciona un perfil para ver el cálculo estimado.")
+    ).toBeInTheDocument();
+
+    // El resumen de cálculo no debe aparecer
+    expect(screen.queryByText("Informacion del calculo")).not.toBeInTheDocument();
+  });
+
   it("muestra mensajes de error y exito desde el fetcher", () => {
     mocks.useAddRecord.mockReturnValue({
       jobProfiles: [],
