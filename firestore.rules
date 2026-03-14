@@ -1,10 +1,81 @@
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Default deny-all. Tighten rules per collection before production deploy.
-    match /{document=**} {
-      allow read, write: if false;
+    // Función auxiliar para verificar autenticación
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Función auxiliar para verificar propiedad del documento (basado en UID)
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+   
+ 		match /users/{userId} {
+      allow read: if isAuthenticated() && isOwner(userId);
+      allow create: if isAuthenticated() && isOwner(userId);
+      allow update: if isAuthenticated() && isOwner(userId);
+      // No permitimos borrar perfiles por ahora (o solo el dueño)
+      allow delete: if false; 
+      
+      // Reglas para registros de horas
+      match /records/{recordId} {
+          allow read, write: if isAuthenticated() && isOwner(userId);
+      }
+      
+      // Reglas para registros de jobs
+      match /jobsProfiles/{jobProfileId} {
+          allow read, write: if isAuthenticated() && isOwner(userId);
+      }
+    }
+    match /utilities/{userId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+    // Reglas para la colección de usuarios/perfiles
+    match /profiles/{userId} {
+      allow read: if isAuthenticated() && isOwner(userId);
+      allow create: if isAuthenticated() && isOwner(userId);
+      allow update: if isAuthenticated() && isOwner(userId);
+      // No permitimos borrar perfiles por ahora (o solo el dueño)
+      allow delete: if false; 
+      
+      // Subcolección de empleos (jobs)
+      match /jobs/{jobId} {
+        allow read, write: if isAuthenticated() && isOwner(userId);
+      }
+      
+      // Reglas para registros de horas
+      match /records/{recordId} {
+        allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+        allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+        allow update, delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      }
+    }
+
+    // Reglas para registros de horas
+    match /hours_records/{recordId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    // Reglas para registros de horas (colección legacy, mantener por compatibilidad)
+    match /records/{recordId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+    
+    match /branches/{branchId} {
+        allow read, write: if true; // temporal para poblar
+      match /jobsPositions/{jobId} {
+         allow read, write: if true; // temporal para poblar
+      }
+    }
+    
+    match /ramas/{userId} {
+     allow read, write: if true;
     }
   }
 }
