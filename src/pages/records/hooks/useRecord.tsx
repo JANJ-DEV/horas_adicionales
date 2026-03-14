@@ -13,9 +13,14 @@ export const useRecord = () => {
   const hasCurrentUser = Boolean(currentUser?.uid);
   const navigate = useNavigate();
 
-  const handleDeleteRecord = (recordId: string) => {
-    alert("Funcionalidad en desarrollo");
-    deleteRecord(recordId);
+  const handleDeleteRecord = async (recordId: string) => {
+    const shouldDelete = window.confirm(
+      "Esta accion eliminara el registro de forma permanente. Quieres continuar?"
+    );
+
+    if (!shouldDelete) return;
+
+    await deleteRecord(recordId);
   };
   const handlerViewDetails = (recordId: string) => {
     navigate(`/records/details/${recordId}`);

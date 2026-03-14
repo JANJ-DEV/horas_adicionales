@@ -66,3 +66,111 @@ export const calculateSalary = (decimalHours: number, hourlyRate: number): numbe
   const totalSalary = decimalHours * hourlyRate;
   return Number(totalSalary.toFixed(2));
 };
+
+export type RecordsPeriod = "day" | "week" | "month";
+
+type DateLike = Date | string | { toDate: () => Date } | undefined | null;
+
+type RecordLike = {
+  dateTimeRecord?: DateLike;
+  createdAt?: DateLike;
+  workStartTime?: string;
+  workEndTime?: string;
+  estimatedHourlyRate?: number;
+};
+
+const startOfDay = (value: Date) => {
+  const next = new Date(value);
+  next.setHours(0, 0, 0, 0);
+  return next;
+};
+
+const startOfWeek = (value: Date) => {
+  const next = startOfDay(value);
+  const currentDay = next.getDay();
+  const mondayOffset = (currentDay + 6) % 7;
+  next.setDate(next.getDate() - mondayOffset);
+  return next;
+};
+
+const startOfMonth = (value: Date) => {
+  const next = startOfDay(value);
+  next.setDate(1);
+  return next;
+};
+
+const toDate = (value: DateLike): Date | null => {
+  if (!value) return null;
+  if (value instanceof Date) return value;
+  if (typeof value === "string") {
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? null : parsed;
+  }
+  if (typeof value === "object" && "toDate" in value && typeof value.toDate === "function") {
+    const parsed = value.toDate();
+    return parsed instanceof Date && !Number.isNaN(parsed.getTime()) ? parsed : null;
+  }
+  return null;
+};
+
+export const getRecordReferenceDate = (record: Pick<RecordLike, "dateTimeRecord" | "createdAt">) => {
+  return toDate(record.dateTimeRecord) ?? toDate(record.createdAt);
+};
+
+export const isDateInPeriod = (
+  value: Date,
+  period: RecordsPeriod,
+  referenceDate: Date = new Date()
+) => {
+  const normalizedValue = startOfDay(value).getTime();
+
+  if (period === "day") {
+    return normalizedValue === startOfDay(referenceDate).getTime();
+  }
+
+  if (period === "week") {
+    const start = startOfWeek(referenceDate).getTime();
+    const end = new Date(startOfWeek(referenceDate));
+    end.setDate(end.getDate() + 7);
+    return normalizedValue >= start && normalizedValue < end.getTime();
+  }
+
+  const start = startOfMonth(referenceDate).getTime();
+  const end = new Date(startOfMonth(referenceDate));
+  end.setMonth(end.getMonth() + 1);
+  return normalizedValue >= start && normalizedValue < end.getTime();
+};
+
+export const filterRecordsByPeriod = <T extends RecordLike>(
+  records: T[],
+  period: RecordsPeriod,
+  referenceDate: Date = new Date()
+) => {
+  return records.filter((record) => {
+    const reference = getRecordReferenceDate(record);
+    if (!reference) return false;
+    return isDateInPeriod(reference, period, referenceDate);
+  });
+};
+
+export const calculateRecordsSummary = <T extends RecordLike>(records: T[]) => {
+  return records.reduce(
+    (acc, record) => {
+      const hasWorkedTime = Boolean(record.workStartTime && record.workEndTime);
+      if (!hasWorkedTime) return acc;
+
+      const workedHours = calculateWorkedHours(record.workStartTime as string, record.workEndTime as string);
+      const hourlyRate = Number(record.estimatedHourlyRate ?? 0);
+      const salary = calculateSalary(workedHours.decimal, hourlyRate);
+
+      return {
+        totalHoursDecimal: Number((acc.totalHoursDecimal + workedHours.decimal).toFixed(2)),
+        totalSalary: Number((acc.totalSalary + salary).toFixed(2)),
+      };
+    },
+    {
+      totalHoursDecimal: 0,
+      totalSalary: 0,
+    }
+  );
+};
