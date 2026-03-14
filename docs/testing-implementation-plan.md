@@ -1,4 +1,4 @@
-# Plan de Implementacion de Testing
+# Plan de Implementación de Testing
 
 ## Objetivo
 
