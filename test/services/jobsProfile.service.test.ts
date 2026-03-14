@@ -130,7 +130,7 @@ describe("jobsProfile.service", () => {
       }
     );
     expect(mocks.toastSuccess).toHaveBeenCalledWith("Perfil de trabajo guardado correctamente ", {
-      containerId: "job-profiles",
+      containerId: "jobs-profiles",
     });
     expect(result).toEqual({
       id: "profile-123",
