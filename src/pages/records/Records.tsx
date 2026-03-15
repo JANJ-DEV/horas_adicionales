@@ -36,8 +36,6 @@ const Records = () => {
 
   useEffect(() => {
     if (!hasCurrentUser) {
-      setHasJobProfiles(false);
-      setIsLoadingProfiles(false);
       return;
     }
 

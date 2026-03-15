@@ -14,7 +14,7 @@ const UpdateAccount: FC = () => {
     error?: string;
   };
   const rawData = formAction.data;
-  let formFeedback: FormFeedback = {};
+  const formFeedback: FormFeedback = {};
 
   if (rawData && typeof rawData === "object") {
     const maybeData = rawData as Record<string, unknown>;
