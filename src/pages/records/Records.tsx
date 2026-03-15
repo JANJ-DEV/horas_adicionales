@@ -2,11 +2,13 @@ import { useRecord } from "./hooks/useRecord";
 import RecordCard from "./components/RecordCard";
 import { useEffect, useState } from "react";
 import { subscribeToBranches } from "@/services/branches.services";
+import { subscribeToJobProfiles } from "@/services/jobsProfile.service";
 import type { Branch } from "@/types";
 import RecordsPeriodSelector from "./components/RecordsPeriodSelector";
 import RecordsSummary from "./components/RecordsSummary";
 import RecordListItem from "./components/RecordListItem";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
+import { Link } from "react-router";
 import {
   calculateRecordsSummary,
   filterRecordsByPeriod,
@@ -27,8 +29,37 @@ const Records = () => {
     handlerViewDetails,
   } = useRecord();
   const [branches, setBranches] = useState<Branch[]>([]);
+  const [hasJobProfiles, setHasJobProfiles] = useState(true);
+  const [isLoadingProfiles, setIsLoadingProfiles] = useState(true);
   const [selectedPeriod, setSelectedPeriod] = useState<RecordsPeriod>("week");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+
+  useEffect(() => {
+    if (!hasCurrentUser) {
+      setHasJobProfiles(false);
+      setIsLoadingProfiles(false);
+      return;
+    }
+
+    const unsubscribe = subscribeToJobProfiles(
+      (profiles) => {
+        setHasJobProfiles(profiles.length > 0);
+        setIsLoadingProfiles(false);
+      },
+      () => {
+        setIsLoadingProfiles(false);
+      },
+      () => {
+        setIsLoadingProfiles(false);
+      }
+    );
+
+    return () => {
+      if (typeof unsubscribe === "function") {
+        unsubscribe();
+      }
+    };
+  }, [hasCurrentUser]);
 
   useEffect(() => {
     const unsubscribe = subscribeToBranches((nextBranches) => {
@@ -116,7 +147,30 @@ const Records = () => {
         </aside>
       )}
 
-      {!isLoading && !isError && hasCurrentUser && recordsByPeriod.length === 0 && (
+      {!isLoading && !isError && !isLoadingProfiles && hasCurrentUser && recordsByPeriod.length === 0 && !hasJobProfiles && (
+        <aside className="rounded-lg border border-amber-500/40 bg-amber-500/10 p-4 text-amber-100">
+          <h3 className="text-base font-semibold text-amber-200">Tu cuenta esta lista para empezar</h3>
+          <p className="mt-2 text-sm text-amber-100/90">
+            Solo falta crear tu primer perfil de trabajo para poder registrar jornadas.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Link
+              to="/jobs-profiles/add"
+              className="rounded-md border border-cyan-400 bg-cyan-500/20 px-3 py-1.5 text-sm font-medium text-cyan-200 transition hover:bg-cyan-500/30"
+            >
+              Crear primer perfil
+            </Link>
+            <Link
+              to="/jobs-profiles"
+              className="rounded-md border border-slate-500 bg-slate-700/30 px-3 py-1.5 text-sm font-medium text-slate-200 transition hover:bg-slate-700/50"
+            >
+              Ver perfiles
+            </Link>
+          </div>
+        </aside>
+      )}
+
+      {!isLoading && !isError && !isLoadingProfiles && hasCurrentUser && recordsByPeriod.length === 0 && hasJobProfiles && (
         <aside className="rounded-lg border border-slate-700 bg-slate-900/70 p-4 text-slate-200">
           No hay registros para el periodo seleccionado.
         </aside>
@@ -160,7 +214,7 @@ const Records = () => {
         <div ref={sentinelRef} className="h-8 w-full" aria-hidden="true" />
       )}
 
-      {hasCurrentUser && !isLoading && !isError && !hasMore && visibleRecords.length > 0 && (
+      {hasCurrentUser && !isLoading && !isError && !isLoadingProfiles && !hasMore && visibleRecords.length > 0 && (
         <p className="text-center text-xs text-slate-400">Has llegado al final de los registros.</p>
       )}
 

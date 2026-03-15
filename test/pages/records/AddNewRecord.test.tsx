@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import { MemoryRouter } from "react-router";
 
 const mocks = vi.hoisted(() => ({
   useAddRecord: vi.fn(),
@@ -21,6 +22,37 @@ const MockFetcherForm = ({ children, ...props }: React.ComponentProps<"form">) =
 );
 
 describe("AddNewRecord", () => {
+  it("muestra guia con CTA cuando no existen perfiles de trabajo", () => {
+    mocks.useAddRecord.mockReturnValue({
+      jobProfiles: [],
+      loading: false,
+      selectedTitle: "",
+      handleProfileChange: vi.fn(),
+      hasCurrentUser: true,
+      formAction: { Form: MockFetcherForm, state: "idle", data: null },
+      estimatedHourlyRate: undefined,
+      selectedBranchId: "",
+      selectedJobPositionId: "",
+    });
+    mocks.useUtilities.mockReturnValue({
+      activeUtilities: [],
+      isLoadingUtilities: false,
+    });
+
+    render(
+      <MemoryRouter>
+        <AddNewRecord />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByText("Necesitas un perfil de trabajo")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Crear primer perfil" })).toHaveAttribute(
+      "href",
+      "/jobs-profiles/add"
+    );
+    expect(screen.queryByRole("combobox", { name: /Perfil/ })).not.toBeInTheDocument();
+  });
+
   it("muestra estado de carga cuando hay usuario y perfiles cargando", () => {
     mocks.useAddRecord.mockReturnValue({
       jobProfiles: [],
