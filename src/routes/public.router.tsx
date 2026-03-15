@@ -6,12 +6,11 @@ export const publicRouter = [
     element: <PublicLayout />,
     children: [
       {
-        path: "/",
         index: true,
         element: <App />,
       },
       {
-        path: "/home",
+        path: "home",
         element: <App />,
       },
     ],

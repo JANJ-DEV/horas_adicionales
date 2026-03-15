@@ -13,6 +13,7 @@ import { notify, TOAST_SCOPE } from "@/services/toast.service";
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isAuthResolved, setIsAuthResolved] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isCancelling, setIsCancelling] = useState<boolean>(false);
@@ -91,6 +92,8 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setCurrentUser(null);
         setIsAuthenticated(false);
       }
+
+      setIsAuthResolved(true);
     });
     return () => {
       unsubscribe();
@@ -101,6 +104,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     <AuthCtx.Provider
       value={{
         isAuthenticated,
+        isAuthResolved,
         isError,
         isLoading,
         isCancelling,

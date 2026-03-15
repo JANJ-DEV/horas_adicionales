@@ -5,9 +5,15 @@ import MainHeader from "../layouts/MainHeader";
 import GoBack from "@/components/GoBack";
 import UtilitiesProvider from "@/context/providers/UtilitiesProvider";
 import AppToastContainer from "@/components/AppToastContainer";
+import Loading from "@/components/Loading";
 
 const RecordsLayout = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isAuthResolved } = useAuth();
+
+  if (!isAuthResolved) {
+    return <Loading />;
+  }
+
   if (!isAuthenticated) {
     return <Navigate to="/" replace />;
   }
