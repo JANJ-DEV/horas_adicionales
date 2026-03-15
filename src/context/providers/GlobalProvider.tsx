@@ -11,7 +11,11 @@ const getInitialTheme = (): ThemeMode => {
     return storedTheme;
   }
 
-  return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  if (typeof window.matchMedia === "function") {
+    return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  }
+
+  return "dark";
 };
 
 const GlobalProvider: FC<Children> = ({ children }) => {
