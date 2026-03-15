@@ -35,7 +35,7 @@ const Btn: FC<BtnProps> = ({
 }) => {
   const [variantStyles] = useState({
     primary:
-      "border border-transparent bg-[var(--accent)] text-slate-950 shadow-[0_2px_6px_rgba(105,211,192,0.15)] hover:-translate-y-0.5 hover:bg-[var(--accentStrong)] hover:text-white",
+      "border border-transparent bg-[var(--accent)] text-slate-950 shadow-[0_2px_6px_rgba(105,211,192,0.15)] hover:-translate-y-0.5 hover:bg-[var(--accent-strong)] hover:text-white",
     secondary:
       "border border-[var(--border)] bg-[var(--bg-soft)] text-[var(--text)] hover:-translate-y-0.5 hover:border-[var(--border-strong)] hover:bg-[var(--surface)]",
     danger:

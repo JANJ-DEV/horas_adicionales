@@ -32,7 +32,7 @@ const Account: FC = () => {
         </article>
         <article className="app-card p-4">
           <strong className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--accent-warm)]">
-            Telefono
+            Teléfono
           </strong>
           <p className="mt-2 text-base font-semibold text-[var(--text)]">
             {user.phoneNumber || "No disponible"}
@@ -48,7 +48,7 @@ const Account: FC = () => {
         </article>
         <article className="app-card p-4 text-left">
           <strong className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
-            Ultima sesion
+            Última sesión
           </strong>
           <p className="mt-2 text-sm font-semibold text-[var(--text-muted)]">
             {user.metadata.lastSignInTime}
