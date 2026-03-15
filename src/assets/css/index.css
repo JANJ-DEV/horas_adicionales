@@ -253,7 +253,7 @@ button {
 
 .Toastify__toast-container {
   width: min(92vw, 24rem);
-  padding: 1rem;
+  padding: 0.5rem;
 }
 
 .app-toast {
@@ -269,10 +269,12 @@ button {
   color: var(--text) !important;
   overflow: hidden;
   backdrop-filter: blur(12px);
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
 }
 
 .app-toast .Toastify__toast-body {
-  padding: 1rem 1.1rem;
+  padding: 1rem 0;
   font-size: 0.94rem;
   font-weight: 600;
 }
