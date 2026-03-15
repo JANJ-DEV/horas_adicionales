@@ -5,12 +5,13 @@ import MainHeader from "../layouts/MainHeader";
 import GoBack from "@/components/GoBack";
 import UtilitiesProvider from "@/context/providers/UtilitiesProvider";
 import AppToastContainer from "@/components/AppToastContainer";
+import Loading from "@/components/Loading";
 
 const RecordsLayout = () => {
   const { isAuthenticated, isAuthResolved } = useAuth();
 
   if (!isAuthResolved) {
-    return null;
+    return <Loading />;
   }
 
   if (!isAuthenticated) {
