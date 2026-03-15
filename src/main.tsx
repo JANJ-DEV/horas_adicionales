@@ -12,6 +12,11 @@ import ToastCustomProvider from "./context/providers/ToastCustomProvider.tsx";
 import GlobalProvider from "./context/providers/GlobalProvider.tsx";
 import AppToastContainer from "./components/AppToastContainer.tsx";
 
+window.addEventListener("vite:preloadError", (event) => {
+  event.preventDefault();
+  window.location.reload();
+});
+
 const hours_records = createRoot(document.getElementById("root")!);
 
 hours_records.render(
