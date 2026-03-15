@@ -51,13 +51,12 @@ describe("routes composition", () => {
     expect(publicRouter[0].children).toHaveLength(2);
     expect(publicRouter[0].children?.[0]).toEqual(
       expect.objectContaining({
-        path: "/",
         index: true,
       })
     );
     expect(publicRouter[0].children?.[1]).toEqual(
       expect.objectContaining({
-        path: "/home",
+        path: "home",
       })
     );
   });

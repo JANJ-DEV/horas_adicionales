@@ -7,7 +7,11 @@ import BranchesProvider from "@/context/providers/BranchesProvider";
 import AppToastContainer from "@/components/AppToastContainer";
 
 const JobProfilesLayout = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isAuthResolved } = useAuth();
+
+  if (!isAuthResolved) {
+    return null;
+  }
 
   if (!isAuthenticated) {
     return <Navigate to="/" replace />;

@@ -3,6 +3,7 @@ import { createContext } from "react";
 
 export type AuthContextType = {
   isAuthenticated: boolean;
+  isAuthResolved: boolean;
   isError: boolean;
   isLoading: boolean;
   isCancelling: boolean;

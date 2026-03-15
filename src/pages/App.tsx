@@ -7,8 +7,8 @@ import useAuth from "@/context/hooks/auth.hook";
 import { Navigate } from "react-router";
 
 const App: FC = () => {
-  const { isAuthenticated } = useAuth();
-  if (isAuthenticated) return <Navigate to="/records" replace={true} />;
+  const { isAuthenticated, isAuthResolved } = useAuth();
+  if (isAuthResolved && isAuthenticated) return <Navigate to="/records" replace={true} />;
 
   return (
     <div>

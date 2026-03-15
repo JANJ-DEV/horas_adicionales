@@ -6,7 +6,11 @@ import MainContent from "../layouts/MainContent";
 import GoBack from "@/components/GoBack";
 
 const AccountLayout: FC = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isAuthResolved } = useAuth();
+
+  if (!isAuthResolved) {
+    return null;
+  }
 
   if (!isAuthenticated) {
     return <Navigate to="/" replace />;

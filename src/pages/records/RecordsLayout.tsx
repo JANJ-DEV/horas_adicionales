@@ -7,7 +7,12 @@ import UtilitiesProvider from "@/context/providers/UtilitiesProvider";
 import AppToastContainer from "@/components/AppToastContainer";
 
 const RecordsLayout = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isAuthResolved } = useAuth();
+
+  if (!isAuthResolved) {
+    return null;
+  }
+
   if (!isAuthenticated) {
     return <Navigate to="/" replace />;
   }
