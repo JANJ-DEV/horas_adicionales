@@ -12,7 +12,7 @@ import {
 } from "@/services/utilities.service";
 import { useEffect, useState, type FC } from "react";
 import { UtilitiesCtx } from "../UtilitiesCtx";
-import { toast } from "react-toastify";
+import { notify, TOAST_SCOPE } from "@/services/toast.service";
 
 const EMPTY_CATALOG: UtilitiesCatalog = {
   global_utilities: [],
@@ -37,7 +37,7 @@ const UtilitiesProvider: FC<Children> = ({ children }) => {
       () => {
         setIsErrorUtilities(true);
         setIsLoadingUtilities(false);
-        toast.error("Error al cargar utilidades", { containerId: "global" });
+        notify.error("Error al cargar utilidades", { scope: TOAST_SCOPE.GLOBAL });
       }
     );
 

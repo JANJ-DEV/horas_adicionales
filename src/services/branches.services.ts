@@ -8,7 +8,6 @@ import {
   getDoc,
 } from "firebase/firestore";
 import { firestore } from "@/apis/firebase";
-import { toast } from "react-toastify";
 import type { Branch, BranchDoc, JobPositionDoc } from "@/types";
 
 export const subscribeToBranches = (
@@ -56,7 +55,7 @@ export const subscribeToBranches = (
 
 export const addBranch = (branch: Branch): void => {
   // Implement the logic to add a branch
-  toast.info(`Se ha agregado la rama: ${branch.name} `, { containerId: "global" });
+  void branch;
 };
 
 export const getBranchById = async (id: string): Promise<Branch | null> => {
@@ -83,17 +82,16 @@ export const getBranchById = async (id: string): Promise<Branch | null> => {
       jobsPositions,
     };
   }
-  toast.error(`No se encontró la rama con ID: ${id} `, { containerId: "global" });
   return null;
 };
 export const updateBranchById = (id: string): Partial<Branch> | undefined => {
   // Implement the logic to get a branch by its ID
-  toast.info(`Se ha actualizado la rama con ID: ${id} `, { containerId: "global" });
+  void id;
   return undefined;
 };
 
 export const removeBranchById = (id: string): Branch | undefined => {
   // Implement the logic to get a branch by its ID
-  toast.info(`Se ha eliminado la rama con ID: ${id} `, { containerId: "global" });
+  void id;
   return undefined;
 };

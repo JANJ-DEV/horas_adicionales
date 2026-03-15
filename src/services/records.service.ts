@@ -13,7 +13,6 @@ import {
 } from "firebase/firestore";
 import { firestore } from "@/apis/firebase";
 import { authFirebase } from "@/apis/firebase";
-import { toast } from "react-toastify";
 import type { UtilityFieldValue } from "./utilities.service";
 
 export interface RecordService {
@@ -69,7 +68,7 @@ export const saveRecord = async (record: RecordService) => {
 
   if (!userId) {
     console.error("No hay un usuario autenticado");
-    return;
+    return null;
   }
 
   try {
@@ -93,10 +92,10 @@ export const saveRecord = async (record: RecordService) => {
       estimatedHourlyRate: record.estimatedHourlyRate,
       utilitiesValues: record.utilitiesValues ?? {},
     });
-
-    toast.success("Registro guardado con éxito", { containerId: "records" });
+    return { ...record, id: newDocRef.id } as RecordService;
   } catch (error) {
     console.error("Error al guardar:", error);
+    return null;
   }
 };
 
@@ -123,24 +122,26 @@ export const updateRecord = async (
       ...updatedData,
       updatedAt: serverTimestamp(),
     });
-    toast.success("Registro actualizado con éxito", { containerId: "records" });
+    return true;
   } catch (error) {
     console.error("Error al actualizar registro:", error);
+    return false;
   }
 };
 
-export const deleteRecord = async (recordId: string) => {
+export const deleteRecord = async (recordId: string): Promise<boolean> => {
   try {
     const userId = authFirebase.currentUser?.uid;
     if (!userId) {
       console.error("No hay un usuario autenticado");
-      return;
+      return false;
     }
     const docRef = doc(firestore, "users", userId, NAME_COLLECTION, recordId);
     await deleteDoc(docRef);
-    toast.success("Registro eliminado con éxito", { containerId: "records" });
+    return true;
   } catch (error) {
     console.error("Error al eliminar registro:", error);
+    return false;
   }
 };
 
@@ -156,7 +157,6 @@ export const getRecordById = async (recordId: string): Promise<RecordService | n
     if (docSnap.exists()) {
       return { id: docSnap.id, ...docSnap.data() } as RecordService;
     } else {
-      toast.error("No se encontró el documento", { containerId: "records" });
       return null;
     }
   } catch (error) {

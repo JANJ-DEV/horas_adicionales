@@ -2,8 +2,8 @@ import Btn from "@/components/Btn";
 import { useState, type FC, type SubmitEvent } from "react";
 import CardFooter from "./CardFooter";
 import type { Children } from "@/types";
-import { toast } from "react-toastify";
 import { updateJobProfile } from "@/services/jobsProfile.service";
+import { notify, TOAST_SCOPE } from "@/services/toast.service";
 
 type IsUpdatingTitleProps = Children & {
   state: boolean;
@@ -38,12 +38,12 @@ const ProfileTitle: FC<{ title: string; jobProfileId: string }> = ({ title, jobP
     const newTitle = String(data.get(`title-${jobProfileId}`) ?? "").trim();
 
     if (!newTitle) {
-      toast.error("El título no puede estar vacío", { containerId: "profile" });
+      notify.error("El título no puede estar vacío", { scope: TOAST_SCOPE.PROFILE });
       return;
     }
 
     if (newTitle === title.trim()) {
-      toast.info("No hay cambios para guardar", { containerId: "profile" });
+      notify.info("No hay cambios para guardar", { scope: TOAST_SCOPE.PROFILE });
       setIsUpdatingTitle(false);
       return;
     }
@@ -51,13 +51,13 @@ const ProfileTitle: FC<{ title: string; jobProfileId: string }> = ({ title, jobP
     try {
       setIsSaving(true);
       await updateJobProfile(jobProfileId, { title: newTitle });
-      toast.success(`Título actualizado a: ${newTitle}`, {
-        containerId: "profile",
+      notify.success(`Título actualizado a: ${newTitle}`, {
+        scope: TOAST_SCOPE.PROFILE,
       });
       setIsUpdatingTitle(false);
     } catch (error) {
       console.error("Error al actualizar el título del perfil", error);
-      toast.error("No se pudo actualizar el título", { containerId: "profile" });
+      notify.error("No se pudo actualizar el título", { scope: TOAST_SCOPE.PROFILE });
     } finally {
       setIsSaving(false);
     }

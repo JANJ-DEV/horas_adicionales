@@ -1,7 +1,7 @@
 import useBranches from "@/context/hooks/useBranches.hook.";
 import type { Branch, JobPosition } from "@/types";
 import { useState } from "react";
-import { toast } from "react-toastify";
+import { notify, TOAST_SCOPE } from "@/services/toast.service";
 
 export const useFilterBranches = () => {
   const { branches } = useBranches();
@@ -12,13 +12,13 @@ export const useFilterBranches = () => {
   const handlerOnChangeBranch = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const branchId = e.target.value;
     setSelectedBranch(branchId);
-    toast.info(`Rama seleccionada: ${branchId}`, { containerId: "profile" });
+    notify.info(`Rama seleccionada: ${branchId}`, { scope: TOAST_SCOPE.PROFILE });
   };
 
   const handlerOnChangeJobPosition = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const jobPositionId = e.target.value;
     setSelectedJobPosition(jobPositionId);
-    toast.info(`Puesto de trabajo seleccionado: ${jobPositionId}`, { containerId: "profile" });
+    notify.info(`Puesto de trabajo seleccionado: ${jobPositionId}`, { scope: TOAST_SCOPE.PROFILE });
   };
 
   const getJobPositionByBranch = (selectedJobPosition: string) => {

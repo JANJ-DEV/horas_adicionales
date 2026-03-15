@@ -11,7 +11,6 @@ import {
 } from "firebase/firestore";
 import { firestore } from "@/apis/firebase";
 import { authFirebase } from "@/apis/firebase";
-import { toast } from "react-toastify";
 import type { JobProfile } from "@/types";
 
 const nameCollection = "jobsProfiles";
@@ -52,8 +51,7 @@ export const subscribeToJobProfiles = (
 export const saveJobProfile = async (payload: JobProfile) => {
   const userId = authFirebase.currentUser?.uid;
   if (!userId) {
-    toast.error("No hay un usuario autenticado", { containerId: "jobs-profiles" });
-    return;
+    return null;
   }
   try {
     // 1. Referencia a la colección
@@ -68,7 +66,6 @@ export const saveJobProfile = async (payload: JobProfile) => {
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     });
-    toast.success("Perfil de trabajo guardado correctamente ", { containerId: "job-profiles" });
     return { ...payload, id: newDocRef.id } as JobProfile;
   } catch (error) {
     console.error("Error al crear el perfil de trabajo:", error);

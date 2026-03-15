@@ -2,6 +2,7 @@ import useAuth from "@/context/hooks/auth.hook";
 import { deleteRecord, subscribeToRecords, type RecordService } from "@/services/records.service";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { notify, TOAST_SCOPE } from "@/services/toast.service";
 
 export const useRecord = () => {
   const { currentUser } = useAuth();
@@ -20,7 +21,13 @@ export const useRecord = () => {
 
     if (!shouldDelete) return;
 
-    await deleteRecord(recordId);
+    const removed = await deleteRecord(recordId);
+    if (removed) {
+      notify.success("Registro eliminado con éxito", { scope: TOAST_SCOPE.RECORDS });
+      return;
+    }
+
+    notify.error("No se pudo eliminar el registro", { scope: TOAST_SCOPE.RECORDS });
   };
   const handlerViewDetails = (recordId: string) => {
     navigate(`/records/details/${recordId}`);

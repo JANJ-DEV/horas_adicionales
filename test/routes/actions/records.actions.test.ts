@@ -56,7 +56,7 @@ describe("records.actions add", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.authFirebase.currentUser = { uid: "user-123" };
-    mocks.saveRecord.mockResolvedValue(undefined);
+    mocks.saveRecord.mockImplementation(async (payload) => payload);
     mocks.getUtilitiesCatalogFromFirestore.mockResolvedValue(buildCatalog());
     mocks.getActiveUtilityIdsForProfile.mockReturnValue([]);
   });

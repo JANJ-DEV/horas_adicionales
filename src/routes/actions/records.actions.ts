@@ -136,12 +136,18 @@ export async function add({ request }: ActionFunctionArgs) {
     utilitiesValues,
   };
 
-  await saveRecord(record);
+  const savedRecord = await saveRecord(record);
+  if (!savedRecord) {
+    return {
+      error: "No se pudo guardar el registro",
+    };
+  }
+
   // Retorna el resultado
   return {
     success: true,
     message: "Registro guardado correctamente",
-    record,
+    record: savedRecord,
     jobProfileId,
   };
 }

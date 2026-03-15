@@ -1,7 +1,6 @@
 import useBranches from "@/context/hooks/useBranches.hook.";
 import { useState, type FC, useEffect, type ChangeEvent } from "react";
 import { useFetcher } from "react-router";
-import { ToastContainer } from "react-toastify";
 import SelectJobProfile from "./components/SelectJobProfile";
 import { getBranchById } from "@/services/branches.services";
 import type { JobPosition } from "@/types";
@@ -81,19 +80,6 @@ const CreateJobProfile: FC = () => {
           <p className="text-green-500">{formAction.data.message}</p>
         )}
       </formAction.Form>
-
-      <ToastContainer
-        containerId="job-profiles-toast"
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
     </section>
   );
 };

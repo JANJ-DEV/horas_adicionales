@@ -8,8 +8,6 @@ const mocks = vi.hoisted(() => ({
   onSnapshot: vi.fn(),
   getDoc: vi.fn(),
   deleteDoc: vi.fn(),
-  toastSuccess: vi.fn(),
-  toastError: vi.fn(),
   authFirebase: {
     currentUser: { uid: "user-123" },
   } as { currentUser: { uid: string } | null },
@@ -24,13 +22,6 @@ vi.mock("firebase/firestore", () => ({
   onSnapshot: mocks.onSnapshot,
   getDoc: mocks.getDoc,
   deleteDoc: mocks.deleteDoc,
-}));
-
-vi.mock("react-toastify", () => ({
-  toast: {
-    success: mocks.toastSuccess,
-    error: mocks.toastError,
-  },
 }));
 
 vi.mock("@/apis/firebase", () => ({
@@ -105,15 +96,12 @@ describe("jobsProfile.service", () => {
     expect(result).toBe(unsubscribe);
   });
 
-  it("saveJobProfile devuelve toast de error si no hay usuario autenticado", async () => {
+  it("saveJobProfile devuelve null si no hay usuario autenticado", async () => {
     mocks.authFirebase.currentUser = null;
 
     const result = await saveJobProfile({ title: "Perfil noche" } as never);
 
-    expect(result).toBeUndefined();
-    expect(mocks.toastError).toHaveBeenCalledWith("No hay un usuario autenticado", {
-      containerId: "jobs-profiles",
-    });
+    expect(result).toBeNull();
   });
 
   it("saveJobProfile persiste el payload y devuelve el perfil con id", async () => {
@@ -132,9 +120,6 @@ describe("jobsProfile.service", () => {
         updatedAt: "SERVER_TIMESTAMP",
       }
     );
-    expect(mocks.toastSuccess).toHaveBeenCalledWith("Perfil de trabajo guardado correctamente ", {
-      containerId: "job-profiles",
-    });
     expect(result).toEqual({
       id: "profile-123",
       title: "Perfil noche",
