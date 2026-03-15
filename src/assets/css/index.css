@@ -158,7 +158,7 @@ button {
 
 .app-surface {
   border: 1px solid var(--border);
-  background: linear-gradient(180deg, var(--surfaceStrong), var(--surface));
+  background: linear-gradient(180deg, var(--surface-strong), var(--surface));
   border-radius: 1.5rem;
   box-shadow: var(--shadow);
   backdrop-filter: blur(6px);
