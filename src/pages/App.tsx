@@ -11,9 +11,9 @@ const App: FC = () => {
 
   const guides = [
     {
-      title: "Acceso rapido con Google",
+      title: "Acceso rápido con Google",
       description:
-        "Inicia sesion en segundos y empieza a usar tu espacio personal sin formularios largos.",
+        "Inicia sesión en segundos y empieza a usar tu espacio personal sin formularios largos.",
     },
     {
       title: "Perfiles por puesto o sucursal",
@@ -21,9 +21,9 @@ const App: FC = () => {
         "Configura distintos contextos de trabajo para separar tarifas, ramas y puestos con claridad.",
     },
     {
-      title: "Resumen de horas y calculos",
+      title: "Resumen de horas y cálculos",
       description:
-        "Consulta horas trabajadas y una estimacion economica por periodo desde una interfaz simple.",
+        "Consulta horas trabajadas y una estimación económica por periodo desde una interfaz simple.",
     },
   ];
 
@@ -31,7 +31,7 @@ const App: FC = () => {
     {
       step: "01",
       title: "Crea tu cuenta",
-      text: "Pulsa en iniciar sesion con Google para acceder a tu espacio de trabajo.",
+      text: "Pulsa en iniciar sesión con Google para acceder a tu espacio de trabajo.",
       action: true,
     },
     {
