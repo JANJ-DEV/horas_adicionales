@@ -1,6 +1,6 @@
 import useBranches from "@/context/hooks/useBranches.hook.";
 import { useState, type FC, useEffect, type ChangeEvent } from "react";
-import { useFetcher } from "react-router";
+import { Link, useFetcher } from "react-router";
 import SelectJobProfile from "./components/SelectJobProfile";
 import { getBranchById } from "@/services/branches.services";
 import type { JobPosition } from "@/types";
@@ -77,7 +77,15 @@ const CreateJobProfile: FC = () => {
         )}
         {/* Mensaje de éxito */}
         {formAction.data && formAction.data.success && (
-          <p className="text-green-500">{formAction.data.message}</p>
+          <aside className="flex flex-col gap-3 rounded-xl border border-green-700 bg-green-900/30 p-4">
+            <p className="text-green-300">{formAction.data.message}</p>
+            <Link
+              to="/records/add"
+              className="w-fit rounded-lg border border-cyan-400 bg-cyan-500/20 px-4 py-2 text-sm font-semibold text-cyan-200 transition hover:bg-cyan-500/30"
+            >
+              Ir a registrar horas
+            </Link>
+          </aside>
         )}
       </formAction.Form>
     </section>

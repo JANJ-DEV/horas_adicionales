@@ -4,6 +4,7 @@ import RecordCalculationSummary from "@/components/RecordCalculationSummary";
 import useUtilities from "@/context/hooks/useUtilities.hook";
 import { useAddRecord } from "./hooks/useAddRecord";
 import { useState, type FC } from "react";
+import { Link } from "react-router";
 
 const UTILITY_FIELD_PREFIX = "utility__";
 
@@ -65,11 +66,40 @@ const AddNewRecord: FC = () => {
   const formResetKey = formAction.data ? JSON.stringify(formAction.data) : "initial";
   const estimatedHourlyRateValue =
     estimatedHourlyRate !== undefined ? String(estimatedHourlyRate) : "";
+  const hasJobProfiles = jobProfiles.length > 0;
 
   const showLivePreview =
     Boolean(estimatedHourlyRate) &&
     startTime.length > 0 &&
     endTime.length > 0;
+
+  if (hasCurrentUser && !loading && !hasJobProfiles) {
+    return (
+      <section className="mx-auto w-full max-w-2xl pb-6">
+        <aside className="flex flex-col gap-4 rounded-xl border border-amber-500/40 bg-amber-500/10 p-5 text-amber-100">
+          <h2 className="text-xl font-semibold text-amber-200">Necesitas un perfil de trabajo</h2>
+          <p className="text-sm text-amber-100/90">
+            Para registrar horas primero debes crear tu primer perfil de trabajo. Ese perfil define
+            sucursal, puesto y tarifa estimada.
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <Link
+              to="/jobs-profiles/add"
+              className="rounded-lg border border-cyan-400 bg-cyan-500/20 px-4 py-2 text-sm font-semibold text-cyan-200 transition hover:bg-cyan-500/30"
+            >
+              Crear primer perfil
+            </Link>
+            <Link
+              to="/jobs-profiles"
+              className="rounded-lg border border-slate-500 bg-slate-700/30 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:bg-slate-700/50"
+            >
+              Ver perfiles de trabajo
+            </Link>
+          </div>
+        </aside>
+      </section>
+    );
+  }
 
   return (
     <section className="mx-auto w-full max-w-2xl pb-6">

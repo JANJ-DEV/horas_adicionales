@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import { MemoryRouter } from "react-router";
 
 const mocks = vi.hoisted(() => ({
   useBranches: vi.fn(),
@@ -7,9 +8,13 @@ const mocks = vi.hoisted(() => ({
   getBranchById: vi.fn(),
 }));
 
-vi.mock("react-router", () => ({
-  useFetcher: mocks.useFetcher,
-}));
+vi.mock("react-router", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("react-router")>();
+  return {
+    ...actual,
+    useFetcher: mocks.useFetcher,
+  };
+});
 
 vi.mock("@/context/hooks/useBranches.hook.", () => ({
   default: mocks.useBranches,
@@ -41,7 +46,7 @@ describe("CreateJobProfile", () => {
     });
     mocks.getBranchById.mockResolvedValue({ jobsPositions: [] });
 
-    render(<CreateJobProfile />);
+    render(<CreateJobProfile />, { wrapper: MemoryRouter });
 
     expect(screen.getByRole("heading", { name: "Añadir perfil de trabajo" })).toBeInTheDocument();
     expect(screen.getByLabelText("Título del perfil de trabajo:")).toBeInTheDocument();
@@ -62,7 +67,7 @@ describe("CreateJobProfile", () => {
       jobsPositions: [{ id: "job-1", name: "Supervisor", description: "Coordina" }],
     });
 
-    const { rerender } = render(<CreateJobProfile />);
+    const { rerender } = render(<CreateJobProfile />, { wrapper: MemoryRouter });
 
     fireEvent.change(screen.getByLabelText("Selecciona una rama:"), {
       target: { value: "branch-1" },
@@ -74,6 +79,10 @@ describe("CreateJobProfile", () => {
 
     expect(screen.getByText("Puestos para branch-1")).toBeInTheDocument();
     expect(screen.getByText("Perfil creado")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Ir a registrar horas" })).toHaveAttribute(
+      "href",
+      "/records/add"
+    );
 
     mocks.useFetcher.mockReturnValue({
       Form: MockFetcherForm,

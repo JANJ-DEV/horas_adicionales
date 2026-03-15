@@ -10,7 +10,6 @@ export const useRecord = () => {
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [records, setRecords] = useState<RecordService[]>([]);
-  const customErrorMessage = "No tienes registros";
   const hasCurrentUser = Boolean(currentUser?.uid);
   const navigate = useNavigate();
 
@@ -42,8 +41,8 @@ export const useRecord = () => {
       (records) => {
         if (!records || records.length === 0) {
           setRecords([]);
-          setErrorMessage(customErrorMessage);
-          setIsError(true);
+          setErrorMessage(null);
+          setIsError(false);
           setIsLoading(false);
         } else {
           setRecords(records as RecordService[]);
@@ -56,7 +55,7 @@ export const useRecord = () => {
         console.error("Error al suscribirse a los registros:", error);
         setRecords([]);
         setIsError(true);
-        setErrorMessage(customErrorMessage);
+        setErrorMessage("Error al cargar los registros");
         setIsLoading(false);
       },
       () => {
