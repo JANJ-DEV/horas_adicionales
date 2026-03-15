@@ -9,7 +9,20 @@ const AccountLayout: FC = () => {
   const { isAuthenticated, isAuthResolved } = useAuth();
 
   if (!isAuthResolved) {
-    return null;
+    return (
+      <section className="flex min-h-[100dvh] flex-col">
+        <MainHeader />
+        <section className="flex min-h-0 flex-1 flex-col">
+          <MainContent>
+            <section className="flex min-h-[calc(100dvh-6.5rem)] flex-col items-center justify-center">
+              <div role="status" className="text-sm text-slate-200">
+                Cargando tu cuenta...
+              </div>
+            </section>
+          </MainContent>
+        </section>
+      </section>
+    );
   }
 
   if (!isAuthenticated) {
