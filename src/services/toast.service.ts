@@ -18,8 +18,9 @@ const buildOptions = ({
   ...options
 }: NotifyOptions = {}): ToastOptions => ({
   containerId: scope,
-  autoClose: 3000,
+  autoClose: 2000,
   closeOnClick: true,
+  closeButton: false,
   ...options,
 });
 
