@@ -10,6 +10,7 @@ const mocks = vi.hoisted(() => ({
   deleteDoc: vi.fn(),
   updateDoc: vi.fn(),
   onSnapshot: vi.fn(),
+  writeBatch: vi.fn(),
   authFirebase: {
     currentUser: { uid: "user-123" },
   } as { currentUser: { uid: string } | null },
@@ -26,6 +27,7 @@ vi.mock("firebase/firestore", () => ({
   deleteDoc: mocks.deleteDoc,
   updateDoc: mocks.updateDoc,
   onSnapshot: mocks.onSnapshot,
+  writeBatch: mocks.writeBatch,
   Timestamp: class Timestamp {},
 }));
 
@@ -39,6 +41,7 @@ import {
   getRecordById,
   saveRecord,
   subscribeToRecords,
+  updateEstimatedHourlyRateByJobProfile,
   updateRecord,
 } from "../../src/services/records.service";
 
@@ -69,6 +72,10 @@ describe("records.service", () => {
     mocks.deleteDoc.mockResolvedValue(undefined);
     mocks.updateDoc.mockResolvedValue(undefined);
     mocks.onSnapshot.mockReturnValue(vi.fn());
+    mocks.writeBatch.mockImplementation(() => ({
+      update: vi.fn(),
+      commit: vi.fn().mockResolvedValue(undefined),
+    }));
   });
 
   it("subscribeToRecords no se suscribe si no hay usuario autenticado", () => {
@@ -222,6 +229,119 @@ describe("records.service", () => {
       }
     );
     expect(result).toBe(true);
+  });
+
+  it("updateEstimatedHourlyRateByJobProfile sincroniza la tarifa en los registros relacionados", async () => {
+    const batchUpdate = vi.fn();
+    const batchCommit = vi.fn().mockResolvedValue(undefined);
+
+    mocks.writeBatch.mockReturnValue({
+      update: batchUpdate,
+      commit: batchCommit,
+    });
+    mocks.getDocs.mockResolvedValue({
+      docs: [
+        {
+          ref: { path: "users/user-123/records/record-1" },
+          data: () => ({ jobProfileId: "profile-1" }),
+        },
+        {
+          ref: { path: "users/user-123/records/record-2" },
+          data: () => ({
+            titleJobProfile: "Turno noche",
+            branchId: "branch-1",
+            jobPositionId: "job-1",
+          }),
+        },
+        {
+          ref: { path: "users/user-123/records/record-3" },
+          data: () => ({ jobProfileId: "profile-2" }),
+        },
+      ],
+    });
+
+    const result = await updateEstimatedHourlyRateByJobProfile("profile-1", 22.5, {
+      titleJobProfile: "Turno noche",
+      branchId: "branch-1",
+      jobPositionId: "job-1",
+    });
+
+    expect(mocks.getDocs).toHaveBeenCalledWith({ path: "users/user-123/records" });
+    expect(batchUpdate).toHaveBeenNthCalledWith(
+      1,
+      { path: "users/user-123/records/record-1" },
+      {
+        estimatedHourlyRate: 22.5,
+        updatedAt: "SERVER_TIMESTAMP",
+      }
+    );
+    expect(batchUpdate).toHaveBeenNthCalledWith(
+      2,
+      { path: "users/user-123/records/record-2" },
+      {
+        estimatedHourlyRate: 22.5,
+        updatedAt: "SERVER_TIMESTAMP",
+      }
+    );
+    expect(batchCommit).toHaveBeenCalledTimes(1);
+    expect(result).toBe(2);
+  });
+
+  it("updateEstimatedHourlyRateByJobProfile usa fallback para registros antiguos sin jobProfileId", async () => {
+    const batchUpdate = vi.fn();
+    const batchCommit = vi.fn().mockResolvedValue(undefined);
+
+    mocks.writeBatch.mockReturnValue({
+      update: batchUpdate,
+      commit: batchCommit,
+    });
+    mocks.getDocs.mockResolvedValue({
+      docs: [
+        {
+          ref: { path: "users/user-123/records/record-legacy" },
+          data: () => ({
+            titleJobProfile: "Perfil legacy",
+            branchId: "branch-9",
+            jobPositionId: "job-4",
+          }),
+        },
+        {
+          ref: { path: "users/user-123/records/record-other" },
+          data: () => ({
+            titleJobProfile: "Otro perfil",
+            branchId: "branch-9",
+            jobPositionId: "job-4",
+          }),
+        },
+      ],
+    });
+
+    const result = await updateEstimatedHourlyRateByJobProfile("profile-legacy", 19, {
+      titleJobProfile: "Perfil legacy",
+      branchId: "branch-9",
+      jobPositionId: "job-4",
+    });
+
+    expect(batchUpdate).toHaveBeenCalledTimes(1);
+    expect(batchUpdate).toHaveBeenCalledWith(
+      { path: "users/user-123/records/record-legacy" },
+      {
+        estimatedHourlyRate: 19,
+        updatedAt: "SERVER_TIMESTAMP",
+      }
+    );
+    expect(result).toBe(1);
+  });
+
+  it("updateEstimatedHourlyRateByJobProfile devuelve 0 cuando no hay registros a sincronizar", async () => {
+    mocks.getDocs.mockResolvedValue({
+      docs: [],
+    });
+
+    const result = await updateEstimatedHourlyRateByJobProfile("profile-1", 22.5);
+
+    expect(result).toBe(0);
+    expect(mocks.writeBatch).not.toHaveBeenCalled();
   });
 
   it("deleteRecord elimina el documento del usuario autenticado", async () => {

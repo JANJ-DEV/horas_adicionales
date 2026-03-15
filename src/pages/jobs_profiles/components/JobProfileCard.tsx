@@ -57,6 +57,9 @@ const JobProfileCard: FC<{ jobProfile: JobProfile }> = ({ jobProfile }) => {
         <EstimatedHourlyRate
           rate={jobProfile.estimatedHourlyRate}
           jobProfileId={jobProfile.id as string}
+          profileTitle={jobProfile.title}
+          branchId={jobProfile.branch.id}
+          jobPositionId={jobProfile.jobPosition.id}
         />
       </CardBody>
       <CardFooter variant="card">

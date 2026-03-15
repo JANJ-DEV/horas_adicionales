@@ -1,5 +1,6 @@
 import Btn from "@/components/Btn";
 import { updateJobProfile } from "@/services/jobsProfile.service";
+import { updateEstimatedHourlyRateByJobProfile } from "@/services/records.service";
 import { useState, type FC, type SubmitEvent } from "react";
 import CardFooter from "./CardFooter";
 import { notify, TOAST_SCOPE } from "@/services/toast.service";
@@ -11,17 +12,22 @@ const currencyFormatter = new Intl.NumberFormat("es-ES", {
   maximumFractionDigits: 2,
 });
 
-const EstimatedHourlyRate: FC<{ rate: number | null | undefined; jobProfileId: string }> = ({
-  rate,
-  jobProfileId,
-}) => {
+const EstimatedHourlyRate: FC<{
+  rate: number | null | undefined;
+  jobProfileId: string;
+  profileTitle: string;
+  branchId?: string;
+  jobPositionId?: string;
+}> = ({ rate, jobProfileId, profileTitle, branchId, jobPositionId }) => {
   const [isUpdatingRate, setIsUpdatingRate] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [syncExistingRecords, setSyncExistingRecords] = useState(false);
 
   const normalizedCurrentRate = Number(rate ?? 0);
 
   const toggleUpdatingRate = () => {
     setIsUpdatingRate(!isUpdatingRate);
+    setSyncExistingRecords(false);
   };
 
   const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
@@ -51,7 +57,28 @@ const EstimatedHourlyRate: FC<{ rate: number | null | undefined; jobProfileId: s
     try {
       setIsSaving(true);
       await updateJobProfile(jobProfileId, { estimatedHourlyRate: parsedRate });
-      notify.success("Tarifa estimada actualizada correctamente", { scope: TOAST_SCOPE.PROFILE });
+
+      if (syncExistingRecords) {
+        const updatedRecordsCount = await updateEstimatedHourlyRateByJobProfile(
+          jobProfileId,
+          parsedRate,
+          {
+            titleJobProfile: profileTitle,
+            branchId,
+            jobPositionId,
+          }
+        );
+
+        notify.success(
+          updatedRecordsCount > 0
+            ? `Tarifa actualizada y aplicada a ${updatedRecordsCount} registros existentes`
+            : "Tarifa actualizada. No habia registros existentes para sincronizar",
+          { scope: TOAST_SCOPE.PROFILE }
+        );
+      } else {
+        notify.success("Tarifa estimada actualizada correctamente", { scope: TOAST_SCOPE.PROFILE });
+      }
+
       setIsUpdatingRate(false);
     } catch (error) {
       console.error("Error al actualizar la tarifa estimada", error);
@@ -115,6 +142,17 @@ const EstimatedHourlyRate: FC<{ rate: number | null | undefined; jobProfileId: s
             disabled={isSaving}
             className="w-full border py-2 px-4 rounded text-sm lg:text-base mt-2"
           />
+
+          <label className="mt-3 flex items-start gap-3 text-sm text-[var(--text-muted)]">
+            <input
+              type="checkbox"
+              checked={syncExistingRecords}
+              onChange={(event) => setSyncExistingRecords(event.target.checked)}
+              disabled={isSaving}
+              className="mt-1 h-4 w-4 rounded border-[var(--border)]"
+            />
+            <span>Aplicar esta tarifa tambien a los registros ya creados con este perfil</span>
+          </label>
 
           <CardFooter variant="card">
             <Btn
