@@ -59,13 +59,13 @@ const RecordCard: FC<RecordCardProps> = ({
   return (
     <article
       key={record.id}
-      className="group relative flex flex-col gap-4 overflow-hidden rounded-xl border border-cyan-400/25 bg-gradient-to-br from-slate-900/90 via-slate-800/80 to-slate-900/90 p-5 shadow-lg shadow-black/30 transition-all duration-300 hover:-translate-y-1 hover:border-cyan-300/60 hover:shadow-cyan-500/20"
+      className="group app-card relative flex flex-col gap-4 overflow-hidden p-5 transition-all duration-300 hover:-translate-y-1 hover:border-[var(--border-strong)]"
     >
-      <div className="pointer-events-none absolute -right-12 -top-12 h-28 w-28 rounded-full bg-cyan-400/15 blur-2xl transition-opacity duration-300 group-hover:opacity-100" />
+      <div className="pointer-events-none absolute -right-12 -top-12 h-28 w-28 rounded-full bg-[color:var(--accent)]/15 blur-2xl transition-opacity duration-300 group-hover:opacity-100" />
 
       <RecordedTimeInfo record={record} />
 
-      <section className="rounded-lg bg-black/20 p-3 ring-1 ring-white/10 flex flex-col gap-2 text-sm text-slate-100">
+      <section className="app-panel flex flex-col gap-2 p-3 text-sm text-[var(--text)]">
         <p title={branchName || "No especificada"}>
           <strong>Rama:</strong> {branchName || "No especificada"}
         </p>

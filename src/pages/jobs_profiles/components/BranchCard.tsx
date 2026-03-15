@@ -63,9 +63,9 @@ const BranchCard: FC<{ branch: Branch; jobProfileId: string }> = ({ branch, jobP
   };
 
   return (
-    <section className="rounded-lg bg-black/20 p-3 ring-1 ring-white/10">
+    <section className="app-panel p-3">
       <header className="flex items-center justify-between">
-        <strong className="mb-1 text-xs font-semibold uppercase tracking-wider text-cyan-300/90">
+        <strong className="mb-1 text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
           Rama
         </strong>
         <Btn
@@ -92,7 +92,7 @@ const BranchCard: FC<{ branch: Branch; jobProfileId: string }> = ({ branch, jobP
             />
           </article>
 
-          <p className="mt-2 text-sm text-slate-300">{selectedBranch.description}</p>
+          <p className="mt-2 text-sm text-[var(--text-muted)]">{selectedBranch.description}</p>
 
           <footer className="mt-4 flex justify-end gap-4 items-center">
             <Btn
@@ -117,9 +117,9 @@ const BranchCard: FC<{ branch: Branch; jobProfileId: string }> = ({ branch, jobP
       ) : (
         <>
           <article className="mt-2">
-            <strong className="text-base text-white">{branch.name}</strong>
+            <strong className="text-base text-[var(--text)]">{branch.name}</strong>
           </article>
-          <p className="mt-1 text-sm text-slate-300">{branch.description}</p>
+          <p className="mt-1 text-sm text-[var(--text-muted)]">{branch.description}</p>
         </>
       )}
     </section>

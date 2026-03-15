@@ -15,7 +15,7 @@ const AccountLayout: FC = () => {
         <section className="flex min-h-0 flex-1 flex-col">
           <MainContent>
             <section className="flex min-h-[calc(100dvh-6.5rem)] flex-col items-center justify-center">
-              <div role="status" className="text-sm text-slate-200">
+              <div role="status" className="text-sm text-[var(--text-muted)]">
                 Cargando tu cuenta...
               </div>
             </section>
@@ -35,15 +35,15 @@ const AccountLayout: FC = () => {
       <section className="flex min-h-0 flex-1 flex-col">
         <MainContent>
           <section className="flex min-h-[calc(100dvh-6.5rem)] flex-col">
-            <nav className="mt-4 flex flex-col gap-3 sm:mt-6 sm:flex-row sm:items-center sm:gap-4">
+            <nav className="app-surface flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
               <GoBack />
               <NavLink
                 to="/account/update"
                 className={({ isActive }) => {
-                  return `rounded-lg border px-4 py-2 text-center text-sm font-semibold transition ${
+                  return `inline-flex items-center justify-center rounded-full px-4 py-2.5 text-center text-sm font-semibold transition ${
                     isActive
-                      ? "border-cyan-400/70 bg-cyan-500/20 text-cyan-100"
-                      : "border-slate-500/60 bg-slate-800/45 text-slate-200 hover:border-cyan-400/70 hover:text-cyan-100"
+                      ? "bg-[var(--accent)] text-slate-950 shadow-[0_2px_6px_rgba(105,211,192,0.15)]"
+                      : "border border-[var(--border)] bg-[var(--bg-soft)] text-[var(--text)] hover:border-[var(--border-strong)] hover:text-[var(--accent)]"
                   }`;
                 }}
               >

@@ -34,32 +34,40 @@ const Btn: FC<BtnProps> = ({
   size = "md",
 }) => {
   const [variantStyles] = useState({
-    primary: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded",
-    secondary: "bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded",
-    danger: "bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded",
-    success: "bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded",
-    warning: "bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded",
-    info: "bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded",
-    light: "bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded",
-    dark: "bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded",
-    link: "text-blue-500 hover:text-blue-700 font-bold py-2 px-4",
+    primary:
+      "border border-transparent bg-[var(--accent)] text-slate-950 shadow-[0_2px_6px_rgba(105,211,192,0.15)] hover:-translate-y-0.5 hover:bg-[var(--accentStrong)] hover:text-white",
+    secondary:
+      "border border-[var(--border)] bg-[var(--bg-soft)] text-[var(--text)] hover:-translate-y-0.5 hover:border-[var(--border-strong)] hover:bg-[var(--surface)]",
+    danger:
+      "border border-transparent bg-[var(--danger)]/16 text-[var(--danger)] hover:-translate-y-0.5 hover:bg-[var(--danger)] hover:text-white",
+    success:
+      "border border-transparent bg-[var(--success)]/16 text-[var(--success)] hover:-translate-y-0.5 hover:bg-[var(--success)] hover:text-white",
+    warning:
+      "border border-transparent bg-[var(--warning)]/16 text-[var(--warning)] hover:-translate-y-0.5 hover:bg-[var(--warning)] hover:text-slate-950",
+    info: "border border-transparent bg-[var(--accent-strong)]/16 text-[var(--accent-strong)] hover:-translate-y-0.5 hover:bg-[var(--accent-strong)] hover:text-white",
+    light:
+      "border border-[var(--border)] bg-white/80 text-slate-900 hover:-translate-y-0.5 hover:bg-white",
+    dark: "border border-transparent bg-slate-950 text-white hover:-translate-y-0.5 hover:bg-slate-800",
+    link: "border border-transparent bg-transparent text-[var(--accent)] hover:text-[var(--accent-strong)]",
     outline:
-      "border border-blue-500 hover:bg-blue-500 hover:text-white font-bold py-2 px-4 rounded",
-    disabled: "bg-gray-500 cursor-not-allowed",
-    loading: "bg-gray-500 cursor-not-allowed",
+      "border border-[var(--border-strong)] bg-transparent text-[var(--text)] hover:-translate-y-0.5 hover:bg-[var(--bg-soft)] hover:text-[var(--accent)]",
+    disabled:
+      "border border-[var(--border)] bg-[var(--bg-soft)] text-[var(--text-soft)] cursor-not-allowed opacity-70",
+    loading:
+      "border border-[var(--border)] bg-[var(--bg-soft)] text-[var(--text-soft)] cursor-not-allowed opacity-70",
   });
   const [sizeStyles] = useState({
-    xs: "text-xs py-1 px-2",
-    sm: "text-sm py-2 px-3",
-    md: "text-md py-2 px-4",
-    lg: "text-lg py-3 px-5",
-    xl: "text-xl py-4 px-6",
+    xs: "text-xs px-3 py-2",
+    sm: "text-sm px-4 py-2.5",
+    md: "text-sm px-4 py-3 sm:text-base",
+    lg: "text-base px-5 py-3.5 sm:text-lg",
+    xl: "text-lg px-6 py-4 sm:text-xl",
   });
 
   return (
     <button
       type={type}
-      className={`${variantStyles[variant]} ${sizeStyles[size]} transition-colors duration-300`}
+      className={`inline-flex items-center justify-center gap-2 rounded-full font-bold tracking-[0.01em] transition duration-300 ${variantStyles[variant]} ${sizeStyles[size]}`}
       onClick={onClick}
       disabled={formState}
       title={title}

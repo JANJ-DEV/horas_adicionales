@@ -7,7 +7,7 @@ type MainContentProps = {
 
 const MainContent: FC<MainContentProps> = ({ children }) => {
   return (
-    <main className="min-w-0 max-w-full overflow-x-hidden px-4">
+    <main className="app-page mt-4 min-w-0 max-w-full overflow-x-hidden md:mt-6 lg:mt-8">
       {children}
       <VerticalScrollButton />
     </main>

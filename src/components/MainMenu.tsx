@@ -12,6 +12,9 @@ const MainMenu = ({ variant }: MainMenuProps) => {
   const { menuBars } = useGlobal();
   const { closeMenuBars } = menuBars;
 
+  const baseLinkClass =
+    "rounded-full px-4 py-2 text-sm font-semibold transition duration-300 hover:-translate-y-0.5";
+
   useEffect(() => {
     const handlerCloseMenuBars = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
@@ -27,7 +30,7 @@ const MainMenu = ({ variant }: MainMenuProps) => {
 
   return (
     <nav
-      className={`flex ${variant === "mobile" ? "flex-col gap-4 px-4 text-lg" : "flex-row gap-4"} `}
+      className={`flex ${variant === "mobile" ? "flex-col gap-2 px-1 text-base" : "flex-row items-center gap-2"}`}
     >
       {isAuthenticated && (
         <>
@@ -35,7 +38,11 @@ const MainMenu = ({ variant }: MainMenuProps) => {
             onClick={closeMenuBars}
             to="/records"
             className={({ isActive }) =>
-              ` font-bold ${isActive ? "text-green-500" : "text-gray-500"}`
+              `${baseLinkClass} ${
+                isActive
+                  ? "bg-[color:var(--accent)] text-slate-950 shadow-[0_2px_6px_rgba(105,211,192,0.15)]"
+                  : "text-[var(--text-muted)] hover:bg-[var(--bg-soft)] hover:text-[var(--text)]"
+              }`
             }
           >
             Registros
@@ -44,7 +51,11 @@ const MainMenu = ({ variant }: MainMenuProps) => {
             onClick={closeMenuBars}
             to="/jobs-profiles"
             className={({ isActive }) =>
-              `font-bold ${isActive ? "text-green-500" : "text-gray-500"}`
+              `${baseLinkClass} ${
+                isActive
+                  ? "bg-[color:var(--accent)] text-slate-950 shadow-[0_2px_6px_rgba(105,211,192,0.15)]"
+                  : "text-[var(--text-muted)] hover:bg-[var(--bg-soft)] hover:text-[var(--text)]"
+              }`
             }
           >
             Perfiles de Trabajo

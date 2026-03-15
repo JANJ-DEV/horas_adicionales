@@ -13,10 +13,12 @@ const PrivateLayout: FC = () => {
   }
   return (
     <UtilitiesProvider>
-      <MainHeader />
-      <MainContent>
-        <Outlet />
-      </MainContent>
+      <section className="flex min-h-[100dvh] flex-col pb-6">
+        <MainHeader />
+        <MainContent>
+          <Outlet />
+        </MainContent>
+      </section>
     </UtilitiesProvider>
   );
 };

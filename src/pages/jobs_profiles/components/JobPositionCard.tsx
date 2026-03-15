@@ -9,9 +9,9 @@ const JobPositionCard: FC<{ jobProfile: JobProfile }> = ({ jobProfile }) => {
     setIsUpdatingJobPosition(!isUpdatingJobPosition);
   };
   return (
-    <section className="rounded-lg bg-black/20 p-3 ring-1 ring-white/10">
+    <section className="app-panel p-3">
       <header className="flex items-center justify-between">
-        <strong className="mb-1 text-xs font-semibold uppercase tracking-wider text-cyan-300/90">
+        <strong className="mb-1 text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
           Puesto
         </strong>
         <Btn
@@ -24,8 +24,10 @@ const JobPositionCard: FC<{ jobProfile: JobProfile }> = ({ jobProfile }) => {
       </header>
       {!isUpdatingJobPosition && (
         <article className="mt-2">
-          <strong className="text-base text-white">{jobProfile.jobPosition.name}</strong>
-          <p className="mt-1 text-sm text-slate-300">{jobProfile.jobPosition.description}</p>
+          <strong className="text-base text-[var(--text)]">{jobProfile.jobPosition.name}</strong>
+          <p className="mt-1 text-sm text-[var(--text-muted)]">
+            {jobProfile.jobPosition.description}
+          </p>
         </article>
       )}
       <IsUpdatingJobPosition

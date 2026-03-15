@@ -37,7 +37,7 @@ const CurrentUser: FC = () => {
         disabled
         aria-label="Cancelando inicio de sesión"
         title="Cancelando..."
-        className="flex cursor-default animate-pulse items-center gap-1.5 rounded-full border border-slate-700 bg-slate-800/60 px-2.5 py-1.5 text-slate-400"
+        className="flex cursor-default animate-pulse items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-2 text-[var(--text-muted)]"
       >
         <FaTimesCircle size={16} />
         <span className="hidden text-xs sm:inline">Cancelando...</span>
@@ -57,21 +57,21 @@ const CurrentUser: FC = () => {
             toggleMenuCurrentUser();
             closeMenuBars();
           }}
-          className="flex items-center gap-2 rounded-full border border-orange-300/30 bg-orange-400/10 p-0.5 pr-2.5 text-orange-200 transition hover:bg-orange-400/20"
+          className="flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--bg-soft)] p-1 pr-3 text-[var(--text)] transition duration-300 hover:border-[var(--border-strong)] hover:bg-[var(--surface)]"
         >
           {currentUser.photoURL ? (
             <img
               src={currentUser.photoURL}
               alt="Foto de perfil"
-              className={`h-7 w-7 rounded-full border-2 ${currentUser.emailVerified ? "border-cyan-500" : "border-red-500"}`}
+              className={`h-8 w-8 rounded-full border-2 ${currentUser.emailVerified ? "border-[var(--accent)]" : "border-[var(--danger)]"}`}
             />
           ) : (
-            <FaRegUserCircle size={28} className="text-slate-400" />
+            <FaRegUserCircle size={28} className="text-[var(--text-muted)]" />
           )}
-          <span className="hidden max-w-[8rem] truncate text-xs font-medium text-orange-200 lg:inline">
+          <span className="hidden max-w-[8rem] truncate text-xs font-semibold text-[var(--text)] lg:inline">
             {currentUser.displayName ?? currentUser.email}
           </span>
-          <span className="text-xs font-medium text-orange-200 sm:inline lg:hidden">
+          <span className="text-xs font-semibold text-[var(--text)] sm:inline lg:hidden">
             {(currentUser.displayName ?? currentUser.email ?? "")
               .split(" ")
               .filter(Boolean)
@@ -83,11 +83,13 @@ const CurrentUser: FC = () => {
 
         {/* Dropdown */}
         {isMenuCurrentUserOpen && (
-          <section className="absolute right-0 top-full z-20 mt-2 min-w-max rounded-xl border border-slate-700 bg-slate-900 py-2 shadow-xl">
+          <section className="absolute right-0 top-full z-20 mt-3 min-w-[14rem] rounded-2xl border border-[var(--border)] bg-[var(--surface-strong)] py-2 shadow-[0_4px_12px_rgba(11,18,32,0.15)] backdrop-blur-md">
             {/* Cabecera del menú */}
-            <div className="border-b border-slate-700 px-4 py-2">
-              <p className="text-xs text-slate-400">Conectado como</p>
-              <p className="truncate text-sm font-semibold text-cyan-300">
+            <div className="border-b border-[var(--border)] px-4 py-3">
+              <p className="text-xs uppercase tracking-[0.18em] text-[var(--text-soft)]">
+                Conectado como
+              </p>
+              <p className="truncate pt-1 text-sm font-semibold text-[var(--text)]">
                 {currentUser.displayName ?? currentUser.email}
               </p>
             </div>
@@ -100,7 +102,7 @@ const CurrentUser: FC = () => {
                 }}
                 to="/account"
                 className={({ isActive }) =>
-                  `px-4 py-2 text-sm transition hover:bg-slate-800 ${isActive ? "text-cyan-400" : "text-slate-200"}`
+                  `px-4 py-2.5 text-sm font-semibold transition hover:bg-[var(--bg-soft)] ${isActive ? "text-[var(--accent)]" : "text-[var(--text)]"}`
                 }
               >
                 Mi cuenta
@@ -111,7 +113,7 @@ const CurrentUser: FC = () => {
                   e.stopPropagation();
                   signOutGoogle();
                 }}
-                className="flex items-center gap-2 px-4 py-2 text-sm text-red-400 transition hover:bg-slate-800"
+                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-[var(--danger)] transition hover:bg-[var(--bg-soft)]"
               >
                 <FaSignOutAlt size={14} />
                 Cerrar sesión
@@ -131,10 +133,10 @@ const CurrentUser: FC = () => {
         e.stopPropagation();
         signInWithGoogle();
       }}
-      className="flex items-center gap-2 rounded-full border border-slate-700 bg-slate-800/60 px-2.5 py-1.5 text-slate-300 transition hover:border-cyan-600 hover:bg-slate-700/60 hover:text-cyan-300"
+      className="flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-2 text-[var(--text)] transition duration-300 hover:border-[var(--border-strong)] hover:bg-[var(--surface)] hover:text-[var(--accent)]"
     >
       <FaRegUserCircle size={18} />
-      <span className="hidden text-xs font-medium sm:inline">Iniciar sesión</span>
+      <span className="hidden text-xs font-semibold sm:inline">Iniciar sesión</span>
     </button>
   );
 };

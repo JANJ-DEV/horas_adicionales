@@ -13,8 +13,10 @@ const PERIOD_OPTIONS: Array<{ value: RecordsPeriod; label: string }> = [
 
 const RecordsPeriodSelector = ({ value, onChange }: RecordsPeriodSelectorProps) => {
   return (
-    <section className="flex flex-wrap items-center gap-2 rounded-lg border border-cyan-500/20 bg-slate-900/50 p-2">
-      <strong className="px-2 text-xs uppercase tracking-wide text-cyan-300">Periodo</strong>
+    <section className="app-surface flex flex-wrap items-center gap-2 p-2.5">
+      <strong className="px-2 text-xs uppercase tracking-[0.18em] text-[var(--accent)]">
+        Periodo
+      </strong>
       {PERIOD_OPTIONS.map((option) => {
         const isActive = option.value === value;
 
@@ -23,10 +25,10 @@ const RecordsPeriodSelector = ({ value, onChange }: RecordsPeriodSelectorProps) 
             key={option.value}
             type="button"
             onClick={() => onChange(option.value)}
-            className={`rounded-md px-3 py-1.5 text-sm transition-colors ${
+            className={`rounded-full px-4 py-2 text-sm font-semibold transition duration-300 ${
               isActive
-                ? "bg-cyan-400/20 text-cyan-100 ring-1 ring-cyan-400/70"
-                : "bg-slate-800/70 text-slate-200 hover:bg-slate-700"
+                ? "bg-[var(--accent)] text-slate-950 shadow-[0_2px_6px_rgba(105,211,192,0.15)]"
+                : "bg-[var(--bg-soft)] text-[var(--text)] hover:text-[var(--accent)]"
             }`}
             aria-pressed={isActive}
           >

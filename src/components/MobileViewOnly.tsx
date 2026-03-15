@@ -9,7 +9,15 @@ type Props = {
 };
 
 const MobileViewOnly: FC<Props> = ({ children, className, tag: Tag, display = "block" }) => {
-  return <Tag className={`${display} lg:hidden ${className}`}>{children}</Tag>;
+  const mobileDisplay =
+    display === "block"
+      ? "block"
+      : display === "inline-block"
+        ? "inline-block"
+        : display === "inline-flex"
+          ? "inline-flex"
+          : "flex";
+  return <Tag className={`${mobileDisplay} lg:hidden ${className}`}>{children}</Tag>;
 };
 
 export default MobileViewOnly;

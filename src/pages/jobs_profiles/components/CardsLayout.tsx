@@ -7,7 +7,7 @@ type PropsCardsLayout = Children & {
 
 const CardsLayout: FC<PropsCardsLayout> = ({ children, variant = "default" }) => {
   const varinatsStyles = {
-    default: "flex flex-col sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-4",
+    default: "flex flex-col gap-4 sm:grid sm:grid-cols-2 lg:grid-cols-3",
   };
   return <section className={varinatsStyles[variant]}>{children}</section>;
 };

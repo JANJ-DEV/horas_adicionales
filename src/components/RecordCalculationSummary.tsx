@@ -21,11 +21,13 @@ const RecordCalculationSummary: FC<RecordCalculationSummaryProps> = ({
 
   return (
     <footer
-      className="flex min-w-0 flex-col rounded bg-slate-900/50"
+      className="app-panel flex min-w-0 flex-col overflow-hidden"
       title="Total de horas trabajadas y salario calculado (horas:minutos / decimal)"
     >
-      <div className="flex items-center gap-2 px-4 py-2">
-        <span className="min-w-0 break-words text-info">Informacion del calculo</span>
+      <div className="flex items-center gap-2 border-b border-[var(--border)] px-4 py-3">
+        <span className="min-w-0 break-words text-sm font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
+          Informacion del calculo
+        </span>
         {hasWorkedTime && startTime && endTime && (
           <HoursCalculationTooltip
             startTime={startTime}
@@ -42,19 +44,19 @@ const RecordCalculationSummary: FC<RecordCalculationSummaryProps> = ({
               className="flex min-w-0 flex-wrap items-center gap-2"
               title="Horas trabajadas en formato horas:minutos"
             >
-              <strong className="text-violet-400">Total:</strong>
-              <span className="break-words">{workedHours.formatted}</span>
+              <strong className="text-[var(--accent-strong)]">Total:</strong>
+              <span className="break-words text-[var(--text)]">{workedHours.formatted}</span>
             </header>
             <section className="shrink-0" title="Horas trabajadas en formato decimal">
-              (<small className="text-orange-300"> {workedHours.decimal}</small>)
+              (<small className="text-[var(--accent-warm)]"> {workedHours.decimal}</small>)
             </section>
           </div>
           <div
             className="flex min-w-0 flex-wrap items-center gap-2"
             title="Calculos basados en horas trabajadas y tarifa horaria, configurable en el perfil de trabajo"
           >
-            <strong className="text-warning">Salario estimado:</strong>
-            <span className="break-words text-success">{salary}</span>
+            <strong className="text-[var(--accent-warm)]">Salario estimado:</strong>
+            <span className="break-words text-[var(--success)]">{salary}</span>
           </div>
         </div>
       )}
