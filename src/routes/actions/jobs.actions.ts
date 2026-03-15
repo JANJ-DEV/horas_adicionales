@@ -1,12 +1,12 @@
 import type { Branch, JobPosition, JobProfile } from "@/types";
 import type { ActionFunctionArgs } from "react-router";
-import { toast } from "react-toastify";
 import { updateAccount } from "@/services/auth.service";
 import { uploadFile } from "@/services/uploadFile.service";
 import { authFirebase } from "@/apis/firebase";
 import { getBranchById } from "@/services/branches.services";
 import { getJobPositionFromBranchId } from "@/services/jobsPositions.service";
 import { saveJobProfile } from "@/services/jobsProfile.service";
+import { notify, TOAST_SCOPE } from "@/services/toast.service";
 
 export const add = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
@@ -16,12 +16,26 @@ export const add = async ({ request }: ActionFunctionArgs) => {
   const estimatedHourlyRate = formData.get("estimatedHourlyRate") as string;
 
   if (!title || !idBranch || !idJobPosition) {
-    toast.error("Todos los campos son requeridos", { containerId: "jobs-profiles" });
+    notify.error("Todos los campos son requeridos", { scope: TOAST_SCOPE.JOBS_PROFILES });
     return;
   }
 
-  const branch = (await getBranchById(idBranch)) as Branch;
-  const jobPositions = (await getJobPositionFromBranchId(idJobPosition, idBranch)) as JobPosition;
+  const branch = (await getBranchById(idBranch)) as Branch | null;
+  if (!branch) {
+    notify.error("No se encontró la rama seleccionada", { scope: TOAST_SCOPE.JOBS_PROFILES });
+    return;
+  }
+
+  const jobPositions = (await getJobPositionFromBranchId(
+    idJobPosition,
+    idBranch
+  )) as JobPosition | null;
+  if (!jobPositions) {
+    notify.error("No se encontró el puesto de trabajo seleccionado", {
+      scope: TOAST_SCOPE.JOBS_PROFILES,
+    });
+    return;
+  }
 
   const newJobProfile: JobProfile = {
     title,
@@ -38,8 +52,13 @@ export const add = async ({ request }: ActionFunctionArgs) => {
     estimatedHourlyRate: parseFloat(estimatedHourlyRate),
   };
 
-  const jobProfile = (await saveJobProfile(newJobProfile)) as JobProfile;
-  toast.success("Perfil de trabajo guardado correctamente ", { containerId: "jobs-profiles" });
+  const jobProfile = (await saveJobProfile(newJobProfile)) as JobProfile | null;
+  if (!jobProfile) {
+    notify.error("No se pudo guardar el perfil de trabajo", { scope: TOAST_SCOPE.JOBS_PROFILES });
+    return;
+  }
+
+  notify.success("Perfil de trabajo guardado correctamente ", { scope: TOAST_SCOPE.JOBS_PROFILES });
   return {
     success: true,
     message: "Perfil de trabajo guardado correctamente",
@@ -54,7 +73,7 @@ export const update = async ({ request }: ActionFunctionArgs) => {
     ?.files?.[0] as File;
 
   if (!displayName) {
-    toast.error("El nombre de usuario es requerido", { containerId: "global" });
+    notify.error("El nombre de usuario es requerido", { scope: TOAST_SCOPE.GLOBAL });
     return {
       error: "El nombre de usuario es requerido",
     };
@@ -69,10 +88,10 @@ export const update = async ({ request }: ActionFunctionArgs) => {
       await updateAccount({ displayName, photoURL: url });
       data.set("photoURL", url);
     }
-    toast.success("Cuenta actualizada correctamente", { containerId: "global" });
+    notify.success("Cuenta actualizada correctamente", { scope: TOAST_SCOPE.GLOBAL });
   } catch (error) {
     console.error("Error al actualizar la cuenta:", error);
-    toast.error("Error al actualizar la cuenta", { containerId: "global" });
+    notify.error("Error al actualizar la cuenta", { scope: TOAST_SCOPE.GLOBAL });
     return {
       error: "Error al actualizar la cuenta",
     };

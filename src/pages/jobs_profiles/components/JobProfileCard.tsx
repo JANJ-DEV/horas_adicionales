@@ -12,7 +12,7 @@ import ProfileCardSkeleton from "./ProfileCardSkeleton";
 import GlitterEffect from "./GlitterEffect";
 import IsRemoveProfile from "./IsRemoveProfile";
 import { deleteJobProfile } from "@/services/jobsProfile.service";
-import { toast } from "react-toastify";
+import { notify, TOAST_SCOPE } from "@/services/toast.service";
 
 const JobProfileCard: FC<{ jobProfile: JobProfile }> = ({ jobProfile }) => {
   const [isRemoveProfile, setIsRemoveProfile] = useState(false);
@@ -20,7 +20,7 @@ const JobProfileCard: FC<{ jobProfile: JobProfile }> = ({ jobProfile }) => {
 
   const handleDeleteProfile = async () => {
     if (!jobProfile.id) {
-      toast.error("No se encontró el identificador del perfil", { containerId: "profile" });
+      notify.error("No se encontró el identificador del perfil", { scope: TOAST_SCOPE.PROFILE });
       return;
     }
 
@@ -35,10 +35,10 @@ const JobProfileCard: FC<{ jobProfile: JobProfile }> = ({ jobProfile }) => {
       setIsDeleting(true);
       setIsRemoveProfile(true);
       await deleteJobProfile(jobProfile.id);
-      toast.success("Perfil de trabajo eliminado correctamente", { containerId: "profile" });
+      notify.success("Perfil de trabajo eliminado correctamente", { scope: TOAST_SCOPE.PROFILE });
     } catch (error) {
       console.error("Error al eliminar el perfil de trabajo", error);
-      toast.error("No se pudo eliminar el perfil de trabajo", { containerId: "profile" });
+      notify.error("No se pudo eliminar el perfil de trabajo", { scope: TOAST_SCOPE.PROFILE });
       setIsRemoveProfile(false);
     } finally {
       setIsDeleting(false);

@@ -2,10 +2,10 @@ import { useEffect, useState, type ChangeEvent, type FC, type SubmitEvent } from
 import type { JobPosition, JobProfile } from "@/types";
 import { getBranchById } from "@/services/branches.services";
 import { updateJobProfile } from "@/services/jobsProfile.service";
-import { toast } from "react-toastify";
 import SelectJobPositionFromBranchId from "./SelectJobPosition";
 import Btn from "@/components/Btn";
 import CardFooter from "./CardFooter";
+import { notify, TOAST_SCOPE } from "@/services/toast.service";
 
 type Props = {
   state: boolean;
@@ -42,17 +42,17 @@ const IsUpdatingJobPosition: FC<Props> = ({ state, jobProfile, onClose }) => {
     e.preventDefault();
 
     if (!jobProfile.id) {
-      toast.error("No se encontró el identificador del perfil", { containerId: "profile" });
+      notify.error("No se encontró el identificador del perfil", { scope: TOAST_SCOPE.PROFILE });
       return;
     }
 
     if (!selectedJobPositionId) {
-      toast.error("Debes seleccionar un puesto de trabajo", { containerId: "profile" });
+      notify.error("Debes seleccionar un puesto de trabajo", { scope: TOAST_SCOPE.PROFILE });
       return;
     }
 
     if (selectedJobPositionId === jobProfile.jobPosition.id) {
-      toast.info("No hay cambios para guardar", { containerId: "profile" });
+      notify.info("No hay cambios para guardar", { scope: TOAST_SCOPE.PROFILE });
       onClose();
       return;
     }
@@ -66,11 +66,11 @@ const IsUpdatingJobPosition: FC<Props> = ({ state, jobProfile, onClose }) => {
           description: selectedJobPosition.description,
         },
       });
-      toast.success("Puesto actualizado correctamente", { containerId: "profile" });
+      notify.success("Puesto actualizado correctamente", { scope: TOAST_SCOPE.PROFILE });
       onClose();
     } catch (error) {
       console.error("Error al actualizar el puesto del perfil", error);
-      toast.error("No se pudo actualizar el puesto", { containerId: "profile" });
+      notify.error("No se pudo actualizar el puesto", { scope: TOAST_SCOPE.PROFILE });
     } finally {
       setIsSaving(false);
     }

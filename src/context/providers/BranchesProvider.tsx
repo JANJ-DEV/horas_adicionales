@@ -2,7 +2,7 @@ import type { Branch, Children } from "@/types";
 import { useEffect, useState, type FC } from "react";
 import BranchesCtx from "../BranchesCtx";
 import { subscribeToBranches } from "@/services/branches.services";
-import { toast } from "react-toastify";
+import { notify, TOAST_SCOPE } from "@/services/toast.service";
 
 const BranchesProvider: FC<Children> = ({ children }) => {
   const [branches, setBranches] = useState<Branch[]>([]);
@@ -25,14 +25,14 @@ const BranchesProvider: FC<Children> = ({ children }) => {
         }
       },
       () => {
-        toast.error("Error al cargar los sectores y puestos de trabajo", {
-          containerId: "global",
+        notify.error("Error al cargar los sectores y puestos de trabajo", {
+          scope: TOAST_SCOPE.GLOBAL,
         });
         setIsErrorBranches(true);
       },
       () => {
-        toast.info("Proceso de carga de sectores y puestos de trabajo finalizado", {
-          containerId: "global",
+        notify.info("Proceso de carga de sectores y puestos de trabajo finalizado", {
+          scope: TOAST_SCOPE.GLOBAL,
         });
         setIsLoadingBranches(false);
       }

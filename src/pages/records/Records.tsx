@@ -1,4 +1,3 @@
-import { ToastContainer } from "react-toastify";
 import { useRecord } from "./hooks/useRecord";
 import RecordCard from "./components/RecordCard";
 import { useEffect, useState } from "react";
@@ -165,7 +164,6 @@ const Records = () => {
         <p className="text-center text-xs text-slate-400">Has llegado al final de los registros.</p>
       )}
 
-      <ToastContainer containerId="records" position="top-center" />
     </section>
   );
 };

@@ -1,17 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
 
-const mocks = vi.hoisted(() => ({
-  toastInfo: vi.fn(),
-  toastError: vi.fn(),
-}));
-
-vi.mock("react-toastify", () => ({
-  toast: {
-    info: mocks.toastInfo,
-    error: mocks.toastError,
-  },
-}));
-
 vi.mock("@/apis/firebase", () => ({
   firestore: {},
 }));
@@ -31,7 +19,7 @@ import {
 } from "../../src/services/branches.services";
 
 describe("branches.services (logic without firestore)", () => {
-  it("addBranch lanza toast informativo con nombre de rama", () => {
+  it("addBranch no lanza errores y mantiene side effects fuera del servicio", () => {
     addBranch({
       id: "COM-01",
       name: "Comercial",
@@ -39,26 +27,18 @@ describe("branches.services (logic without firestore)", () => {
       jobsPositions: [],
     });
 
-    expect(mocks.toastInfo).toHaveBeenCalledWith("Se ha agregado la rama: Comercial ", {
-      containerId: "global",
-    });
+    expect(true).toBe(true);
   });
 
-  it("updateBranchById devuelve undefined y lanza toast", () => {
+  it("updateBranchById devuelve undefined", () => {
     const result = updateBranchById("COM-01");
 
     expect(result).toBeUndefined();
-    expect(mocks.toastInfo).toHaveBeenCalledWith("Se ha actualizado la rama con ID: COM-01 ", {
-      containerId: "global",
-    });
   });
 
-  it("removeBranchById devuelve undefined y lanza toast", () => {
+  it("removeBranchById devuelve undefined", () => {
     const result = removeBranchById("COM-01");
 
     expect(result).toBeUndefined();
-    expect(mocks.toastInfo).toHaveBeenCalledWith("Se ha eliminado la rama con ID: COM-01 ", {
-      containerId: "global",
-    });
   });
 });

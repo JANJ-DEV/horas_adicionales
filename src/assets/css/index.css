@@ -46,3 +46,147 @@ body {
   background-color: var(--color-overlay-90);
   @apply w-full max-w-7xl mx-auto;
 }
+
+.Toastify__toast-container {
+  width: min(92vw, 24rem);
+  padding: 2rem 1rem;
+}
+
+.Toastify__toast-container--top-left,
+.Toastify__toast-container--top-center,
+.Toastify__toast-container--top-right {
+  padding-top: 2rem;
+}
+
+.Toastify__toast-container--bottom-left,
+.Toastify__toast-container--bottom-center,
+.Toastify__toast-container--bottom-right {
+  padding-bottom: 2rem;
+}
+
+.app-toast {
+  --toast-accent: #63b3ed;
+  --toast-bg-soft: rgba(99, 179, 237, 0.16);
+  --toast-border-soft: rgba(99, 179, 237, 0.48);
+  border: 1px solid var(--toast-border-soft);
+  border-radius: 0.875rem;
+  background: linear-gradient(160deg, rgba(16, 20, 30, 0.95), rgba(9, 12, 19, 0.94)) !important;
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.45);
+  color: #f4f8ff !important;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(3px);
+  margin-bottom: 0.7rem;
+  padding: 0.5rem;
+  min-height: 4rem;
+}
+
+.app-toast::before,
+.app-toast::after {
+  content: "";
+  position: absolute;
+  border-radius: 9999px;
+  pointer-events: none;
+}
+
+.app-toast::before {
+  width: 5.25rem;
+  height: 5.25rem;
+  top: -2.5rem;
+  right: -1.75rem;
+  background: radial-gradient(circle, var(--toast-bg-soft) 0%, rgba(255, 255, 255, 0) 72%);
+  animation: app-toast-bubble-drift 3.2s ease-in-out infinite alternate;
+}
+
+.app-toast::after {
+  width: 3.25rem;
+  height: 3.25rem;
+  left: -1.1rem;
+  bottom: -1.5rem;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.11) 0%, rgba(255, 255, 255, 0) 75%);
+  animation: app-toast-bubble-drift 2.6s ease-in-out infinite alternate-reverse;
+}
+
+.app-toast .Toastify__toast-body {
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.35;
+  margin: 0;
+  padding: 1rem 1.2rem;
+}
+
+.app-toast-progress {
+  background: linear-gradient(90deg, var(--toast-accent), rgba(255, 255, 255, 0.9)) !important;
+  opacity: 1 !important;
+  height: 0.26rem;
+}
+
+.app-toast--success {
+  --toast-accent: #48bb78;
+  --toast-bg-soft: rgba(72, 187, 120, 0.2);
+  --toast-border-soft: rgba(72, 187, 120, 0.52);
+}
+
+.app-toast--error {
+  --toast-accent: #e53e3e;
+  --toast-bg-soft: rgba(229, 62, 62, 0.2);
+  --toast-border-soft: rgba(229, 62, 62, 0.56);
+}
+
+.app-toast--warning {
+  --toast-accent: #ed8936;
+  --toast-bg-soft: rgba(237, 137, 54, 0.2);
+  --toast-border-soft: rgba(237, 137, 54, 0.56);
+}
+
+.app-toast--info,
+.app-toast--default {
+  --toast-accent: #63b3ed;
+  --toast-bg-soft: rgba(99, 179, 237, 0.2);
+  --toast-border-soft: rgba(99, 179, 237, 0.54);
+}
+
+@keyframes app-toast-bubble-in {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -0.9rem, 0) scale(0.96);
+  }
+  65% {
+    opacity: 1;
+    transform: translate3d(0, 0.2rem, 0) scale(1.018);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes app-toast-bubble-out {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0, -0.45rem, 0) scale(0.95);
+  }
+}
+
+@keyframes app-toast-bubble-drift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.78;
+  }
+  100% {
+    transform: translate3d(-0.3rem, 0.22rem, 0) scale(1.1);
+    opacity: 0.98;
+  }
+}
+
+.app-toast-bubble-enter {
+  animation: app-toast-bubble-in 0.36s ease-out;
+}
+
+.app-toast-bubble-exit {
+  animation: app-toast-bubble-out 0.24s ease-in forwards;
+}

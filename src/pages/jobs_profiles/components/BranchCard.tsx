@@ -1,10 +1,10 @@
 import type { Branch } from "@/types";
 import Btn from "@/components/Btn";
 import { useState, type ChangeEvent, type FC, type SubmitEvent } from "react";
-import { toast } from "react-toastify";
 import { updateJobProfile } from "@/services/jobsProfile.service";
 import useBranches from "@/context/hooks/useBranches.hook.";
 import SelectJobProfile from "./SelectJobProfile";
+import { notify, TOAST_SCOPE } from "@/services/toast.service";
 
 const BranchCard: FC<{ branch: Branch; jobProfileId: string }> = ({ branch, jobProfileId }) => {
   const { branches } = useBranches();
@@ -30,17 +30,17 @@ const BranchCard: FC<{ branch: Branch; jobProfileId: string }> = ({ branch, jobP
     e.preventDefault();
 
     if (!selectedBranchId) {
-      toast.error("Debes seleccionar una rama", { containerId: "profile" });
+      notify.error("Debes seleccionar una rama", { scope: TOAST_SCOPE.PROFILE });
       return;
     }
 
     if (!selectedBranch) {
-      toast.error("No se encontró la rama seleccionada", { containerId: "profile" });
+      notify.error("No se encontró la rama seleccionada", { scope: TOAST_SCOPE.PROFILE });
       return;
     }
 
     if (selectedBranchId === branch.id) {
-      toast.info("No hay cambios para guardar", { containerId: "profile" });
+      notify.info("No hay cambios para guardar", { scope: TOAST_SCOPE.PROFILE });
       setIsUpdatingBranch(false);
       return;
     }
@@ -52,11 +52,11 @@ const BranchCard: FC<{ branch: Branch; jobProfileId: string }> = ({ branch, jobP
           ...selectedBranch,
         },
       });
-      toast.success("Rama actualizada correctamente", { containerId: "profile" });
+      notify.success("Rama actualizada correctamente", { scope: TOAST_SCOPE.PROFILE });
       setIsUpdatingBranch(false);
     } catch (error) {
       console.error("Error al actualizar la rama del perfil", error);
-      toast.error("No se pudo actualizar la rama", { containerId: "profile" });
+      notify.error("No se pudo actualizar la rama", { scope: TOAST_SCOPE.PROFILE });
     } finally {
       setIsSaving(false);
     }

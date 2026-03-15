@@ -2,7 +2,7 @@ import { getJobProfileById } from "@/services/jobsProfile.service";
 import type { JobProfile } from "@/types";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { toast } from "react-toastify";
+import { notify, TOAST_SCOPE } from "@/services/toast.service";
 
 const JobProfileDetails: React.FC = () => {
   const params = useParams();
@@ -19,8 +19,8 @@ const JobProfileDetails: React.FC = () => {
         if (jobProfile) {
           setDetails(jobProfile as JobProfile);
         } else {
-          toast.error("No se encontró el perfil de trabajo con el ID proporcionado", {
-            containerId: "jobs-profiles",
+          notify.error("No se encontró el perfil de trabajo con el ID proporcionado", {
+            scope: TOAST_SCOPE.JOBS_PROFILES,
           });
         }
       })

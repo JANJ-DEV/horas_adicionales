@@ -10,8 +10,6 @@ const mocks = vi.hoisted(() => ({
   deleteDoc: vi.fn(),
   updateDoc: vi.fn(),
   onSnapshot: vi.fn(),
-  toastSuccess: vi.fn(),
-  toastError: vi.fn(),
   authFirebase: {
     currentUser: { uid: "user-123" },
   } as { currentUser: { uid: string } | null },
@@ -29,13 +27,6 @@ vi.mock("firebase/firestore", () => ({
   updateDoc: mocks.updateDoc,
   onSnapshot: mocks.onSnapshot,
   Timestamp: class Timestamp {},
-}));
-
-vi.mock("react-toastify", () => ({
-  toast: {
-    success: mocks.toastSuccess,
-    error: mocks.toastError,
-  },
 }));
 
 vi.mock("@/apis/firebase", () => ({
@@ -158,8 +149,8 @@ describe("records.service", () => {
     expect(consoleErrorSpy).toHaveBeenCalledWith("No hay un usuario autenticado");
   });
 
-  it("saveRecord persiste payload con timestamps y lanza toast", async () => {
-    await saveRecord({
+  it("saveRecord persiste payload con timestamps y devuelve el registro con id", async () => {
+    const result = await saveRecord({
       titleJobProfile: "Turno noche",
       dateTimeRecord: "2026-03-14",
       workStartTime: "08:00",
@@ -191,12 +182,22 @@ describe("records.service", () => {
         },
       }
     );
-    expect(mocks.toastSuccess).toHaveBeenCalledWith("Registro guardado con éxito", {
-      containerId: "records",
+    expect(result).toEqual({
+      id: "record-123",
+      titleJobProfile: "Turno noche",
+      dateTimeRecord: "2026-03-14",
+      workStartTime: "08:00",
+      workEndTime: "17:00",
+      estimatedHourlyRate: 15,
+      branchId: "branch-1",
+      jobPositionId: "job-1",
+      utilitiesValues: {
+        extra_hours_total: 2,
+      },
     });
   });
 
-  it("getRecordById devuelve null y toast cuando el documento no existe", async () => {
+  it("getRecordById devuelve null cuando el documento no existe", async () => {
     mocks.getDoc.mockResolvedValue({
       exists: () => false,
       id: "record-404",
@@ -206,13 +207,10 @@ describe("records.service", () => {
     const result = await getRecordById("record-404");
 
     expect(result).toBeNull();
-    expect(mocks.toastError).toHaveBeenCalledWith("No se encontró el documento", {
-      containerId: "records",
-    });
   });
 
   it("updateRecord actualiza el documento y agrega updatedAt", async () => {
-    await updateRecord("user-123", "record-1", {
+    const result = await updateRecord("user-123", "record-1", {
       titleJobProfile: "Turno tarde",
     });
 
@@ -223,20 +221,16 @@ describe("records.service", () => {
         updatedAt: "SERVER_TIMESTAMP",
       }
     );
-    expect(mocks.toastSuccess).toHaveBeenCalledWith("Registro actualizado con éxito", {
-      containerId: "records",
-    });
+    expect(result).toBe(true);
   });
 
   it("deleteRecord elimina el documento del usuario autenticado", async () => {
-    await deleteRecord("record-1");
+    const result = await deleteRecord("record-1");
 
     expect(mocks.deleteDoc).toHaveBeenCalledWith({
       id: "record-1",
       path: "users/user-123/records/record-1",
     });
-    expect(mocks.toastSuccess).toHaveBeenCalledWith("Registro eliminado con éxito", {
-      containerId: "records",
-    });
+    expect(result).toBe(true);
   });
 });

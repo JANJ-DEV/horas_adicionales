@@ -1,8 +1,8 @@
 import Btn from "@/components/Btn";
 import { updateJobProfile } from "@/services/jobsProfile.service";
 import { useState, type FC, type SubmitEvent } from "react";
-import { toast } from "react-toastify";
 import CardFooter from "./CardFooter";
+import { notify, TOAST_SCOPE } from "@/services/toast.service";
 
 const currencyFormatter = new Intl.NumberFormat("es-ES", {
   style: "currency",
@@ -32,18 +32,18 @@ const EstimatedHourlyRate: FC<{ rate: number | null | undefined; jobProfileId: s
       .replace(",", ".");
 
     if (!inputValue) {
-      toast.error("La tarifa estimada es obligatoria", { containerId: "profile" });
+      notify.error("La tarifa estimada es obligatoria", { scope: TOAST_SCOPE.PROFILE });
       return;
     }
 
     const parsedRate = Number(inputValue);
     if (Number.isNaN(parsedRate) || parsedRate <= 0) {
-      toast.error("La tarifa debe ser un número mayor a 0", { containerId: "profile" });
+      notify.error("La tarifa debe ser un número mayor a 0", { scope: TOAST_SCOPE.PROFILE });
       return;
     }
 
     if (parsedRate === normalizedCurrentRate) {
-      toast.info("No hay cambios para guardar", { containerId: "profile" });
+      notify.info("No hay cambios para guardar", { scope: TOAST_SCOPE.PROFILE });
       setIsUpdatingRate(false);
       return;
     }
@@ -51,11 +51,11 @@ const EstimatedHourlyRate: FC<{ rate: number | null | undefined; jobProfileId: s
     try {
       setIsSaving(true);
       await updateJobProfile(jobProfileId, { estimatedHourlyRate: parsedRate });
-      toast.success("Tarifa estimada actualizada correctamente", { containerId: "profile" });
+      notify.success("Tarifa estimada actualizada correctamente", { scope: TOAST_SCOPE.PROFILE });
       setIsUpdatingRate(false);
     } catch (error) {
       console.error("Error al actualizar la tarifa estimada", error);
-      toast.error("No se pudo actualizar la tarifa estimada", { containerId: "profile" });
+      notify.error("No se pudo actualizar la tarifa estimada", { scope: TOAST_SCOPE.PROFILE });
     } finally {
       setIsSaving(false);
     }

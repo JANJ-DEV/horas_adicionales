@@ -1,4 +1,4 @@
-import { ToastContainer } from "react-toastify";
+import AppToastContainer from "@/components/AppToastContainer";
 import { useJobsProfiles } from "./hooks/useJobsProfiles";
 import { lazy, Suspense } from "react";
 import ErrorApp from "@/components/Error";
@@ -34,7 +34,7 @@ const JobProfiles = ({ variant = "default" }: PropsJobProfiles) => {
           </CardsLayout>
         </Suspense>
       )}
-      <ToastContainer containerId="profile" position="top-right" />
+      <AppToastContainer containerId="profile" position="top-center" />
     </section>
   );
 };
