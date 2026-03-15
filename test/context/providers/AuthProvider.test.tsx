@@ -82,6 +82,8 @@ describe("AuthProvider", () => {
     expect(mocks.toastInfo).toHaveBeenCalledWith("Bienvenido Juan", {
       containerId: "global",
       autoClose: 3000,
+      closeButton: false,
+      closeOnClick: true,
     });
     expect(result.current.isLoading).toBe(false);
   });
@@ -93,7 +95,10 @@ describe("AuthProvider", () => {
         return vi.fn();
       }
     );
-    mocks.signInWithPopup.mockRejectedValue({ code: "auth/network-request-failed", message: "Network error" });
+    mocks.signInWithPopup.mockRejectedValue({
+      code: "auth/network-request-failed",
+      message: "Network error",
+    });
     mocks.signOut.mockResolvedValue(undefined);
 
     const { result } = renderHook(() => useAuth(), { wrapper });
@@ -105,7 +110,7 @@ describe("AuthProvider", () => {
     expect(result.current.isError).toBe(true);
     expect(mocks.toastError).toHaveBeenCalledWith(
       "No se pudo iniciar sesión con Google. Inténtalo de nuevo.",
-      { containerId: "global" }
+      { containerId: "global", autoClose: 2000, closeButton: false, closeOnClick: true }
     );
 
     await act(async () => {
@@ -117,6 +122,8 @@ describe("AuthProvider", () => {
     expect(mocks.toastInfo).toHaveBeenCalledWith("Sesión cerrada, te esperamos pronto 😘😘", {
       containerId: "global",
       autoClose: 2000,
+      closeButton: false,
+      closeOnClick: true,
     });
   });
 });
