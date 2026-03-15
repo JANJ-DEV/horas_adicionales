@@ -8,6 +8,7 @@ import {
   deleteDoc,
   updateDoc,
   onSnapshot,
+  writeBatch,
   type FirestoreError,
   Timestamp,
 } from "firebase/firestore";
@@ -31,6 +32,13 @@ export interface RecordService {
 }
 
 const NAME_COLLECTION = "records";
+const BATCH_WRITE_LIMIT = 500;
+
+type LegacyRecordMatcher = {
+  titleJobProfile: string;
+  branchId?: string;
+  jobPositionId?: string;
+};
 
 export const subscribeToRecords = (
   onUpdate: (records: RecordService[]) => void,
@@ -126,6 +134,63 @@ export const updateRecord = async (
   } catch (error) {
     console.error("Error al actualizar registro:", error);
     return false;
+  }
+};
+
+export const updateEstimatedHourlyRateByJobProfile = async (
+  jobProfileId: string,
+  estimatedHourlyRate: number,
+  legacyMatcher?: LegacyRecordMatcher
+): Promise<number> => {
+  try {
+    const userId = authFirebase.currentUser?.uid;
+    if (!userId) {
+      console.error("No hay un usuario autenticado");
+      return 0;
+    }
+
+    const collectionRef = collection(firestore, "users", userId, NAME_COLLECTION);
+    const querySnapshot = await getDocs(collectionRef);
+    const matchedDocs = querySnapshot.docs.filter((recordDoc) => {
+      const data = recordDoc.data() as RecordService;
+
+      if (data.jobProfileId === jobProfileId) {
+        return true;
+      }
+
+      if (!legacyMatcher || data.jobProfileId) {
+        return false;
+      }
+
+      return (
+        data.titleJobProfile === legacyMatcher.titleJobProfile &&
+        data.branchId === legacyMatcher.branchId &&
+        data.jobPositionId === legacyMatcher.jobPositionId
+      );
+    });
+
+    if (matchedDocs.length === 0) {
+      return 0;
+    }
+
+    for (let index = 0; index < matchedDocs.length; index += BATCH_WRITE_LIMIT) {
+      const batch = writeBatch(firestore);
+      const docsChunk = matchedDocs.slice(index, index + BATCH_WRITE_LIMIT);
+
+      docsChunk.forEach((recordDoc) => {
+        batch.update(recordDoc.ref, {
+          estimatedHourlyRate,
+          updatedAt: serverTimestamp(),
+        });
+      });
+
+      await batch.commit();
+    }
+
+    return matchedDocs.length;
+  } catch (error) {
+    console.error("Error al sincronizar la tarifa estimada en los registros:", error);
+    throw error;
   }
 };
 
