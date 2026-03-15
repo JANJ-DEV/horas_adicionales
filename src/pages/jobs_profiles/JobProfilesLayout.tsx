@@ -10,7 +10,15 @@ const JobProfilesLayout = () => {
   const { isAuthenticated, isAuthResolved } = useAuth();
 
   if (!isAuthResolved) {
-    return null;
+    return (
+      <div
+        role="status"
+        aria-live="polite"
+        className="flex items-center justify-center h-full w-full"
+      >
+        Cargando…
+      </div>
+    );
   }
 
   if (!isAuthenticated) {
