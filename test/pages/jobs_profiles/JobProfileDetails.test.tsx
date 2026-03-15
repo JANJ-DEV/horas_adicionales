@@ -70,7 +70,7 @@ describe("JobProfileDetails", () => {
     await waitFor(() => {
       expect(mocks.toastError).toHaveBeenCalledWith(
         "No se encontró el perfil de trabajo con el ID proporcionado",
-        { containerId: "jobs-profiles" }
+        { containerId: "jobs-profiles", autoClose: 2000, closeButton: false, closeOnClick: true }
       );
     });
   });

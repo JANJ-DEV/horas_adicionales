@@ -2,6 +2,7 @@ import type { FC } from "react";
 import { Outlet } from "react-router";
 import MainHeader from "./MainHeader";
 import MainContent from "./MainContent";
+import Footer from "@/components/Footer";
 
 const Publiclayout: FC = () => {
   return (
@@ -10,6 +11,7 @@ const Publiclayout: FC = () => {
       <MainContent>
         <Outlet />
       </MainContent>
+      <Footer />
     </section>
   );
 };
