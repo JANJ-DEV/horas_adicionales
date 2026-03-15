@@ -20,12 +20,14 @@ window.addEventListener("vite:preloadError", (event) => {
 const hours_records = createRoot(document.getElementById("root")!);
 
 hours_records.render(
-  <GlobalProvider>
-    <ToastCustomProvider>
-      <AuthProvider>
-        <RouterProvider router={router} />
-      </AuthProvider>
-      <AppToastContainer containerId="global" position="top-center" />
-    </ToastCustomProvider>
-  </GlobalProvider>
+  <div className="app-shell">
+    <GlobalProvider>
+      <ToastCustomProvider>
+        <AuthProvider>
+          <RouterProvider router={router} />
+        </AuthProvider>
+        <AppToastContainer containerId="global" position="top-center" />
+      </ToastCustomProvider>
+    </GlobalProvider>
+  </div>
 );

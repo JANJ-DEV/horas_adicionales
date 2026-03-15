@@ -28,18 +28,26 @@ const RecordsSummary = ({
   totalSalary,
 }: RecordsSummaryProps) => {
   return (
-    <section className="grid gap-3 rounded-xl border border-cyan-500/20 bg-slate-900/60 p-4 sm:grid-cols-3">
-      <article className="rounded-lg bg-black/20 p-3 ring-1 ring-white/10">
-        <p className="text-xs uppercase tracking-wide text-slate-300">Registros ({periodLabel[period]})</p>
-        <strong className="text-2xl text-cyan-100">{recordsCount}</strong>
+    <section className="app-surface grid gap-3 p-4 sm:grid-cols-3">
+      <article className="app-card p-4">
+        <p className="text-xs uppercase tracking-[0.18em] text-[var(--text-soft)]">
+          Registros ({periodLabel[period]})
+        </p>
+        <strong className="mt-2 block text-2xl text-[var(--text)]">{recordsCount}</strong>
       </article>
-      <article className="rounded-lg bg-black/20 p-3 ring-1 ring-white/10">
-        <p className="text-xs uppercase tracking-wide text-slate-300">Horas totales</p>
-        <strong className="text-2xl text-cyan-100">{totalHoursDecimal.toFixed(2)}h</strong>
+      <article className="app-card p-4">
+        <p className="text-xs uppercase tracking-[0.18em] text-[var(--text-soft)]">Horas totales</p>
+        <strong className="mt-2 block text-2xl text-[var(--text)]">
+          {totalHoursDecimal.toFixed(2)}h
+        </strong>
       </article>
-      <article className="rounded-lg bg-black/20 p-3 ring-1 ring-white/10">
-        <p className="text-xs uppercase tracking-wide text-slate-300">Sueldo estimado</p>
-        <strong className="text-2xl text-emerald-300">{formatCurrency(totalSalary)}</strong>
+      <article className="app-card p-4">
+        <p className="text-xs uppercase tracking-[0.18em] text-[var(--text-soft)]">
+          Sueldo estimado
+        </p>
+        <strong className="mt-2 block text-2xl text-[var(--success)]">
+          {formatCurrency(totalSalary)}
+        </strong>
       </article>
     </section>
   );

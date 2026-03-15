@@ -7,7 +7,7 @@ const GoBack: FC = () => {
     <button
       type="button"
       onClick={() => goBack(-1)}
-      className={`focus:text-green-500 active:text-green-900 border rounded-sm py-2 px-4`}
+      className="inline-flex items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-2.5 text-sm font-semibold text-[var(--text)] transition duration-300 hover:-translate-y-0.5 hover:border-[var(--border-strong)] hover:text-[var(--accent)]"
     >
       Volver
     </button>

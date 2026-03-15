@@ -12,7 +12,7 @@ describe("Loading component", () => {
     expect(wrapper).toBeTruthy();
     expect(wrapper.className).toContain("animate-spin");
     expect(icon).toBeTruthy();
-    expect(icon?.classList.contains("text-white")).toBe(true);
+    expect(icon?.classList.contains("text-[var(--accent)]")).toBe(true);
   });
 
   it("usa variante auth con estilo de color esperado", () => {
@@ -23,7 +23,7 @@ describe("Loading component", () => {
 
     expect(wrapper.className).toContain("animate-ping");
     expect(icon).toBeTruthy();
-    expect(icon?.classList.contains("text-yellow-300")).toBe(true);
+    expect(icon?.classList.contains("text-[var(--accent-warm)]")).toBe(true);
   });
 
   it("respeta el size recibido", () => {

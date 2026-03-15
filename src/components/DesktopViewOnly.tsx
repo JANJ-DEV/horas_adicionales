@@ -8,7 +8,15 @@ type Props = {
 };
 
 const DesktopViewOnly: FC<Props> = ({ children, className, tag: Tag, display = "block" }) => {
-  return <Tag className={`${display} hidden lg:flex ${className}`}>{children}</Tag>;
+  const desktopDisplay =
+    display === "block"
+      ? "lg:block"
+      : display === "inline-block"
+        ? "lg:inline-block"
+        : display === "inline-flex"
+          ? "lg:inline-flex"
+          : "lg:flex";
+  return <Tag className={`hidden ${desktopDisplay} ${className}`}>{children}</Tag>;
 };
 
 export default DesktopViewOnly;

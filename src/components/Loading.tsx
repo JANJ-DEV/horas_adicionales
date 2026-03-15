@@ -12,9 +12,9 @@ const Loading: FC<LoadingProps> = ({ variant = "load", size = 24 }) => {
       className={`flex items-center justify-center ${variant === "auth" ? "animate-ping" : "animate-spin"}`}
     >
       {variant === "auth" ? (
-        <CgSearchLoading size={size} className="text-yellow-300" />
+        <CgSearchLoading size={size} className="text-[var(--accent-warm)]" />
       ) : (
-        <CgSpinner size={size} className="text-white" />
+        <CgSpinner size={size} className="text-[var(--accent)]" />
       )}
     </div>
   );

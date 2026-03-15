@@ -4,7 +4,7 @@ import MainMenu from "./MainMenu";
 
 const Menu: FC = () => {
   return (
-    <DesktopViewOnly tag="nav" className="gap-4 items-center">
+    <DesktopViewOnly tag="nav" className="items-center gap-3">
       <MainMenu variant="desktop" />
     </DesktopViewOnly>
   );

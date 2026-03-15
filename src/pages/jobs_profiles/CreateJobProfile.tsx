@@ -27,11 +27,16 @@ const CreateJobProfile: FC = () => {
   };
 
   return (
-    <section className="flex flex-col gap-4">
-      <h2 className="text-3xl lg:text-4xl">Añadir perfil de trabajo</h2>
-      <formAction.Form action="/jobs-profiles/add" method="post" className="flex flex-col gap-4">
+    <section className="app-surface flex flex-col gap-5 p-4 sm:p-6">
+      <div>
+        <p className="section-kicker">Nuevo perfil</p>
+        <h2 className="mt-4 font-[var(--font-display)] text-3xl font-bold text-[var(--text)] lg:text-4xl">
+          Añadir perfil de trabajo
+        </h2>
+      </div>
+      <formAction.Form action="/jobs-profiles/add" method="post" className="flex flex-col gap-5">
         <section className="flex flex-col gap-2">
-          <label htmlFor="title" className="text-2xl">
+          <label htmlFor="title" className="text-sm font-semibold text-[var(--text)] sm:text-base">
             Título del perfil de trabajo:
           </label>
           <input
@@ -39,7 +44,7 @@ const CreateJobProfile: FC = () => {
             name="title"
             id="title"
             placeholder="ej. Transportes SL"
-            className="border py-2 px-4 rounded"
+            className="rounded-2xl border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-[var(--text)] outline-none transition duration-300 focus:border-[var(--border-strong)] focus:ring-2 focus:ring-[color:var(--accent)]/15"
           />
         </section>
         {branches && (
@@ -54,7 +59,10 @@ const CreateJobProfile: FC = () => {
           </>
         )}
         <section className="flex flex-col gap-2">
-          <label htmlFor="estimatedHourlyRate" className="text-2xl">
+          <label
+            htmlFor="estimatedHourlyRate"
+            className="text-sm font-semibold text-[var(--text)] sm:text-base"
+          >
             Tarifa horaria estimada:
           </label>
           <input
@@ -62,7 +70,7 @@ const CreateJobProfile: FC = () => {
             name="estimatedHourlyRate"
             id="estimatedHourlyRate"
             placeholder="ej. 20€/hora"
-            className="border py-2 px-4 rounded"
+            className="rounded-2xl border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-[var(--text)] outline-none transition duration-300 focus:border-[var(--border-strong)] focus:ring-2 focus:ring-[color:var(--accent)]/15"
           />
         </section>
 
@@ -73,15 +81,17 @@ const CreateJobProfile: FC = () => {
         />
         {/* Mensaje de error */}
         {formAction.data && formAction.data.error && (
-          <p className="text-red-500">{formAction.data.error}</p>
+          <p className="rounded-2xl border border-[var(--danger)]/30 bg-[var(--danger)]/10 px-4 py-3 text-sm font-semibold text-[var(--danger)]">
+            {formAction.data.error}
+          </p>
         )}
         {/* Mensaje de éxito */}
         {formAction.data && formAction.data.success && (
-          <aside className="flex flex-col gap-3 rounded-xl border border-green-700 bg-green-900/30 p-4">
-            <p className="text-green-300">{formAction.data.message}</p>
+          <aside className="app-card flex flex-col gap-3 p-4">
+            <p className="font-semibold text-[var(--success)]">{formAction.data.message}</p>
             <Link
               to="/records/add"
-              className="w-fit rounded-lg border border-cyan-400 bg-cyan-500/20 px-4 py-2 text-sm font-semibold text-cyan-200 transition hover:bg-cyan-500/30"
+              className="w-fit rounded-full bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-slate-950 transition duration-300 hover:-translate-y-0.5 hover:bg-[var(--accent-strong)] hover:text-white"
             >
               Ir a registrar horas
             </Link>

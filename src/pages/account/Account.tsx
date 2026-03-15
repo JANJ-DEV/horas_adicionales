@@ -6,30 +6,54 @@ const Account: FC = () => {
   const { currentUser } = useAuth();
   const user = currentUser as User;
   return (
-    <section id={user.uid} className="flex items-center flex-col gap-2 mt-6 text-center">
+    <section
+      id={user.uid}
+      className="app-surface mx-auto mt-2 flex w-full max-w-3xl flex-col items-center gap-6 p-5 text-center sm:p-8"
+    >
       <div className="flex flex-col items-center gap-4">
+        <p className="section-kicker">Mi cuenta</p>
         <img
           src={user.photoURL as string}
           alt={user.displayName as string}
           width={128}
           height={128}
-          className={`touch w-56 h-56 rounded-full border-8 ${user.emailVerified ? "border-green-500" : "border-red-500"}`}
+          className={`touch h-40 w-40 rounded-full border-8 object-cover sm:h-56 sm:w-56 ${user.emailVerified ? "border-[var(--success)]" : "border-[var(--danger)]"}`}
         />
-        <h1 className="text-4xl font-black text-orange-300">{user.displayName}</h1>
+        <h1 className="font-[var(--font-display)] text-3xl font-black text-[var(--text)] sm:text-4xl">
+          {user.displayName}
+        </h1>
       </div>
-      <div className="flex flex-col gap-4">
-        <p className="text-lg font-bold text-blue-300">{user.email}</p>
-        <p className="text-lg font-bold">{user.phoneNumber}</p>
-        <div className="flex">
-          <div className="flex flex-col gap-2">
-            <strong className="font-bold text-yellow-300">Creado</strong>
-            <p className="text-xs font-bold">{user.metadata.creationTime}</p>
-          </div>
-          <div className="flex flex-col gap-2">
-            <strong className="font-bold text-violet-300">Última sesión</strong>
-            <p className="text-xs font-bold">{user.metadata.lastSignInTime}</p>
-          </div>
-        </div>
+      <div className="grid w-full gap-4 sm:grid-cols-2">
+        <article className="app-card p-4">
+          <strong className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--accent)]">
+            Email
+          </strong>
+          <p className="mt-2 break-all text-base font-semibold text-[var(--text)]">{user.email}</p>
+        </article>
+        <article className="app-card p-4">
+          <strong className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--accent-warm)]">
+            Teléfono
+          </strong>
+          <p className="mt-2 text-base font-semibold text-[var(--text)]">
+            {user.phoneNumber || "No disponible"}
+          </p>
+        </article>
+        <article className="app-card p-4 text-left">
+          <strong className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--accent)]">
+            Creado
+          </strong>
+          <p className="mt-2 text-sm font-semibold text-[var(--text-muted)]">
+            {user.metadata.creationTime}
+          </p>
+        </article>
+        <article className="app-card p-4 text-left">
+          <strong className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--accent-strong)]">
+            Última sesión
+          </strong>
+          <p className="mt-2 text-sm font-semibold text-[var(--text-muted)]">
+            {user.metadata.lastSignInTime}
+          </p>
+        </article>
       </div>
     </section>
   );

@@ -1,5 +1,7 @@
 import { createContext } from "react";
 
+export type ThemeMode = "light" | "dark";
+
 interface GlobalContextType {
   menuBars: {
     isMenuBarsOpen: boolean;
@@ -18,6 +20,11 @@ interface GlobalContextType {
     toggleMenuCurrentUser: () => void;
     closeMenuCurrentUser: () => void;
     openMenuCurrentUser: () => void;
+  };
+  theme: {
+    currentTheme: ThemeMode;
+    toggleTheme: () => void;
+    setTheme: (theme: ThemeMode) => void;
   };
 }
 

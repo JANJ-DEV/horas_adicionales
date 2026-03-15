@@ -103,7 +103,7 @@ describe("CurrentUser component", () => {
 
     const avatar = screen.getByAltText("Foto de perfil");
     expect(avatar).toBeInTheDocument();
-    expect(avatar.className).toContain("border-cyan-500");
+    expect(avatar.className).toContain("border-[var(--accent)]");
 
     const trigger = screen.getByRole("button", { name: /Abrir menú de usuario/i });
     fireEvent.click(trigger);

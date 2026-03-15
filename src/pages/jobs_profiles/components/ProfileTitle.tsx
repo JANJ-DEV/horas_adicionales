@@ -66,7 +66,9 @@ const ProfileTitle: FC<{ title: string; jobProfileId: string }> = ({ title, jobP
   return (
     <>
       <Title variant={isUpdatingTitle ? "updating" : "default"}>
-        <h3 className="text-xl font-semibold text-cyan-100">{title}</h3>
+        <h3 className="font-[var(--font-display)] text-xl font-semibold text-[var(--text)]">
+          {title}
+        </h3>
         <Btn
           size="xs"
           label={isUpdatingTitle ? "x" : "Editar"}
@@ -83,7 +85,7 @@ const ProfileTitle: FC<{ title: string; jobProfileId: string }> = ({ title, jobP
             id={`title-${jobProfileId}`}
             defaultValue={title}
             disabled={isSaving}
-            className="w-full border py-2 px-4 rounded text-sm lg:text-base mt-2"
+            className="mt-2 w-full rounded-2xl border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-sm text-[var(--text)] outline-none transition duration-300 focus:border-[var(--border-strong)] focus:ring-2 focus:ring-[color:var(--accent)]/15 lg:text-base"
           />
 
           <CardFooter variant="card">
