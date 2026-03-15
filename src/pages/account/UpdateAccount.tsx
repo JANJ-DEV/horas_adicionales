@@ -9,10 +9,24 @@ const UpdateAccount: FC = () => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [selectedFileName, setSelectedFileName] = useState<string>("");
   const isSubmitting = formAction.state === "submitting";
-  const formFeedback = (formAction.data ?? {}) as {
+  type FormFeedback = {
     message?: string;
     error?: string;
   };
+  const rawData = formAction.data;
+  let formFeedback: FormFeedback = {};
+
+  if (rawData && typeof rawData === "object") {
+    const maybeData = rawData as Record<string, unknown>;
+
+    if (typeof maybeData.message === "string") {
+      formFeedback.message = maybeData.message;
+    }
+
+    if (typeof maybeData.error === "string") {
+      formFeedback.error = maybeData.error;
+    }
+  }
 
   useEffect(() => {
     return () => {
