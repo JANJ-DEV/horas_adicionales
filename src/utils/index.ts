@@ -69,6 +69,18 @@ export const calculateSalary = (decimalHours: number, hourlyRate: number): numbe
 
 export type RecordsPeriod = "day" | "week" | "month";
 
+export type RecordsAdvancedFilters = {
+  branchId?: string;
+  jobPositionId?: string;
+  jobProfileId?: string;
+  dateFrom?: string;
+  dateTo?: string;
+  minHourlyRate?: number;
+  maxHourlyRate?: number;
+  minWorkedHours?: number;
+  maxWorkedHours?: number;
+};
+
 type DateLike = Date | string | { toDate: () => Date } | undefined | null;
 
 type RecordLike = {
@@ -113,7 +125,9 @@ const toDate = (value: DateLike): Date | null => {
   return null;
 };
 
-export const getRecordReferenceDate = (record: Pick<RecordLike, "dateTimeRecord" | "createdAt">) => {
+export const getRecordReferenceDate = (
+  record: Pick<RecordLike, "dateTimeRecord" | "createdAt">
+) => {
   return toDate(record.dateTimeRecord) ?? toDate(record.createdAt);
 };
 
@@ -159,7 +173,10 @@ export const calculateRecordsSummary = <T extends RecordLike>(records: T[]) => {
       const hasWorkedTime = Boolean(record.workStartTime && record.workEndTime);
       if (!hasWorkedTime) return acc;
 
-      const workedHours = calculateWorkedHours(record.workStartTime as string, record.workEndTime as string);
+      const workedHours = calculateWorkedHours(
+        record.workStartTime as string,
+        record.workEndTime as string
+      );
       const hourlyRate = Number(record.estimatedHourlyRate ?? 0);
       const salary = calculateSalary(workedHours.decimal, hourlyRate);
 
@@ -173,4 +190,95 @@ export const calculateRecordsSummary = <T extends RecordLike>(records: T[]) => {
       totalSalary: 0,
     }
   );
+};
+
+type RecordFilterLike = RecordLike & {
+  branchId?: string;
+  jobPositionId?: string;
+  jobProfileId?: string;
+};
+
+const normalizeDateFilter = (value?: string) => {
+  if (!value) return null;
+  const parsed = new Date(`${value}T00:00:00`);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+};
+
+const toSafeNumber = (value?: number) => {
+  if (typeof value !== "number" || Number.isNaN(value)) {
+    return null;
+  }
+  return value;
+};
+
+export const filterRecordsByAdvancedFilters = <T extends RecordFilterLike>(
+  records: T[],
+  filters: RecordsAdvancedFilters
+) => {
+  const dateFrom = normalizeDateFilter(filters.dateFrom);
+  const dateTo = normalizeDateFilter(filters.dateTo);
+
+  if (dateTo) {
+    dateTo.setHours(23, 59, 59, 999);
+  }
+
+  const minHourlyRate = toSafeNumber(filters.minHourlyRate);
+  const maxHourlyRate = toSafeNumber(filters.maxHourlyRate);
+  const minWorkedHours = toSafeNumber(filters.minWorkedHours);
+  const maxWorkedHours = toSafeNumber(filters.maxWorkedHours);
+
+  return records.filter((record) => {
+    if (filters.branchId && record.branchId !== filters.branchId) {
+      return false;
+    }
+
+    if (filters.jobPositionId && record.jobPositionId !== filters.jobPositionId) {
+      return false;
+    }
+
+    if (filters.jobProfileId && record.jobProfileId !== filters.jobProfileId) {
+      return false;
+    }
+
+    if (dateFrom || dateTo) {
+      const recordDate = getRecordReferenceDate(record);
+      if (!recordDate) {
+        return false;
+      }
+
+      if (dateFrom && recordDate.getTime() < dateFrom.getTime()) {
+        return false;
+      }
+
+      if (dateTo && recordDate.getTime() > dateTo.getTime()) {
+        return false;
+      }
+    }
+
+    const hourlyRate = Number(record.estimatedHourlyRate ?? 0);
+    if (minHourlyRate !== null && hourlyRate < minHourlyRate) {
+      return false;
+    }
+
+    if (maxHourlyRate !== null && hourlyRate > maxHourlyRate) {
+      return false;
+    }
+
+    if (minWorkedHours !== null || maxWorkedHours !== null) {
+      const workedHours = calculateWorkedHours(
+        record.workStartTime ?? "",
+        record.workEndTime ?? ""
+      ).decimal;
+
+      if (minWorkedHours !== null && workedHours < minWorkedHours) {
+        return false;
+      }
+
+      if (maxWorkedHours !== null && workedHours > maxWorkedHours) {
+        return false;
+      }
+    }
+
+    return true;
+  });
 };

@@ -3,6 +3,7 @@ import {
   calculateRecordsSummary,
   calculateSalary,
   calculateWorkedHours,
+  filterRecordsByAdvancedFilters,
   filterRecordsByPeriod,
   getRecordReferenceDate,
   isDateInPeriod,
@@ -81,11 +82,21 @@ describe("utils", () => {
 
     it("evalua correctamente si una fecha cae en dia, semana o mes", () => {
       expect(isDateInPeriod(new Date("2026-03-14T12:00:00.000Z"), "day", referenceDate)).toBe(true);
-      expect(isDateInPeriod(new Date("2026-03-13T12:00:00.000Z"), "day", referenceDate)).toBe(false);
-      expect(isDateInPeriod(new Date("2026-03-10T12:00:00.000Z"), "week", referenceDate)).toBe(true);
-      expect(isDateInPeriod(new Date("2026-03-01T12:00:00.000Z"), "week", referenceDate)).toBe(false);
-      expect(isDateInPeriod(new Date("2026-03-01T12:00:00.000Z"), "month", referenceDate)).toBe(true);
-      expect(isDateInPeriod(new Date("2026-02-28T12:00:00.000Z"), "month", referenceDate)).toBe(false);
+      expect(isDateInPeriod(new Date("2026-03-13T12:00:00.000Z"), "day", referenceDate)).toBe(
+        false
+      );
+      expect(isDateInPeriod(new Date("2026-03-10T12:00:00.000Z"), "week", referenceDate)).toBe(
+        true
+      );
+      expect(isDateInPeriod(new Date("2026-03-01T12:00:00.000Z"), "week", referenceDate)).toBe(
+        false
+      );
+      expect(isDateInPeriod(new Date("2026-03-01T12:00:00.000Z"), "month", referenceDate)).toBe(
+        true
+      );
+      expect(isDateInPeriod(new Date("2026-02-28T12:00:00.000Z"), "month", referenceDate)).toBe(
+        false
+      );
     });
 
     it("filtra registros por periodo y calcula resumen acumulado", () => {
@@ -118,6 +129,66 @@ describe("utils", () => {
         totalHoursDecimal: 13,
         totalSalary: 220,
       });
+    });
+  });
+
+  describe("filterRecordsByAdvancedFilters", () => {
+    const records = [
+      {
+        id: "r1",
+        branchId: "b1",
+        jobPositionId: "j1",
+        jobProfileId: "p1",
+        dateTimeRecord: "2026-03-10",
+        workStartTime: "08:00",
+        workEndTime: "16:00",
+        estimatedHourlyRate: 12,
+      },
+      {
+        id: "r2",
+        branchId: "b1",
+        jobPositionId: "j2",
+        jobProfileId: "p2",
+        dateTimeRecord: "2026-03-14",
+        workStartTime: "09:00",
+        workEndTime: "19:00",
+        estimatedHourlyRate: 20,
+      },
+      {
+        id: "r3",
+        branchId: "b2",
+        jobPositionId: "j3",
+        jobProfileId: "p3",
+        dateTimeRecord: "2026-03-20",
+        workStartTime: "10:00",
+        workEndTime: "12:00",
+        estimatedHourlyRate: 8,
+      },
+    ];
+
+    it("filtra por rama, puesto, perfil y rango de fecha", () => {
+      const result = filterRecordsByAdvancedFilters(records, {
+        branchId: "b1",
+        jobPositionId: "j2",
+        jobProfileId: "p2",
+        dateFrom: "2026-03-13",
+        dateTo: "2026-03-15",
+      });
+
+      expect(result).toHaveLength(1);
+      expect(result[0].id).toBe("r2");
+    });
+
+    it("filtra por rango de tarifa y horas trabajadas", () => {
+      const result = filterRecordsByAdvancedFilters(records, {
+        minHourlyRate: 10,
+        maxHourlyRate: 20,
+        minWorkedHours: 8,
+        maxWorkedHours: 10,
+      });
+
+      expect(result).toHaveLength(2);
+      expect(result.map((record) => record.id)).toEqual(["r1", "r2"]);
     });
   });
 });

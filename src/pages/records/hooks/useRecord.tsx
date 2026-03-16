@@ -1,16 +1,26 @@
 import useAuth from "@/context/hooks/auth.hook";
 import { handleAppError } from "@/services/error.service";
-import { deleteRecord, subscribeToRecords, type RecordService } from "@/services/records.service";
+import {
+  deleteRecord,
+  subscribeToRecords,
+  type RecordsQueryFilters,
+  type RecordService,
+} from "@/services/records.service";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { notify, TOAST_SCOPE } from "@/services/toast.service";
 
-export const useRecord = () => {
+export const useRecord = (queryFilters?: RecordsQueryFilters) => {
   const { currentUser } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [records, setRecords] = useState<RecordService[]>([]);
+  const filterBranchId = queryFilters?.branchId;
+  const filterJobPositionId = queryFilters?.jobPositionId;
+  const filterJobProfileId = queryFilters?.jobProfileId;
+  const filterDateFrom = queryFilters?.dateFrom;
+  const filterDateTo = queryFilters?.dateTo;
   const hasCurrentUser = Boolean(currentUser?.uid);
   const navigate = useNavigate();
 
@@ -61,6 +71,13 @@ export const useRecord = () => {
       },
       () => {
         setIsLoading(false);
+      },
+      {
+        branchId: filterBranchId,
+        jobPositionId: filterJobPositionId,
+        jobProfileId: filterJobProfileId,
+        dateFrom: filterDateFrom,
+        dateTo: filterDateTo,
       }
     );
 
@@ -69,7 +86,14 @@ export const useRecord = () => {
         unsubscribe();
       }
     };
-  }, [currentUser?.uid]);
+  }, [
+    currentUser?.uid,
+    filterBranchId,
+    filterJobPositionId,
+    filterJobProfileId,
+    filterDateFrom,
+    filterDateTo,
+  ]);
 
   return {
     records,
