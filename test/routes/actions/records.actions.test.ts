@@ -343,4 +343,33 @@ describe("records.actions", () => {
       titleJobProfile: "Turno tarde",
     });
   });
+
+  it("update devuelve success aunque updateJobProfile falle", async () => {
+    mocks.getUtilitiesCatalogFromFirestore.mockResolvedValue(buildCatalog());
+    mocks.getActiveUtilityIdsForProfile.mockReturnValue([]);
+    mocks.updateJobProfile.mockRejectedValue(new Error("Firestore error"));
+
+    const result = await update({
+      ...buildActionArgs(
+        buildRequest([
+          ["jobProfileId", "profile-3"],
+          ["titleJobProfile", "Turno mañana"],
+          ["dateTimeRecord", "2026-03-20"],
+          ["workStartTime", "06:00"],
+          ["workEndTime", "14:00"],
+          ["estimatedHourlyRate", "18"],
+        ])
+      ),
+      params: { id: "record-10" },
+    });
+
+    expect(mocks.updateRecord).toHaveBeenCalled();
+    expect(result).toEqual({
+      success: true,
+      message: "Registro actualizado correctamente",
+      recordId: "record-10",
+      jobProfileId: "profile-3",
+      titleJobProfile: "Turno mañana",
+    });
+  });
 });

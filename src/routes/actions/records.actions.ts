@@ -6,6 +6,7 @@ import {
   updateRecord,
   type RecordService,
 } from "@/services/records.service";
+import { handleAppError } from "@/services/error.service";
 import {
   getActiveUtilityIdsForProfile,
   getUtilitiesCatalogFromFirestore,
@@ -209,9 +210,13 @@ export async function update({ request, params }: ActionFunctionArgs) {
     };
   }
 
-  await updateJobProfile(parsedRecord.jobProfileId, {
-    estimatedHourlyRate: parsedRecord.data.estimatedHourlyRate,
-  });
+  try {
+    await updateJobProfile(parsedRecord.jobProfileId, {
+      estimatedHourlyRate: parsedRecord.data.estimatedHourlyRate,
+    });
+  } catch (error) {
+    handleAppError(error, "records.actions.update.updateJobProfile");
+  }
 
   return {
     success: true,

@@ -84,9 +84,14 @@ const EditRecordForm: FC<EditRecordFormProps> = ({
   isLoadingUtilities,
   catalog,
 }) => {
-  const initialUtilities = getUtilityInitialState(catalog, record as RecordService);
-  const [selectedUtilityIds, setSelectedUtilityIds] = useState<string[]>(initialUtilities.selectedIds);
-  const [utilityValues, setUtilityValues] = useState<Record<string, string>>(initialUtilities.values);
+  const [selectedUtilityIds, setSelectedUtilityIds] = useState<string[]>(() => {
+    if (!record) return [];
+    return getUtilityInitialState(catalog, record as RecordService).selectedIds;
+  });
+  const [utilityValues, setUtilityValues] = useState<Record<string, string>>(() => {
+    if (!record) return {};
+    return getUtilityInitialState(catalog, record as RecordService).values;
+  });
   const [startTime, setStartTime] = useState((record?.workStartTime as string | undefined) ?? "");
   const [endTime, setEndTime] = useState((record?.workEndTime as string | undefined) ?? "");
   const [localRate, setLocalRate] = useState(

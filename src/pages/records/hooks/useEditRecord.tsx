@@ -24,7 +24,7 @@ export const useEditRecord = () => {
 
   const selectedProfile = jobProfiles.find((profile) => profile.id === selectedProfileId) ?? null;
   const selectedTitle = selectedProfile?.title ?? record?.titleJobProfile ?? "";
-  const estimatedHourlyRate = selectedProfile?.estimatedHourlyRate ?? record?.estimatedHourlyRate;
+  const estimatedHourlyRate = record?.estimatedHourlyRate ?? selectedProfile?.estimatedHourlyRate;
   const selectedBranchId = selectedProfile?.branch?.id ?? record?.branchId ?? "";
   const selectedJobPositionId = selectedProfile?.jobPosition?.id ?? record?.jobPositionId ?? "";
 
