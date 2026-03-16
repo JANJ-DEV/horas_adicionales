@@ -4,7 +4,7 @@ import InfoTooltip from "@/components/InfoTooltip";
 import Loading from "@/components/Loading";
 import RecordCalculationSummary from "@/components/RecordCalculationSummary";
 import useUtilities from "@/context/hooks/useUtilities.hook";
-import { useState, type FC } from "react";
+import { useState, useEffect, type FC } from "react";
 import { Link, useNavigate } from "react-router";
 import type { RecordService } from "@/services/records.service";
 import type { UtilitiesCatalog } from "@/services/utilities.service";
@@ -84,9 +84,20 @@ const EditRecordForm: FC<EditRecordFormProps> = ({
   isLoadingUtilities,
   catalog,
 }) => {
-  const initialUtilities = getUtilityInitialState(catalog, record as RecordService);
-  const [selectedUtilityIds, setSelectedUtilityIds] = useState<string[]>(initialUtilities.selectedIds);
-  const [utilityValues, setUtilityValues] = useState<Record<string, string>>(initialUtilities.values);
+  const [selectedUtilityIds, setSelectedUtilityIds] = useState<string[]>([]);
+  const [utilityValues, setUtilityValues] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    const isUtilitiesUninitialized =
+      selectedUtilityIds.length === 0 && Object.keys(utilityValues).length === 0;
+
+    if (!isLoadingUtilities && isUtilitiesUninitialized) {
+      const initialUtilities = getUtilityInitialState(catalog, record as RecordService);
+      setSelectedUtilityIds(initialUtilities.selectedIds);
+      setUtilityValues(initialUtilities.values);
+    }
+  }, [isLoadingUtilities, catalog, record, selectedUtilityIds, utilityValues]);
+
   const [startTime, setStartTime] = useState((record?.workStartTime as string | undefined) ?? "");
   const [endTime, setEndTime] = useState((record?.workEndTime as string | undefined) ?? "");
   const [localRate, setLocalRate] = useState(
