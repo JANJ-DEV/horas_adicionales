@@ -1,6 +1,6 @@
 // Pages
 import { recordActions } from "./actions";
-import { AddNewRecord, Records, RecordsLayout, DetailsRecord } from "./lazy.load";
+import { AddNewRecord, Records, RecordsLayout, DetailsRecord, EditRecord } from "./lazy.load";
 
 // Router
 export const recordsRouter = [
@@ -16,6 +16,11 @@ export const recordsRouter = [
         path: "add",
         element: <AddNewRecord />,
         action: recordActions.add,
+      },
+      {
+        path: "edit/:id",
+        element: <EditRecord />,
+        action: recordActions.update,
       },
       {
         path: "details/:id",

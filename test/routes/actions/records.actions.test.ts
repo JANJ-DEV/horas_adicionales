@@ -3,6 +3,8 @@ import type { ActionFunctionArgs } from "react-router";
 
 const mocks = vi.hoisted(() => ({
   saveRecord: vi.fn(),
+  updateRecord: vi.fn(),
+  updateJobProfile: vi.fn(),
   getUtilitiesCatalogFromFirestore: vi.fn(),
   getActiveUtilityIdsForProfile: vi.fn(),
   authFirebase: {
@@ -16,6 +18,7 @@ vi.mock("@/apis/firebase", () => ({
 
 vi.mock("@/services/records.service", () => ({
   saveRecord: mocks.saveRecord,
+  updateRecord: mocks.updateRecord,
 }));
 
 vi.mock("@/services/utilities.service", () => ({
@@ -23,7 +26,11 @@ vi.mock("@/services/utilities.service", () => ({
   getActiveUtilityIdsForProfile: mocks.getActiveUtilityIdsForProfile,
 }));
 
-import { add } from "../../../src/routes/actions/records.actions";
+vi.mock("@/services/jobsProfile.service", () => ({
+  updateJobProfile: mocks.updateJobProfile,
+}));
+
+import { add, update } from "../../../src/routes/actions/records.actions";
 
 const buildCatalog = (overrides: Record<string, unknown> = {}) => ({
   global_utilities: [],
@@ -52,11 +59,13 @@ const buildActionArgs = (request: Request): ActionFunctionArgs => ({
   unstable_pattern: "/records/add",
 });
 
-describe("records.actions add", () => {
+describe("records.actions", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.authFirebase.currentUser = { uid: "user-123" };
     mocks.saveRecord.mockImplementation(async (payload) => payload);
+    mocks.updateRecord.mockResolvedValue(true);
+    mocks.updateJobProfile.mockResolvedValue(true);
     mocks.getUtilitiesCatalogFromFirestore.mockResolvedValue(buildCatalog());
     mocks.getActiveUtilityIdsForProfile.mockReturnValue([]);
   });
@@ -266,6 +275,72 @@ describe("records.actions add", () => {
         },
       },
       jobProfileId: "profile-1",
+      titleJobProfile: "Turno noche",
+    });
+  });
+
+  it("update falla si no llega el id del registro", async () => {
+    const result = await update({
+      ...buildActionArgs(buildRequest([])),
+      params: {},
+    });
+
+    expect(result).toEqual({
+      error: "No se encontró el registro a actualizar",
+    });
+    expect(mocks.updateRecord).not.toHaveBeenCalled();
+  });
+
+  it("update reutiliza la misma validación y persiste el payload actualizado", async () => {
+    mocks.getUtilitiesCatalogFromFirestore.mockResolvedValue(
+      buildCatalog({
+        utility_definitions: {
+          peajes: { label: "Peajes", type: "number", dbKey: "tolls" },
+        },
+      })
+    );
+    mocks.getActiveUtilityIdsForProfile.mockReturnValue(["peajes"]);
+
+    const result = await update({
+      ...buildActionArgs(
+        buildRequest([
+          ["jobProfileId", "profile-2"],
+          ["titleJobProfile", "Turno tarde"],
+          ["dateTimeRecord", "2026-03-18"],
+          ["workStartTime", "09:00"],
+          ["workEndTime", "18:00"],
+          ["estimatedHourlyRate", "20"],
+          ["branchId", "branch-3"],
+          ["jobPositionId", "job-5"],
+          ["selectedUtilityIds", "peajes"],
+          ["utility__peajes", "45"],
+        ])
+      ),
+      params: { id: "record-9" },
+    });
+
+    expect(mocks.updateRecord).toHaveBeenCalledWith("user-123", "record-9", {
+      jobProfileId: "profile-2",
+      titleJobProfile: "Turno tarde",
+      dateTimeRecord: "2026-03-18",
+      workStartTime: "09:00",
+      workEndTime: "18:00",
+      estimatedHourlyRate: 20,
+      branchId: "branch-3",
+      jobPositionId: "job-5",
+      utilitiesValues: {
+        tolls: 45,
+      },
+    });
+    expect(mocks.updateJobProfile).toHaveBeenCalledWith("profile-2", {
+      estimatedHourlyRate: 20,
+    });
+    expect(result).toEqual({
+      success: true,
+      message: "Registro actualizado correctamente",
+      recordId: "record-9",
+      jobProfileId: "profile-2",
+      titleJobProfile: "Turno tarde",
     });
   });
 });

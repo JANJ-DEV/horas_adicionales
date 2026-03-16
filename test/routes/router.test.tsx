@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 const mocks = vi.hoisted(() => ({
   createBrowserRouter: vi.fn((routes) => ({ routes, kind: "router-instance" })),
   recordAddAction: vi.fn(),
+  recordUpdateAction: vi.fn(),
   jobsAddAction: vi.fn(),
   jobsUpdateAction: vi.fn(),
 }));
@@ -17,6 +18,7 @@ vi.mock("../../src/routes/lazy.load", () => ({
   RecordsLayout: () => null,
   Records: () => null,
   AddNewRecord: () => null,
+  EditRecord: () => null,
   DetailsRecord: () => null,
   JobProfilesLayout: () => null,
   JobProfiles: () => null,
@@ -31,6 +33,7 @@ vi.mock("../../src/routes/lazy.load", () => ({
 vi.mock("../../src/routes/actions", () => ({
   recordActions: {
     add: mocks.recordAddAction,
+    update: mocks.recordUpdateAction,
   },
   jobsProfileActions: {
     add: mocks.jobsAddAction,
@@ -61,9 +64,9 @@ describe("routes composition", () => {
     );
   });
 
-  it("recordsRouter define index, add y details con la action correcta", () => {
+  it("recordsRouter define index, add, edit y details con las actions correctas", () => {
     expect(recordsRouter[0].path).toBe("/records");
-    expect(recordsRouter[0].children).toHaveLength(3);
+    expect(recordsRouter[0].children).toHaveLength(4);
     expect(recordsRouter[0].children?.[1]).toEqual(
       expect.objectContaining({
         path: "add",
@@ -71,6 +74,12 @@ describe("routes composition", () => {
       })
     );
     expect(recordsRouter[0].children?.[2]).toEqual(
+      expect.objectContaining({
+        path: "edit/:id",
+        action: mocks.recordUpdateAction,
+      })
+    );
+    expect(recordsRouter[0].children?.[3]).toEqual(
       expect.objectContaining({
         path: "details/:id",
       })

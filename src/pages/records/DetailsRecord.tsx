@@ -94,7 +94,7 @@ const DetailsRecord = () => {
         <aside>
           <Btn
             label="Editar"
-            onClick={() => alert("Funcionalidad en desarrollo")}
+            onClick={() => navigate(`/records/edit/${record.id}`)}
             variant="primary"
           />
         </aside>
