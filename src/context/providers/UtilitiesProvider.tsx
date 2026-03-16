@@ -10,6 +10,7 @@ import {
   type UtilitiesCatalog,
   type UtilityDefinition,
 } from "@/services/utilities.service";
+import { handleAppError } from "@/services/error.service";
 import { useEffect, useState, type FC } from "react";
 import { UtilitiesCtx } from "../UtilitiesCtx";
 import { notify, TOAST_SCOPE } from "@/services/toast.service";
@@ -34,7 +35,8 @@ const UtilitiesProvider: FC<Children> = ({ children }) => {
         setIsLoadingUtilities(false);
         setIsErrorUtilities(false);
       },
-      () => {
+      (error) => {
+        handleAppError(error, "UtilitiesProvider.subscribeToUtilities");
         setIsErrorUtilities(true);
         setIsLoadingUtilities(false);
         notify.error("Error al cargar utilidades", { scope: TOAST_SCOPE.GLOBAL });

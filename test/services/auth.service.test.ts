@@ -104,7 +104,9 @@ describe("auth.service", () => {
 
     expect(result).toBeUndefined();
     expect(mocks.updateProfile).not.toHaveBeenCalled();
-    expect(consoleErrorSpy).toHaveBeenCalledWith("No hay un usuario autenticado");
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "Error general en auth.service.updateAccount: No hay un usuario autenticado"
+    );
   });
 
   it("updateAccount actualiza perfil y documento de usuario con merge", async () => {

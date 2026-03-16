@@ -11,6 +11,7 @@ import CardFooter from "./CardFooter";
 import ProfileCardSkeleton from "./ProfileCardSkeleton";
 import GlitterEffect from "./GlitterEffect";
 import IsRemoveProfile from "./IsRemoveProfile";
+import { handleAppError } from "@/services/error.service";
 import { deleteJobProfile } from "@/services/jobsProfile.service";
 import { notify, TOAST_SCOPE } from "@/services/toast.service";
 
@@ -37,7 +38,7 @@ const JobProfileCard: FC<{ jobProfile: JobProfile }> = ({ jobProfile }) => {
       await deleteJobProfile(jobProfile.id);
       notify.success("Perfil de trabajo eliminado correctamente", { scope: TOAST_SCOPE.PROFILE });
     } catch (error) {
-      console.error("Error al eliminar el perfil de trabajo", error);
+      handleAppError(error, "JobProfileCard.handleDeleteProfile");
       notify.error("No se pudo eliminar el perfil de trabajo", { scope: TOAST_SCOPE.PROFILE });
       setIsRemoveProfile(false);
     } finally {

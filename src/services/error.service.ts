@@ -2,6 +2,18 @@
 
 import { FirebaseError } from "firebase/app"; // O 'firebase/auth', 'firebase/firestore', etc.
 
+type FirebaseLikeError = {
+  code: string;
+  message: string;
+};
+
+function isFirebaseLikeError(error: unknown): error is FirebaseLikeError {
+  if (!error || typeof error !== "object") return false;
+
+  const candidate = error as Partial<FirebaseLikeError>;
+  return typeof candidate.code === "string" && typeof candidate.message === "string";
+}
+
 /**
  * Traduce un código de FirebaseError a un mensaje amigable para el usuario.
  * @param errorCode El código del error de Firebase (ej. 'auth/invalid-email').
@@ -44,7 +56,7 @@ function getFriendlyFirebaseErrorMessage(errorCode: string): string {
  * @param context Opcional: información adicional sobre dónde ocurrió el error.
  */
 export function handleAppError(error: unknown, context?: string): void {
-  if (error instanceof FirebaseError) {
+  if (error instanceof FirebaseError || isFirebaseLikeError(error)) {
     const friendlyMessage = getFriendlyFirebaseErrorMessage(error.code);
     console.error(
       `FirebaseError en ${context || "contexto desconocido"}: [${error.code}] ${error.message}`,

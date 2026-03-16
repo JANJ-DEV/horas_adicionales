@@ -130,10 +130,14 @@ describe("UtilitiesProvider", () => {
   });
 
   it("marca error cuando falla la suscripcion", async () => {
-    mocks.subscribeToUtilities.mockImplementation((_onSuccess: unknown, onError: () => void) => {
-      onError();
-      return vi.fn();
-    });
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    mocks.subscribeToUtilities.mockImplementation(
+      (_onSuccess: unknown, onError: (error: Error) => void) => {
+        onError(new Error("boom"));
+        return vi.fn();
+      }
+    );
     mocks.getActiveUtilityIdsForProfile.mockReturnValue([]);
 
     const { result } = renderHook(() => useUtilities(), { wrapper });
@@ -149,5 +153,8 @@ describe("UtilitiesProvider", () => {
       closeButton: false,
       closeOnClick: true,
     });
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "Error general en UtilitiesProvider.subscribeToUtilities: boom"
+    );
   });
 });

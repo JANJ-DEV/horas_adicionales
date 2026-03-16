@@ -52,6 +52,8 @@ const wrapper = ({ children }: PropsWithChildren) => <AuthProvider>{children}</A
 
 describe("AuthProvider", () => {
   it("sincroniza auth state y permite login exitoso", async () => {
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
     const fakeUser = { uid: "user-1", displayName: "Juan" };
 
     mocks.onAuthStateChanged.mockImplementation(
@@ -86,9 +88,12 @@ describe("AuthProvider", () => {
       closeOnClick: true,
     });
     expect(result.current.isLoading).toBe(false);
+    consoleErrorSpy.mockRestore();
   });
 
   it("marca error cuando falla el login y delega signOut", async () => {
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
     mocks.onAuthStateChanged.mockImplementation(
       (_auth: unknown, callback: (user: unknown) => void) => {
         callback(null);
@@ -125,5 +130,6 @@ describe("AuthProvider", () => {
       closeButton: false,
       closeOnClick: true,
     });
+    consoleErrorSpy.mockRestore();
   });
 });

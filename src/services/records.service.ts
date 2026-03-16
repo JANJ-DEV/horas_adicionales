@@ -14,6 +14,7 @@ import {
 } from "firebase/firestore";
 import { firestore } from "@/apis/firebase";
 import { authFirebase } from "@/apis/firebase";
+import { handleAppError } from "./error.service";
 import type { UtilityFieldValue } from "./utilities.service";
 
 export interface RecordService {
@@ -47,7 +48,10 @@ export const subscribeToRecords = (
 ) => {
   const userId = authFirebase.currentUser?.uid;
   if (!userId) {
-    console.error("No hay un usuario autenticado");
+    handleAppError(
+      new Error("No hay un usuario autenticado"),
+      "records.service.subscribeToRecords"
+    );
     return;
   }
 
@@ -60,7 +64,7 @@ export const subscribeToRecords = (
       onUpdate(records as RecordService[]);
     },
     (error) => {
-      console.error("Error al suscribirse a registros:", error);
+      handleAppError(error, "records.service.subscribeToRecords");
       onError(error);
     },
     () => {
@@ -75,7 +79,7 @@ export const saveRecord = async (record: RecordService) => {
   const userId = authFirebase.currentUser?.uid;
 
   if (!userId) {
-    console.error("No hay un usuario autenticado");
+    handleAppError(new Error("No hay un usuario autenticado"), "records.service.saveRecord");
     return null;
   }
 
@@ -102,7 +106,7 @@ export const saveRecord = async (record: RecordService) => {
     });
     return { ...record, id: newDocRef.id } as RecordService;
   } catch (error) {
-    console.error("Error al guardar:", error);
+    handleAppError(error, "records.service.saveRecord");
     return null;
   }
 };
@@ -114,7 +118,7 @@ export const getRecords = async (userId: string) => {
     const records = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     return records;
   } catch (error) {
-    console.error("Error al obtener registros:", error);
+    handleAppError(error, "records.service.getRecords");
     return [];
   }
 };
@@ -132,7 +136,7 @@ export const updateRecord = async (
     });
     return true;
   } catch (error) {
-    console.error("Error al actualizar registro:", error);
+    handleAppError(error, "records.service.updateRecord");
     return false;
   }
 };
@@ -145,7 +149,10 @@ export const updateEstimatedHourlyRateByJobProfile = async (
   try {
     const userId = authFirebase.currentUser?.uid;
     if (!userId) {
-      console.error("No hay un usuario autenticado");
+      handleAppError(
+        new Error("No hay un usuario autenticado"),
+        "records.service.updateEstimatedHourlyRateByJobProfile"
+      );
       return 0;
     }
 
@@ -189,7 +196,7 @@ export const updateEstimatedHourlyRateByJobProfile = async (
 
     return matchedDocs.length;
   } catch (error) {
-    console.error("Error al sincronizar la tarifa estimada en los registros:", error);
+    handleAppError(error, "records.service.updateEstimatedHourlyRateByJobProfile");
     throw error;
   }
 };
@@ -198,14 +205,14 @@ export const deleteRecord = async (recordId: string): Promise<boolean> => {
   try {
     const userId = authFirebase.currentUser?.uid;
     if (!userId) {
-      console.error("No hay un usuario autenticado");
+      handleAppError(new Error("No hay un usuario autenticado"), "records.service.deleteRecord");
       return false;
     }
     const docRef = doc(firestore, "users", userId, NAME_COLLECTION, recordId);
     await deleteDoc(docRef);
     return true;
   } catch (error) {
-    console.error("Error al eliminar registro:", error);
+    handleAppError(error, "records.service.deleteRecord");
     return false;
   }
 };
@@ -214,7 +221,7 @@ export const getRecordById = async (recordId: string): Promise<RecordService | n
   try {
     const userId = authFirebase.currentUser?.uid;
     if (!userId) {
-      console.error("No hay un usuario autenticado");
+      handleAppError(new Error("No hay un usuario autenticado"), "records.service.getRecordById");
       return null;
     }
     const docRef = doc(firestore, "users", userId, NAME_COLLECTION, recordId);
@@ -225,7 +232,7 @@ export const getRecordById = async (recordId: string): Promise<RecordService | n
       return null;
     }
   } catch (error) {
-    console.error("Error al obtener registro por ID:", error);
+    handleAppError(error, "records.service.getRecordById");
     return null;
   }
 };
@@ -247,7 +254,7 @@ export const getRecordsByDateRange = async (userId: string, startDate: Date, end
     });
     return filteredRecords;
   } catch (error) {
-    console.error("Error al obtener registros por rango de fechas:", error);
+    handleAppError(error, "records.service.getRecordsByDateRange");
     return [];
   }
 };
@@ -268,7 +275,7 @@ export const getRecordsByCompanyName = async (userId: string, companyName: strin
     );
     return filteredRecords;
   } catch (error) {
-    console.error("Error al obtener registros por nombre de empresa:", error);
+    handleAppError(error, "records.service.getRecordsByCompanyName");
     return [];
   }
 };

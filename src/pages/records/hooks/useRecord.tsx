@@ -1,4 +1,5 @@
 import useAuth from "@/context/hooks/auth.hook";
+import { handleAppError } from "@/services/error.service";
 import { deleteRecord, subscribeToRecords, type RecordService } from "@/services/records.service";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
@@ -52,7 +53,7 @@ export const useRecord = () => {
         }
       },
       (error) => {
-        console.error("Error al suscribirse a los registros:", error);
+        handleAppError(error, "useRecord.subscribeToRecords");
         setRecords([]);
         setIsError(true);
         setErrorMessage("Error al cargar los registros");

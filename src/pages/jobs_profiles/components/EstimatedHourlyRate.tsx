@@ -1,4 +1,5 @@
 import Btn from "@/components/Btn";
+import { handleAppError } from "@/services/error.service";
 import { updateJobProfile } from "@/services/jobsProfile.service";
 import { updateEstimatedHourlyRateByJobProfile } from "@/services/records.service";
 import { useState, type FC, type SubmitEvent } from "react";
@@ -81,7 +82,7 @@ const EstimatedHourlyRate: FC<{
 
       setIsUpdatingRate(false);
     } catch (error) {
-      console.error("Error al actualizar la tarifa estimada", error);
+      handleAppError(error, "EstimatedHourlyRate.handleSubmit");
       notify.error("No se pudo actualizar la tarifa estimada", { scope: TOAST_SCOPE.PROFILE });
     } finally {
       setIsSaving(false);

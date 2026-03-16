@@ -1,6 +1,7 @@
 import type { Branch, Children } from "@/types";
 import { useEffect, useState, type FC } from "react";
 import BranchesCtx from "../BranchesCtx";
+import { handleAppError } from "@/services/error.service";
 import { subscribeToBranches } from "@/services/branches.services";
 import { notify, TOAST_SCOPE } from "@/services/toast.service";
 
@@ -24,7 +25,8 @@ const BranchesProvider: FC<Children> = ({ children }) => {
           setIsLoadingBranches(false);
         }
       },
-      () => {
+      (error) => {
+        handleAppError(error, "BranchesProvider.subscribeToBranches");
         notify.error("Error al cargar los sectores y puestos de trabajo", {
           scope: TOAST_SCOPE.GLOBAL,
         });

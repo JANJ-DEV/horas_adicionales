@@ -1,5 +1,12 @@
 import { collection, doc, setDoc, type Firestore } from "firebase/firestore";
 import type { FirebaseError } from "firebase/app";
+import type {
+  BranchesCatalogMap,
+  BranchesCatalogRoot,
+  JobPositionsCatalogMap,
+  JobPositionsCatalogRoot,
+  UtilitiesCatalogRoot,
+} from "@/types";
 
 export interface Collections {
   RAMAS: string;
@@ -25,6 +32,31 @@ type JsonObject = Record<string, unknown>;
 
 function isJsonObject(value: unknown): value is JsonObject {
   return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function getBranchesCatalogMap(branchesJson: unknown): BranchesCatalogMap | null {
+  if (!isJsonObject(branchesJson)) return null;
+
+  const root = (branchesJson as BranchesCatalogRoot).branches;
+  return isJsonObject(root) ? (root as BranchesCatalogMap) : (branchesJson as BranchesCatalogMap);
+}
+
+function getJobsPositionsCatalogMap(jobsPositionsJson: unknown): JobPositionsCatalogMap | null {
+  if (!isJsonObject(jobsPositionsJson)) return null;
+
+  const typedJson = jobsPositionsJson as JobPositionsCatalogRoot;
+  const wrapped = typedJson.jobsPosition ?? typedJson.jobsPositions;
+  return isJsonObject(wrapped)
+    ? (wrapped as JobPositionsCatalogMap)
+    : (jobsPositionsJson as JobPositionsCatalogMap);
+}
+
+function getUtilitiesCatalogRoot(utilitiesJson: unknown) {
+  if (!isJsonObject(utilitiesJson)) return null;
+
+  const typedJson = utilitiesJson as UtilitiesCatalogRoot;
+  const wrapped = typedJson.utilities;
+  return isJsonObject(wrapped) ? wrapped : typedJson;
 }
 
 /**
@@ -77,12 +109,11 @@ export async function populateCollectionFromFirstLevel(
  * 2) { "branches": { "COM-01": { ... } } }
  */
 export async function populateBranches(db: Firestore, branchesJson: unknown) {
-  if (!isJsonObject(branchesJson)) {
+  const branchesData = getBranchesCatalogMap(branchesJson);
+
+  if (!branchesData) {
     throw new Error("El JSON de branches no tiene formato válido.");
   }
-
-  const root = branchesJson.branches;
-  const branchesData = isJsonObject(root) ? root : branchesJson;
 
   await populateCollectionFromFirstLevel(db, COLLECTIONS.BRANCHES, branchesData);
 }
@@ -95,12 +126,11 @@ export async function populateBranches(db: Firestore, branchesJson: unknown) {
  * 3) { "jobsPositions": { "COM-01-01": { ... } }
  */
 export async function populateJobsPositions(db: Firestore, jobsPositionsJson: unknown) {
-  if (!isJsonObject(jobsPositionsJson)) {
+  const jobsPositionsData = getJobsPositionsCatalogMap(jobsPositionsJson);
+
+  if (!jobsPositionsData) {
     throw new Error("El JSON de jobs positions no tiene formato válido.");
   }
-
-  const wrapped = jobsPositionsJson.jobsPosition ?? jobsPositionsJson.jobsPositions;
-  const jobsPositionsData = isJsonObject(wrapped) ? wrapped : jobsPositionsJson;
 
   await populateCollectionFromFirstLevel(db, COLLECTIONS.JOBS_POSITIONS, jobsPositionsData);
 }
@@ -117,12 +147,11 @@ export async function populateJobsPositions(db: Firestore, jobsPositionsJson: un
  * utilities/utility_definitions
  */
 export async function populateUtilities(db: Firestore, utilitiesJson: unknown) {
-  if (!isJsonObject(utilitiesJson)) {
+  const utilitiesData = getUtilitiesCatalogRoot(utilitiesJson);
+
+  if (!utilitiesData) {
     throw new Error("El JSON de utilities no tiene formato válido.");
   }
-
-  const wrapped = utilitiesJson.utilities;
-  const utilitiesData = isJsonObject(wrapped) ? wrapped : utilitiesJson;
 
   const globalUtilities = utilitiesData.global_utilities;
   const branchUtilities = utilitiesData.branch_utilities;
@@ -175,19 +204,15 @@ export async function populateBranchesCatalog(
   branchesJson: unknown,
   jobsPositionsJson: unknown
 ) {
-  if (!isJsonObject(branchesJson)) {
+  const branchesData = getBranchesCatalogMap(branchesJson);
+  if (!branchesData) {
     throw new Error("El JSON de branches no tiene formato válido.");
   }
 
-  if (!isJsonObject(jobsPositionsJson)) {
+  const jobsData = getJobsPositionsCatalogMap(jobsPositionsJson);
+  if (!jobsData) {
     throw new Error("El JSON de jobs positions no tiene formato válido.");
   }
-
-  const branchesRoot = branchesJson.branches;
-  const branchesData = isJsonObject(branchesRoot) ? branchesRoot : branchesJson;
-
-  const jobsRoot = jobsPositionsJson.jobsPositions ?? jobsPositionsJson.jobsPosition;
-  const jobsData = isJsonObject(jobsRoot) ? jobsRoot : jobsPositionsJson;
 
   await populateCollectionFromFirstLevel(db, COLLECTIONS.BRANCHES, branchesData);
 

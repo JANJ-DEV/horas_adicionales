@@ -8,6 +8,7 @@ import {
 } from "firebase/auth";
 import { authFirebase, firestore } from "../apis/firebase";
 import { doc, setDoc } from "firebase/firestore";
+import { handleAppError } from "./error.service";
 
 const signInWithGoogle = async () => {
   const provider = new GoogleAuthProvider();
@@ -29,7 +30,7 @@ const updateAccount = async ({
 }) => {
   const user = authFirebase.currentUser;
   if (!user) {
-    console.error("No hay un usuario autenticado");
+    handleAppError(new Error("No hay un usuario autenticado"), "auth.service.updateAccount");
     return;
   }
   const profilePayload: { displayName?: string; photoURL?: string } = {};
@@ -56,7 +57,7 @@ const updateAccount = async ({
 
     await setDoc(refUserAccount, userDocPayload, { merge: true });
   } catch (error) {
-    console.error("Error al actualizar el documento de usuario:", error);
+    handleAppError(error, "auth.service.updateAccount");
     throw error;
   }
 };

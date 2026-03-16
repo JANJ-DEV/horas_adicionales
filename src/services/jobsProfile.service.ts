@@ -12,6 +12,7 @@ import {
 import { firestore } from "@/apis/firebase";
 import { authFirebase } from "@/apis/firebase";
 import type { JobProfile } from "@/types";
+import { handleAppError } from "./error.service";
 
 const nameCollection = "jobsProfiles";
 
@@ -37,7 +38,7 @@ export const subscribeToJobProfiles = (
       callback(profiles);
     },
     (error) => {
-      console.error("Error al suscribirse a perfiles de trabajo:", error);
+      handleAppError(error, "jobsProfile.service.subscribeToJobProfiles");
       onError(error);
     },
     () => {
@@ -68,7 +69,7 @@ export const saveJobProfile = async (payload: JobProfile) => {
     });
     return { ...payload, id: newDocRef.id } as JobProfile;
   } catch (error) {
-    console.error("Error al crear el perfil de trabajo:", error);
+    handleAppError(error, "jobsProfile.service.saveJobProfile");
     throw error;
   }
 };
@@ -76,7 +77,10 @@ export const saveJobProfile = async (payload: JobProfile) => {
 export const getJobProfileById = async (id: string): Promise<JobProfile | null> => {
   const userId = authFirebase.currentUser?.uid;
   if (!userId) {
-    console.error("No hay un usuario autenticado");
+    handleAppError(
+      new Error("No hay un usuario autenticado"),
+      "jobsProfile.service.getJobProfileById"
+    );
     return null;
   }
   try {
@@ -89,7 +93,7 @@ export const getJobProfileById = async (id: string): Promise<JobProfile | null> 
       return null;
     }
   } catch (error) {
-    console.error("Error al obtener el perfil de trabajo por ID:", error);
+    handleAppError(error, "jobsProfile.service.getJobProfileById");
     throw error;
   }
 };
@@ -97,7 +101,10 @@ export const getJobProfileById = async (id: string): Promise<JobProfile | null> 
 export const updateJobProfile = async (id: string, payload: Partial<JobProfile>) => {
   const userId = authFirebase.currentUser?.uid;
   if (!userId) {
-    console.error("No hay un usuario autenticado");
+    handleAppError(
+      new Error("No hay un usuario autenticado"),
+      "jobsProfile.service.updateJobProfile"
+    );
     return;
   }
   try {
@@ -112,7 +119,7 @@ export const updateJobProfile = async (id: string, payload: Partial<JobProfile>)
     );
     return { id, ...payload } as JobProfile;
   } catch (error) {
-    console.error("Error al actualizar el perfil de trabajo:", error);
+    handleAppError(error, "jobsProfile.service.updateJobProfile");
     throw error;
   }
 };
@@ -120,7 +127,10 @@ export const updateJobProfile = async (id: string, payload: Partial<JobProfile>)
 export const deleteJobProfile = async (id: string) => {
   const userId = authFirebase.currentUser?.uid;
   if (!userId) {
-    console.error("No hay un usuario autenticado");
+    handleAppError(
+      new Error("No hay un usuario autenticado"),
+      "jobsProfile.service.deleteJobProfile"
+    );
     return;
   }
   try {
@@ -128,7 +138,7 @@ export const deleteJobProfile = async (id: string) => {
     await deleteDoc(docRef);
     return true;
   } catch (error) {
-    console.error("Error al eliminar el perfil de trabajo:", error);
+    handleAppError(error, "jobsProfile.service.deleteJobProfile");
     throw error;
   }
 };

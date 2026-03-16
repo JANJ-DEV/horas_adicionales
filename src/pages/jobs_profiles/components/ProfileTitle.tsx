@@ -2,6 +2,7 @@ import Btn from "@/components/Btn";
 import { useState, type FC, type SubmitEvent } from "react";
 import CardFooter from "./CardFooter";
 import type { Children } from "@/types";
+import { handleAppError } from "@/services/error.service";
 import { updateJobProfile } from "@/services/jobsProfile.service";
 import { notify, TOAST_SCOPE } from "@/services/toast.service";
 
@@ -56,7 +57,7 @@ const ProfileTitle: FC<{ title: string; jobProfileId: string }> = ({ title, jobP
       });
       setIsUpdatingTitle(false);
     } catch (error) {
-      console.error("Error al actualizar el título del perfil", error);
+      handleAppError(error, "ProfileTitle.handlerChangeTitle");
       notify.error("No se pudo actualizar el título", { scope: TOAST_SCOPE.PROFILE });
     } finally {
       setIsSaving(false);

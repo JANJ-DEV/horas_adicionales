@@ -9,6 +9,7 @@ import {
 } from "firebase/auth";
 import { authFirebase } from "@/apis/firebase";
 import type { FirebaseError } from "firebase/app";
+import { handleAppError } from "@/services/error.service";
 import { notify, TOAST_SCOPE } from "@/services/toast.service";
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -46,6 +47,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           autoClose: 3000,
         });
     } catch (error) {
+      handleAppError(error, "AuthProvider.signInWithGoogle");
       const firebaseError = error as FirebaseError;
       // El usuario cerró el popup voluntariamente — no es un error, solo restaurar estado
       const ignoredCodes = ["auth/popup-closed-by-user", "auth/cancelled-popup-request"];
@@ -75,8 +77,8 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         });
       })
       .catch((error) => {
-        // An error happened.
-        notify.error((error as FirebaseError).message || "Error signing out", {
+        handleAppError(error, "AuthProvider.signOutGoogle");
+        notify.error("No se pudo cerrar la sesión", {
           scope: TOAST_SCOPE.GLOBAL,
         });
       });

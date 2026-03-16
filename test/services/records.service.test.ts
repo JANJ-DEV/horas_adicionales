@@ -86,7 +86,9 @@ describe("records.service", () => {
 
     expect(result).toBeUndefined();
     expect(mocks.onSnapshot).not.toHaveBeenCalled();
-    expect(consoleErrorSpy).toHaveBeenCalledWith("No hay un usuario autenticado");
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "Error general en records.service.subscribeToRecords: No hay un usuario autenticado"
+    );
   });
 
   it("subscribeToRecords transforma snapshots y devuelve unsubscribe", () => {
@@ -138,8 +140,7 @@ describe("records.service", () => {
 
     expect(onError).toHaveBeenCalledWith(firestoreError);
     expect(consoleErrorSpy).toHaveBeenCalledWith(
-      "Error al suscribirse a registros:",
-      firestoreError
+      "Error general en records.service.subscribeToRecords: boom"
     );
   });
 
@@ -153,7 +154,9 @@ describe("records.service", () => {
     });
 
     expect(mocks.setDoc).not.toHaveBeenCalled();
-    expect(consoleErrorSpy).toHaveBeenCalledWith("No hay un usuario autenticado");
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "Error general en records.service.saveRecord: No hay un usuario autenticado"
+    );
   });
 
   it("saveRecord persiste payload con timestamps y devuelve el registro con id", async () => {

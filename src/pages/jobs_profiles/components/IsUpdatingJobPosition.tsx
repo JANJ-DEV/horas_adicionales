@@ -1,6 +1,7 @@
 import { useEffect, useState, type ChangeEvent, type FC, type SubmitEvent } from "react";
 import type { JobPosition, JobProfile } from "@/types";
 import { getBranchById } from "@/services/branches.services";
+import { handleAppError } from "@/services/error.service";
 import { updateJobProfile } from "@/services/jobsProfile.service";
 import SelectJobPositionFromBranchId from "./SelectJobPosition";
 import Btn from "@/components/Btn";
@@ -26,7 +27,7 @@ const IsUpdatingJobPosition: FC<Props> = ({ state, jobProfile, onClose }) => {
         setJobsPositionsFromBranch(branch?.jobsPositions ?? []);
       })
       .catch((error) => {
-        console.error("Error al obtener puestos de la rama", error);
+        handleAppError(error, "IsUpdatingJobPosition.loadBranchJobs");
       });
   }, [state, jobProfile.branch.id]);
 
@@ -69,7 +70,7 @@ const IsUpdatingJobPosition: FC<Props> = ({ state, jobProfile, onClose }) => {
       notify.success("Puesto actualizado correctamente", { scope: TOAST_SCOPE.PROFILE });
       onClose();
     } catch (error) {
-      console.error("Error al actualizar el puesto del perfil", error);
+      handleAppError(error, "IsUpdatingJobPosition.handlerSubmit");
       notify.error("No se pudo actualizar el puesto", { scope: TOAST_SCOPE.PROFILE });
     } finally {
       setIsSaving(false);

@@ -87,4 +87,28 @@ export type BranchDoc = {
   descripcion_sector?: string;
 };
 
+export type BranchesCatalogMap = Record<string, BranchDoc>;
+
+export type BranchesCatalogRoot = {
+  branches: BranchesCatalogMap;
+};
+
+export type JobPositionsCatalogMap = Record<string, JobPositionDoc & { branchId?: string }>;
+
+export type JobPositionsCatalogRoot = {
+  jobsPosition?: JobPositionsCatalogMap;
+  jobsPositions?: JobPositionsCatalogMap;
+};
+
+export type UtilitiesCatalogRoot = {
+  utilities?: {
+    global_utilities: string[];
+    branch_utilities: Record<string, unknown>;
+    utility_definitions: Record<string, unknown>;
+  };
+  global_utilities?: string[];
+  branch_utilities?: Record<string, unknown>;
+  utility_definitions?: Record<string, unknown>;
+};
+
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;

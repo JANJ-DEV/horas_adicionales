@@ -1,6 +1,7 @@
 import type { Branch } from "@/types";
 import Btn from "@/components/Btn";
 import { useState, type ChangeEvent, type FC, type SubmitEvent } from "react";
+import { handleAppError } from "@/services/error.service";
 import { updateJobProfile } from "@/services/jobsProfile.service";
 import useBranches from "@/context/hooks/useBranches.hook.";
 import SelectJobProfile from "./SelectJobProfile";
@@ -55,7 +56,7 @@ const BranchCard: FC<{ branch: Branch; jobProfileId: string }> = ({ branch, jobP
       notify.success("Rama actualizada correctamente", { scope: TOAST_SCOPE.PROFILE });
       setIsUpdatingBranch(false);
     } catch (error) {
-      console.error("Error al actualizar la rama del perfil", error);
+      handleAppError(error, "BranchCard.handleSubmit");
       notify.error("No se pudo actualizar la rama", { scope: TOAST_SCOPE.PROFILE });
     } finally {
       setIsSaving(false);

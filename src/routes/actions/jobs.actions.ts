@@ -4,6 +4,7 @@ import { updateAccount } from "@/services/auth.service";
 import { uploadFile } from "@/services/uploadFile.service";
 import { authFirebase } from "@/apis/firebase";
 import { getBranchById } from "@/services/branches.services";
+import { handleAppError } from "@/services/error.service";
 import { getJobPositionFromBranchId } from "@/services/jobsPositions.service";
 import { saveJobProfile } from "@/services/jobsProfile.service";
 import { notify, TOAST_SCOPE } from "@/services/toast.service";
@@ -90,7 +91,7 @@ export const update = async ({ request }: ActionFunctionArgs) => {
     }
     notify.success("Cuenta actualizada correctamente", { scope: TOAST_SCOPE.GLOBAL });
   } catch (error) {
-    console.error("Error al actualizar la cuenta:", error);
+    handleAppError(error, "jobs.actions.update");
     notify.error("Error al actualizar la cuenta", { scope: TOAST_SCOPE.GLOBAL });
     return {
       error: "Error al actualizar la cuenta",

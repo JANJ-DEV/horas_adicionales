@@ -1,5 +1,6 @@
 import useAuth from "@/context/hooks/auth.hook";
 import useUtilities from "@/context/hooks/useUtilities.hook";
+import { handleAppError } from "@/services/error.service";
 import { subscribeToJobProfiles } from "@/services/jobsProfile.service";
 import type { JobProfile } from "@/types";
 import { useEffect, useState } from "react";
@@ -41,7 +42,7 @@ export const useAddRecord = () => {
         setLoading(false);
       },
       (error) => {
-        console.error("Error al suscribirse a perfiles de trabajo:", error);
+        handleAppError(error, "useAddRecord.subscribeToJobProfiles");
         setJobProfiles([]);
         setLoading(false);
       },

@@ -1,4 +1,5 @@
 import { getJobProfileById } from "@/services/jobsProfile.service";
+import { handleAppError } from "@/services/error.service";
 import type { JobProfile } from "@/types";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
@@ -25,7 +26,7 @@ const JobProfileDetails: React.FC = () => {
         }
       })
       .catch((error) => {
-        console.error("Error al obtener el perfil de trabajo:", error);
+        handleAppError(error, "JobProfileDetails.getJobProfileById");
       });
   }, [id]);
 
