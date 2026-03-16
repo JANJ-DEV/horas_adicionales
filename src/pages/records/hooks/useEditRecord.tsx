@@ -21,10 +21,10 @@ export const useEditRecord = () => {
   const [isLoadingRecord, setIsLoadingRecord] = useState(true);
   const [record, setRecord] = useState<RecordService | null>(null);
   const [selectedProfileId, setSelectedProfileId] = useState("");
+  const [estimatedHourlyRate, setEstimatedHourlyRate] = useState<number | null>(null);
 
   const selectedProfile = jobProfiles.find((profile) => profile.id === selectedProfileId) ?? null;
   const selectedTitle = selectedProfile?.title ?? record?.titleJobProfile ?? "";
-  const estimatedHourlyRate = selectedProfile?.estimatedHourlyRate ?? record?.estimatedHourlyRate;
   const selectedBranchId = selectedProfile?.branch?.id ?? record?.branchId ?? "";
   const selectedJobPositionId = selectedProfile?.jobPosition?.id ?? record?.jobPositionId ?? "";
 
@@ -34,6 +34,11 @@ export const useEditRecord = () => {
 
     setSelectedProfileId(nextProfileId);
     setSelectedProfileContext(profile?.branch?.id ?? null, profile?.jobPosition?.id ?? null);
+    setEstimatedHourlyRate(
+      profile && typeof profile.estimatedHourlyRate !== "undefined"
+        ? (profile.estimatedHourlyRate as number | null)
+        : null
+    );
   };
 
   useEffect(() => {
@@ -83,6 +88,11 @@ export const useEditRecord = () => {
       setRecord(fetchedRecord);
       setSelectedProfileId(fetchedRecord.jobProfileId ?? "");
       setSelectedProfileContext(fetchedRecord.branchId ?? null, fetchedRecord.jobPositionId ?? null);
+      setEstimatedHourlyRate(
+        typeof fetchedRecord.estimatedHourlyRate !== "undefined"
+          ? (fetchedRecord.estimatedHourlyRate as number | null)
+          : null
+      );
       setIsLoadingRecord(false);
     };
 
