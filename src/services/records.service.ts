@@ -9,6 +9,10 @@ import {
   updateDoc,
   onSnapshot,
   writeBatch,
+  query,
+  where,
+  orderBy,
+  type QueryConstraint,
   type FirestoreError,
   Timestamp,
 } from "firebase/firestore";
@@ -41,10 +45,53 @@ type LegacyRecordMatcher = {
   jobPositionId?: string;
 };
 
+export type RecordsQueryFilters = {
+  branchId?: string;
+  jobPositionId?: string;
+  jobProfileId?: string;
+  dateFrom?: string;
+  dateTo?: string;
+};
+
+const buildRecordsQueryConstraints = (filters?: RecordsQueryFilters) => {
+  const constraints: QueryConstraint[] = [];
+
+  if (!filters) {
+    return constraints;
+  }
+
+  if (filters.branchId) {
+    constraints.push(where("branchId", "==", filters.branchId));
+  }
+
+  if (filters.jobPositionId) {
+    constraints.push(where("jobPositionId", "==", filters.jobPositionId));
+  }
+
+  if (filters.jobProfileId) {
+    constraints.push(where("jobProfileId", "==", filters.jobProfileId));
+  }
+
+  if (filters.dateFrom) {
+    constraints.push(where("dateTimeRecord", ">=", filters.dateFrom));
+  }
+
+  if (filters.dateTo) {
+    constraints.push(where("dateTimeRecord", "<=", filters.dateTo));
+  }
+
+  if (filters.dateFrom || filters.dateTo) {
+    constraints.push(orderBy("dateTimeRecord", "desc"));
+  }
+
+  return constraints;
+};
+
 export const subscribeToRecords = (
   onUpdate: (records: RecordService[]) => void,
   onError: (error: FirestoreError) => void,
-  onComplete: () => void
+  onComplete: () => void,
+  filters?: RecordsQueryFilters
 ) => {
   const userId = authFirebase.currentUser?.uid;
   if (!userId) {
@@ -56,9 +103,12 @@ export const subscribeToRecords = (
   }
 
   const collectionRef = collection(firestore, "users", userId, NAME_COLLECTION);
+  const constraints = buildRecordsQueryConstraints(filters);
+  const recordsQuery =
+    constraints.length > 0 ? query(collectionRef, ...constraints) : collectionRef;
 
   const unsubscribe = onSnapshot(
-    collectionRef,
+    recordsQuery,
     (snapshot) => {
       const records = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
       onUpdate(records as RecordService[]);

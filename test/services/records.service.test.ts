@@ -11,6 +11,9 @@ const mocks = vi.hoisted(() => ({
   updateDoc: vi.fn(),
   onSnapshot: vi.fn(),
   writeBatch: vi.fn(),
+  query: vi.fn(),
+  where: vi.fn(),
+  orderBy: vi.fn(),
   authFirebase: {
     currentUser: { uid: "user-123" },
   } as { currentUser: { uid: string } | null },
@@ -28,6 +31,9 @@ vi.mock("firebase/firestore", () => ({
   updateDoc: mocks.updateDoc,
   onSnapshot: mocks.onSnapshot,
   writeBatch: mocks.writeBatch,
+  query: mocks.query,
+  where: mocks.where,
+  orderBy: mocks.orderBy,
   Timestamp: class Timestamp {},
 }));
 
@@ -72,6 +78,17 @@ describe("records.service", () => {
     mocks.deleteDoc.mockResolvedValue(undefined);
     mocks.updateDoc.mockResolvedValue(undefined);
     mocks.onSnapshot.mockReturnValue(vi.fn());
+    mocks.where.mockImplementation((field, op, value) => ({ type: "where", field, op, value }));
+    mocks.orderBy.mockImplementation((field, direction) => ({
+      type: "orderBy",
+      field,
+      direction,
+    }));
+    mocks.query.mockImplementation((ref, ...constraints) => ({
+      ref,
+      constraints,
+      type: "query",
+    }));
     mocks.writeBatch.mockImplementation(() => ({
       update: vi.fn(),
       commit: vi.fn().mockResolvedValue(undefined),
@@ -120,6 +137,27 @@ describe("records.service", () => {
       { id: "record-2", titleJobProfile: "Dos" },
     ]);
     expect(result).toBe(unsubscribe);
+  });
+
+  it("subscribeToRecords construye query con filtros cuando aplica", () => {
+    const unsubscribe = vi.fn();
+    mocks.onSnapshot.mockReturnValue(unsubscribe);
+
+    subscribeToRecords(vi.fn(), vi.fn(), vi.fn(), {
+      branchId: "branch-1",
+      jobPositionId: "job-2",
+      jobProfileId: "profile-3",
+      dateFrom: "2026-03-01",
+      dateTo: "2026-03-31",
+    });
+
+    expect(mocks.where).toHaveBeenCalledWith("branchId", "==", "branch-1");
+    expect(mocks.where).toHaveBeenCalledWith("jobPositionId", "==", "job-2");
+    expect(mocks.where).toHaveBeenCalledWith("jobProfileId", "==", "profile-3");
+    expect(mocks.where).toHaveBeenCalledWith("dateTimeRecord", ">=", "2026-03-01");
+    expect(mocks.where).toHaveBeenCalledWith("dateTimeRecord", "<=", "2026-03-31");
+    expect(mocks.orderBy).toHaveBeenCalledWith("dateTimeRecord", "desc");
+    expect(mocks.query).toHaveBeenCalledTimes(1);
   });
 
   it("subscribeToRecords propaga errores de onSnapshot", () => {

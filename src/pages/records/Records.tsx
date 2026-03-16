@@ -3,14 +3,16 @@ import RecordCard from "./components/RecordCard";
 import { useEffect, useState } from "react";
 import { subscribeToBranches } from "@/services/branches.services";
 import { subscribeToJobProfiles } from "@/services/jobsProfile.service";
-import type { Branch } from "@/types";
+import type { Branch, JobProfile } from "@/types";
 import RecordsPeriodSelector from "./components/RecordsPeriodSelector";
 import RecordsSummary from "./components/RecordsSummary";
 import RecordListItem from "./components/RecordListItem";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 import { Link } from "react-router";
+import RecordsFiltersBar, { type RecordsFiltersState } from "./components/RecordsFiltersBar";
 import {
   calculateRecordsSummary,
+  filterRecordsByAdvancedFilters,
   filterRecordsByPeriod,
   getRecordReferenceDate,
   type RecordsPeriod,
@@ -18,7 +20,30 @@ import {
 
 const PAGE_SIZE = 9;
 
+const DEFAULT_FILTERS: RecordsFiltersState = {
+  branchId: "",
+  jobPositionId: "",
+  jobProfileId: "",
+  dateFrom: "",
+  dateTo: "",
+  minHourlyRate: "",
+  maxHourlyRate: "",
+  minWorkedHours: "",
+  maxWorkedHours: "",
+};
+
+const parseOptionalNumber = (value: string) => {
+  if (value.trim() === "") {
+    return undefined;
+  }
+
+  const parsed = Number(value);
+  return Number.isNaN(parsed) ? undefined : parsed;
+};
+
 const Records = () => {
+  const [filters, setFilters] = useState<RecordsFiltersState>(DEFAULT_FILTERS);
+  const hasManualDateRange = Boolean(filters.dateFrom || filters.dateTo);
   const {
     records,
     isLoading,
@@ -27,8 +52,15 @@ const Records = () => {
     hasCurrentUser,
     handleDeleteRecord,
     handlerViewDetails,
-  } = useRecord();
+  } = useRecord({
+    branchId: filters.branchId || undefined,
+    jobPositionId: filters.jobPositionId || undefined,
+    jobProfileId: filters.jobProfileId || undefined,
+    dateFrom: filters.dateFrom || undefined,
+    dateTo: filters.dateTo || undefined,
+  });
   const [branches, setBranches] = useState<Branch[]>([]);
+  const [jobProfiles, setJobProfiles] = useState<JobProfile[]>([]);
   const [hasJobProfiles, setHasJobProfiles] = useState(true);
   const [isLoadingProfiles, setIsLoadingProfiles] = useState(true);
   const [selectedPeriod, setSelectedPeriod] = useState<RecordsPeriod>("week");
@@ -41,10 +73,12 @@ const Records = () => {
 
     const unsubscribe = subscribeToJobProfiles(
       (profiles) => {
+        setJobProfiles(profiles);
         setHasJobProfiles(profiles.length > 0);
         setIsLoadingProfiles(false);
       },
       () => {
+        setJobProfiles([]);
         setIsLoadingProfiles(false);
       },
       () => {
@@ -94,7 +128,21 @@ const Records = () => {
     return rightDate.getTime() - leftDate.getTime();
   });
 
-  const recordsByPeriod = filterRecordsByPeriod(orderedRecords, selectedPeriod);
+  const recordsByFilters = filterRecordsByAdvancedFilters(orderedRecords, {
+    branchId: filters.branchId || undefined,
+    jobPositionId: filters.jobPositionId || undefined,
+    jobProfileId: filters.jobProfileId || undefined,
+    dateFrom: filters.dateFrom || undefined,
+    dateTo: filters.dateTo || undefined,
+    minHourlyRate: parseOptionalNumber(filters.minHourlyRate),
+    maxHourlyRate: parseOptionalNumber(filters.maxHourlyRate),
+    minWorkedHours: parseOptionalNumber(filters.minWorkedHours),
+    maxWorkedHours: parseOptionalNumber(filters.maxWorkedHours),
+  });
+
+  const recordsByPeriod = hasManualDateRange
+    ? recordsByFilters
+    : filterRecordsByPeriod(recordsByFilters, selectedPeriod);
 
   const hasMore = visibleCount < recordsByPeriod.length;
 
@@ -120,10 +168,40 @@ const Records = () => {
     setVisibleCount(PAGE_SIZE);
   };
 
+  const handleFilterChange = (name: keyof RecordsFiltersState, value: string) => {
+    setFilters((current) => {
+      if (name === "branchId") {
+        return {
+          ...current,
+          branchId: value,
+          jobPositionId: "",
+        };
+      }
+
+      return {
+        ...current,
+        [name]: value,
+      };
+    });
+    setVisibleCount(PAGE_SIZE);
+  };
+
+  const handleResetFilters = () => {
+    setFilters(DEFAULT_FILTERS);
+    setVisibleCount(PAGE_SIZE);
+  };
+
   return (
     <section className="flex min-w-0 flex-col gap-4 overflow-x-hidden">
       {hasCurrentUser && (
         <>
+          <RecordsFiltersBar
+            branches={branches}
+            jobProfiles={jobProfiles}
+            filters={filters}
+            onFilterChange={handleFilterChange}
+            onReset={handleResetFilters}
+          />
           <RecordsPeriodSelector value={selectedPeriod} onChange={handlePeriodChange} />
           <RecordsSummary
             period={selectedPeriod}
@@ -182,7 +260,7 @@ const Records = () => {
         recordsByPeriod.length === 0 &&
         hasJobProfiles && (
           <aside className="app-card p-4 text-[var(--text-muted)]">
-            No hay registros para el periodo seleccionado.
+            No hay registros que coincidan con los filtros seleccionados.
           </aside>
         )}
 
