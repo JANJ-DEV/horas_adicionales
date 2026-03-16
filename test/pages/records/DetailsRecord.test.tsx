@@ -57,9 +57,8 @@ describe("DetailsRecord", () => {
     expect(navigate).toHaveBeenCalledWith("/records");
   });
 
-  it("renderiza detalle, resuelve rama/puesto y etiquetas de utilidades", async () => {
+  it("renderiza detalle, resuelve rama/puesto y navega a edición", async () => {
     const navigate = vi.fn();
-    const alertSpy = vi.spyOn(window, "alert").mockImplementation(() => {});
 
     mocks.useDetailRecord.mockReturnValue({
       navigate,
@@ -119,6 +118,6 @@ describe("DetailsRecord", () => {
     expect(screen.getByText("25")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "Editar" }));
-    expect(alertSpy).toHaveBeenCalledTimes(1);
+    expect(navigate).toHaveBeenCalledWith("/records/edit/record-1");
   });
 });

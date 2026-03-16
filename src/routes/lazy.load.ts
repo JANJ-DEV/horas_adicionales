@@ -16,6 +16,7 @@ const AccountLayout = lazy(() => import("../pages/account/AccountLayout.tsx"));
 const Account = lazy(() => import("../pages/account/Account.tsx"));
 const UpdateAccount = lazy(() => import("../pages/account/UpdateAccount.tsx"));
 const DetailsRecord = lazy(() => import("../pages/records/DetailsRecord.tsx"));
+const EditRecord = lazy(() => import("../pages/records/EditRecord.tsx"));
 
 export {
   App,
@@ -33,4 +34,5 @@ export {
   Account,
   UpdateAccount,
   DetailsRecord,
+  EditRecord,
 };

@@ -1,6 +1,11 @@
 import type { ActionFunctionArgs } from "react-router";
 import { authFirebase } from "@/apis/firebase";
-import { saveRecord, type RecordService } from "@/services/records.service";
+import { updateJobProfile } from "@/services/jobsProfile.service";
+import {
+  saveRecord,
+  updateRecord,
+  type RecordService,
+} from "@/services/records.service";
 import {
   getActiveUtilityIdsForProfile,
   getUtilitiesCatalogFromFirestore,
@@ -21,8 +26,17 @@ const resolveUtilityStorageKey = (
   return definition.dbKey ?? definition.db_key ?? UTILITY_DB_KEY_FALLBACK[utilityId] ?? utilityId;
 };
 
-export async function add({ request }: ActionFunctionArgs) {
-  const formData = await request.formData();
+type ParseRecordFormResult =
+  | {
+      error: string;
+    }
+  | {
+      data: RecordService;
+      jobProfileId: string;
+      titleJobProfile: string;
+    };
+
+const parseRecordFormData = async (formData: FormData): Promise<ParseRecordFormResult> => {
   const jobProfileId = formData.get("jobProfileId") as string;
   const titleJobProfile = formData.get("titleJobProfile") as string;
   const dateTimeRecord = formData.get("dateTimeRecord") as string;
@@ -82,6 +96,7 @@ export async function add({ request }: ActionFunctionArgs) {
         invalidNumberUtilities.push(utilityId);
         return;
       }
+
       const storageKey = resolveUtilityStorageKey(utilityId, definition);
       utilitiesValues[storageKey] = parsedNumber;
       return;
@@ -111,43 +126,110 @@ export async function add({ request }: ActionFunctionArgs) {
     };
   }
 
-  // Aquí puedes hacer validaciones
   if (!titleJobProfile || !dateTimeRecord || !workStartTime || !workEndTime) {
     return {
       error: "Todos los campos son requeridos",
     };
   }
-  // Aquí harías la llamada a tu API o base de datos
+
+  return {
+    data: {
+      titleJobProfile,
+      dateTimeRecord,
+      workStartTime,
+      workEndTime,
+      estimatedHourlyRate: Number(estimatedHourlyRate),
+      jobProfileId,
+      branchId,
+      jobPositionId,
+      utilitiesValues,
+    },
+    jobProfileId,
+    titleJobProfile,
+  };
+};
+
+export async function add({ request }: ActionFunctionArgs) {
+  const formData = await request.formData();
+  const parsedRecord = await parseRecordFormData(formData);
+
+  if ("error" in parsedRecord) {
+    return parsedRecord;
+  }
+
   const userId = authFirebase.currentUser?.uid;
   if (!userId) {
     return {
       error: "No hay un usuario autenticado",
     };
   }
-  const record: RecordService = {
-    titleJobProfile,
-    dateTimeRecord,
-    workStartTime,
-    workEndTime,
-    estimatedHourlyRate: Number(estimatedHourlyRate),
-    jobProfileId,
-    branchId,
-    jobPositionId,
-    utilitiesValues,
-  };
 
-  const savedRecord = await saveRecord(record);
+  const savedRecord = await saveRecord(parsedRecord.data);
   if (!savedRecord) {
     return {
       error: "No se pudo guardar el registro",
     };
   }
 
-  // Retorna el resultado
   return {
     success: true,
     message: "Registro guardado correctamente",
     record: savedRecord,
-    jobProfileId,
+    jobProfileId: parsedRecord.jobProfileId,
+    titleJobProfile: parsedRecord.titleJobProfile,
+  };
+}
+
+export async function update({ request, params }: ActionFunctionArgs) {
+  const recordId = params.id;
+  if (!recordId) {
+    return {
+      error: "No se encontró el registro a actualizar",
+    };
+  }
+
+  const formData = await request.formData();
+  const parsedRecord = await parseRecordFormData(formData);
+
+  if ("error" in parsedRecord) {
+    return parsedRecord;
+  }
+
+  const userId = authFirebase.currentUser?.uid;
+  if (!userId) {
+    return {
+      error: "No hay un usuario autenticado",
+    };
+  }
+
+  const updated = await updateRecord(userId, recordId, parsedRecord.data);
+  if (!updated) {
+    return {
+      error: "No se pudo actualizar el registro",
+    };
+  }
+
+  let jobProfileSyncFailed = false;
+  try {
+    await updateJobProfile(parsedRecord.jobProfileId, {
+      estimatedHourlyRate: parsedRecord.data.estimatedHourlyRate,
+    });
+  } catch (error) {
+    jobProfileSyncFailed = true;
+    console.error(
+      "Error al sincronizar el perfil de puesto después de actualizar el registro",
+      error,
+    );
+  }
+
+  return {
+    success: true,
+    message: jobProfileSyncFailed
+      ? "Registro actualizado, pero hubo un problema al sincronizar el perfil de puesto"
+      : "Registro actualizado correctamente",
+    recordId,
+    jobProfileId: parsedRecord.jobProfileId,
+    titleJobProfile: parsedRecord.titleJobProfile,
+    ...(jobProfileSyncFailed && { jobProfileSyncFailed: true }),
   };
 }
