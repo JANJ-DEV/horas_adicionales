@@ -126,8 +126,9 @@ const EditRecordForm: FC<EditRecordFormProps> = ({
     handleProfileChange(event);
   };
 
-  const localRateNumber = localRate !== "" ? Number(localRate) : undefined;
-  const showLivePreview = Boolean(localRateNumber) && startTime.length > 0 && endTime.length > 0;
+  const localRateNumber = Number(localRate);
+  const hasValidRate = localRate !== "" && !Number.isNaN(localRateNumber);
+  const showLivePreview = hasValidRate && startTime.length > 0 && endTime.length > 0;
 
   return (
     <section className="mx-auto w-full max-w-2xl pb-6">
