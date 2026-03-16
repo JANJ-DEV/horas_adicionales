@@ -209,15 +209,27 @@ export async function update({ request, params }: ActionFunctionArgs) {
     };
   }
 
-  await updateJobProfile(parsedRecord.jobProfileId, {
-    estimatedHourlyRate: parsedRecord.data.estimatedHourlyRate,
-  });
+  let jobProfileSyncFailed = false;
+  try {
+    await updateJobProfile(parsedRecord.jobProfileId, {
+      estimatedHourlyRate: parsedRecord.data.estimatedHourlyRate,
+    });
+  } catch (error) {
+    jobProfileSyncFailed = true;
+    console.error(
+      "Error al sincronizar el perfil de puesto después de actualizar el registro",
+      error,
+    );
+  }
 
   return {
     success: true,
-    message: "Registro actualizado correctamente",
+    message: jobProfileSyncFailed
+      ? "Registro actualizado, pero hubo un problema al sincronizar el perfil de puesto"
+      : "Registro actualizado correctamente",
     recordId,
     jobProfileId: parsedRecord.jobProfileId,
     titleJobProfile: parsedRecord.titleJobProfile,
+    ...(jobProfileSyncFailed && { jobProfileSyncFailed: true }),
   };
 }
