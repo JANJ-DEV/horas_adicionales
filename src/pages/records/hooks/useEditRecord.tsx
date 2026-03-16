@@ -24,7 +24,7 @@ export const useEditRecord = () => {
 
   const selectedProfile = jobProfiles.find((profile) => profile.id === selectedProfileId) ?? null;
   const selectedTitle = selectedProfile?.title ?? record?.titleJobProfile ?? "";
-  const estimatedHourlyRate = selectedProfile?.estimatedHourlyRate ?? record?.estimatedHourlyRate;
+  const estimatedHourlyRate = record?.estimatedHourlyRate ?? selectedProfile?.estimatedHourlyRate;
   const selectedBranchId = selectedProfile?.branch?.id ?? record?.branchId ?? "";
   const selectedJobPositionId = selectedProfile?.jobPosition?.id ?? record?.jobPositionId ?? "";
 
@@ -100,7 +100,14 @@ export const useEditRecord = () => {
     }
 
     if (formAction.data.success) {
-      notify.success("Registro actualizado correctamente", { scope: TOAST_SCOPE.RECORDS });
+      if (formAction.data.syncWarning) {
+        notify.warning(
+          "Registro actualizado, pero no se pudo sincronizar la tarifa con el perfil de trabajo.",
+          { scope: TOAST_SCOPE.RECORDS, autoClose: 4000 }
+        );
+      } else {
+        notify.success("Registro actualizado correctamente", { scope: TOAST_SCOPE.RECORDS });
+      }
       navigate("/records");
     }
   }, [formAction.data, formAction.state, navigate]);

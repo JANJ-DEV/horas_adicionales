@@ -209,9 +209,14 @@ export async function update({ request, params }: ActionFunctionArgs) {
     };
   }
 
-  await updateJobProfile(parsedRecord.jobProfileId, {
-    estimatedHourlyRate: parsedRecord.data.estimatedHourlyRate,
-  });
+  let syncWarning = false;
+  try {
+    await updateJobProfile(parsedRecord.jobProfileId, {
+      estimatedHourlyRate: parsedRecord.data.estimatedHourlyRate,
+    });
+  } catch {
+    syncWarning = true;
+  }
 
   return {
     success: true,
@@ -219,5 +224,6 @@ export async function update({ request, params }: ActionFunctionArgs) {
     recordId,
     jobProfileId: parsedRecord.jobProfileId,
     titleJobProfile: parsedRecord.titleJobProfile,
+    syncWarning,
   };
 }
