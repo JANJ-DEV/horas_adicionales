@@ -508,7 +508,7 @@ const EditRecord: FC = () => {
   const { record, jobProfiles, hasCurrentUser, isLoadingProfiles, isLoadingRecord } = editRecordState;
   const hasJobProfiles = jobProfiles.length > 0;
 
-  if (isLoadingRecord || (hasCurrentUser && isLoadingProfiles)) {
+  if (isLoadingRecord || isLoadingUtilities || (hasCurrentUser && isLoadingProfiles)) {
     return <Loading />;
   }
 
