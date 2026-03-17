@@ -78,7 +78,7 @@ const IsUpdatingJobPosition: FC<Props> = ({ state, jobProfile, onClose }) => {
   };
 
   return state ? (
-    <form className="bg-dark text-white text-2xl" onSubmit={handlerSubmit}>
+    <form className="text-[var(--text)]" onSubmit={handlerSubmit}>
       <SelectJobPositionFromBranchId
         name={`job-position-${jobProfile.id ?? "unknown"}`}
         variant="id"
@@ -87,7 +87,7 @@ const IsUpdatingJobPosition: FC<Props> = ({ state, jobProfile, onClose }) => {
         onChangeSelectJobPosition={handleChangeSelectJobPosition}
       />
       {selectedJobPosition.description && (
-        <p className="mt-2 text-sm text-slate-300">{selectedJobPosition.description}</p>
+        <p className="mt-2 text-sm text-[var(--text-muted)]">{selectedJobPosition.description}</p>
       )}
 
       <CardFooter variant="card">

@@ -91,9 +91,9 @@ const EstimatedHourlyRate: FC<{
 
   if (!rate && !isUpdatingRate) {
     return (
-      <section className="rounded-lg bg-black/20 p-3 ring-1 ring-white/10">
+      <section className="app-panel p-3">
         <header className="flex items-center justify-between">
-          <strong className="mb-1 text-xs font-semibold uppercase tracking-wider text-cyan-300/90">
+          <strong className="mb-1 text-xs font-semibold uppercase tracking-wider text-[var(--accent-strong)]">
             Tarifa estimada
           </strong>
           <Btn
@@ -104,15 +104,15 @@ const EstimatedHourlyRate: FC<{
             onClick={toggleUpdatingRate}
           />
         </header>
-        <p className="mt-1 text-sm text-slate-300">No definida</p>
+        <p className="mt-1 text-sm text-[var(--text-muted)]">No definida</p>
       </section>
     );
   }
 
   return (
-    <section className="rounded-lg bg-black/20 p-3 ring-1 ring-white/10">
+    <section className="app-panel p-3">
       <header className="flex items-center justify-between">
-        <strong className="mb-1 text-xs font-semibold uppercase tracking-wider text-cyan-300/90">
+        <strong className="mb-1 text-xs font-semibold uppercase tracking-wider text-[var(--accent-strong)]">
           Tarifa estimada
         </strong>
         <Btn
@@ -126,7 +126,7 @@ const EstimatedHourlyRate: FC<{
       </header>
 
       {!isUpdatingRate && (
-        <p className="inline-flex items-center rounded-full border border-orange-300/30 bg-orange-400/10 px-3 py-1 text-sm font-semibold text-orange-200">
+        <p className="inline-flex items-center rounded-full border border-[var(--border-strong)] bg-[color:var(--accent)]/10 px-3 py-1 text-sm font-semibold text-[var(--accent)]">
           Tarifa estimada: {currencyFormatter.format(normalizedCurrentRate)}/hora
         </p>
       )}
@@ -141,7 +141,7 @@ const EstimatedHourlyRate: FC<{
             id={`estimated-hourly-rate-${jobProfileId}`}
             defaultValue={normalizedCurrentRate ? normalizedCurrentRate.toFixed(2) : ""}
             disabled={isSaving}
-            className="w-full border py-2 px-4 rounded text-sm lg:text-base mt-2"
+            className="form-input mt-2 w-full rounded px-4 py-2 text-sm focus:outline-none lg:text-base"
           />
 
           <label className="mt-3 flex items-start gap-3 text-sm text-[var(--text-muted)]">

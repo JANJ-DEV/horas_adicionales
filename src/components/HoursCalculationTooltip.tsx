@@ -21,7 +21,7 @@ const HoursCalculationTooltip: FC<HoursCalculationTooltipProps> = ({
       ariaLabel="Ver como se calcula el total de horas"
       content={
         <>
-          <p className="font-semibold text-slate-100">Como se calcula:</p>
+          <p className="font-semibold text-[var(--text)]">Como se calcula:</p>
           <p>1. Se calcula la diferencia entre entrada y salida.</p>
           <p>2. Se muestra en formato horas:minutos: {workedHours.formatted}.</p>
           <p>3. Se convierte a formato decimal: {workedHours.decimal}.</p>

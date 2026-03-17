@@ -85,11 +85,13 @@ const DetailsRecord = () => {
   }
 
   return (
-    <section className="mt-8 flex flex-col gap-6 bg-slate-800/50 p-6 rounded-lg border border-slate-700">
-      <header className="border-b border-slate-700 pb-4 flex justify-between items-center">
+    <section className="app-surface mt-8 flex flex-col gap-6 rounded-[1.5rem] p-6">
+      <header className="flex items-center justify-between border-b border-[var(--border)] pb-4">
         <section>
-          <h2 className="text-3xl font-bold text-green-500">{record.titleJobProfile}</h2>
-          <p className="text-slate-400">ID del registro: {record.id}</p>
+          <h2 className="font-[var(--font-display)] text-3xl font-bold text-[var(--text)]">
+            {record.titleJobProfile}
+          </h2>
+          <p className="text-[var(--text-muted)]">ID del registro: {record.id}</p>
         </section>
         <aside>
           <Btn
@@ -99,10 +101,10 @@ const DetailsRecord = () => {
           />
         </aside>
       </header>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <article className="flex flex-col gap-2">
-          <h3 className="text-lg font-semibold text-slate-300">Información Temporal</h3>
-          <div className="bg-slate-900/50 p-4 rounded min-h-32">
+          <h3 className="text-lg font-semibold text-[var(--text)]">Informacion temporal</h3>
+          <div className="app-card min-h-32 p-4 text-[var(--text)]">
             <p>
               <strong>Fecha:</strong> {new Date(record.dateTimeRecord).toLocaleDateString()}
             </p>
@@ -115,8 +117,8 @@ const DetailsRecord = () => {
           </div>
         </article>
         <article className="flex flex-col gap-2">
-          <h3 className="text-lg font-semibold text-slate-300">Metadatos</h3>
-          <div className="bg-slate-900/50 p-4 rounded min-h-32">
+          <h3 className="text-lg font-semibold text-[var(--text)]">Metadatos</h3>
+          <div className="app-card min-h-32 p-4 text-[var(--text)]">
             <p>
               <strong>Creado el:</strong>{" "}
               {record.createdAt
@@ -142,7 +144,7 @@ const DetailsRecord = () => {
           </div>
         </article>
       </div>
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+      <section className="grid grid-cols-1 items-stretch gap-6 md:grid-cols-2">
         <div className="min-h-32 [&>footer]:min-h-32">
           <RecordCalculationSummary
             startTime={record.workStartTime as string | undefined}
@@ -152,10 +154,12 @@ const DetailsRecord = () => {
         </div>
 
         <article>
-          <div className="bg-slate-900/50 p-4 rounded min-h-32 flex flex-col gap-2">
-            <h3 className="text-lg font-semibold text-slate-300">Utilidades Registradas</h3>
+          <div className="app-card flex min-h-32 flex-col gap-2 p-4 text-[var(--text)]">
+            <h3 className="text-lg font-semibold text-[var(--text)]">Utilidades registradas</h3>
             {utilityEntries.length === 0 && (
-              <p className="text-slate-400">Este registro no incluye utilidades adicionales.</p>
+              <p className="text-[var(--text-muted)]">
+                Este registro no incluye utilidades adicionales.
+              </p>
             )}
 
             {utilityEntries.map(([storageKey, value]) => (
