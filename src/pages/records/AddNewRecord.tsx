@@ -17,9 +17,9 @@ const todayISO = () => {
 };
 
 const fieldCls = "flex flex-col gap-1.5";
-const labelCls = "text-sm font-semibold text-slate-300";
+const labelCls = "form-label text-sm font-semibold";
 const inputCls =
-  "rounded-xl border border-slate-600 bg-slate-800/60 p-3 text-white transition focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500 disabled:cursor-not-allowed disabled:opacity-50";
+  "form-input rounded-xl p-3 transition focus:outline-none disabled:cursor-not-allowed disabled:opacity-50";
 
 const AddNewRecord: FC = () => {
   const {
@@ -69,9 +69,7 @@ const AddNewRecord: FC = () => {
   const hasJobProfiles = jobProfiles.length > 0;
 
   const showLivePreview =
-    Boolean(estimatedHourlyRate) &&
-    startTime.length > 0 &&
-    endTime.length > 0;
+    Boolean(estimatedHourlyRate) && startTime.length > 0 && endTime.length > 0;
 
   if (hasCurrentUser && !loading && !hasJobProfiles) {
     return (
@@ -106,13 +104,13 @@ const AddNewRecord: FC = () => {
       {/* La key fuerza un remount tras éxito y limpia el formulario */}
       <formAction.Form key={formResetKey} className="flex flex-col gap-5 py-4" method="post">
         {/* ── Perfil de trabajo ── */}
-        <fieldset className="flex flex-col gap-4 rounded-xl border border-slate-700 bg-slate-900/40 p-4">
-          <legend className="px-1 text-xs font-semibold uppercase tracking-widest text-slate-400">
+        <fieldset className="form-section flex flex-col gap-4 p-4">
+          <legend className="form-legend px-1 text-xs font-semibold uppercase tracking-widest">
             Perfil de trabajo
           </legend>
 
           {hasCurrentUser && loading ? (
-            <p className="text-sm text-slate-400">Cargando perfiles...</p>
+            <p className="text-sm text-[var(--text-muted)]">Cargando perfiles...</p>
           ) : (
             <div className={fieldCls}>
               <div className="flex items-center gap-2">
@@ -149,9 +147,8 @@ const AddNewRecord: FC = () => {
                 ))}
               </select>
               {selectedTitle && (
-                <p className="text-xs text-cyan-400">
-                  Perfil activo:{" "}
-                  <span className="font-medium">{selectedTitle}</span>
+                <p className="text-xs text-[var(--accent-strong)]">
+                  Perfil activo: <span className="font-medium">{selectedTitle}</span>
                 </p>
               )}
             </div>
@@ -175,8 +172,8 @@ const AddNewRecord: FC = () => {
         />
 
         {/* ── Horario ── */}
-        <fieldset className="flex flex-col gap-4 rounded-xl border border-slate-700 bg-slate-900/40 p-4">
-          <legend className="px-1 text-xs font-semibold uppercase tracking-widest text-slate-400">
+        <fieldset className="form-section flex flex-col gap-4 p-4">
+          <legend className="form-legend px-1 text-xs font-semibold uppercase tracking-widest">
             Horario
           </legend>
 
@@ -239,8 +236,8 @@ const AddNewRecord: FC = () => {
                   ariaLabel="Información sobre la hora de salida"
                   content={
                     <p>
-                      Hora a la que terminaste. Se usa junto con la hora de entrada para calcular
-                      el total de horas y el salario estimado.
+                      Hora a la que terminaste. Se usa junto con la hora de entrada para calcular el
+                      total de horas y el salario estimado.
                     </p>
                   }
                 />
@@ -267,16 +264,16 @@ const AddNewRecord: FC = () => {
           )}
 
           {!showLivePreview && !estimatedHourlyRate && (startTime || endTime) && (
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-[var(--text-soft)]">
               Selecciona un perfil para ver el cálculo estimado.
             </p>
           )}
         </fieldset>
 
         {/* ── Utilidades ── */}
-        <fieldset className="flex flex-col gap-4 rounded-xl border border-slate-700 bg-slate-900/40 p-4">
+        <fieldset className="form-section flex flex-col gap-4 p-4">
           <legend className="flex items-center gap-2 px-1">
-            <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">
+            <span className="form-legend text-xs font-semibold uppercase tracking-widest">
               Utilidades
             </span>
             <InfoTooltip
@@ -291,11 +288,11 @@ const AddNewRecord: FC = () => {
           </legend>
 
           {isLoadingUtilities && (
-            <p className="text-sm text-slate-400">Cargando utilidades...</p>
+            <p className="text-sm text-[var(--text-muted)]">Cargando utilidades...</p>
           )}
 
           {!isLoadingUtilities && activeUtilities.length === 0 && (
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-[var(--text-soft)]">
               Selecciona un perfil para mostrar las utilidades disponibles.
             </p>
           )}
@@ -303,8 +300,10 @@ const AddNewRecord: FC = () => {
           {!isLoadingUtilities && activeUtilities.length > 0 && (
             <div className="flex flex-col gap-3">
               {genericUtilities.length > 0 && (
-                <div className="rounded-lg border border-slate-700 bg-slate-800/30 p-3">
-                  <p className="mb-2 text-xs font-medium text-slate-400">Utilidades generales</p>
+                <div className="form-subsection rounded-lg p-3">
+                  <p className="mb-2 text-xs font-medium text-[var(--text-soft)]">
+                    Utilidades generales
+                  </p>
                   <div className="flex flex-col gap-1">
                     {genericUtilities.map(({ id, definition }) => {
                       if (!definition) return null;
@@ -313,7 +312,7 @@ const AddNewRecord: FC = () => {
                         <label
                           key={id}
                           htmlFor={checkboxId}
-                          className="flex cursor-pointer items-center gap-2.5 rounded-md px-2 py-1.5 text-sm transition hover:bg-slate-700/50"
+                          className="form-check-row flex cursor-pointer items-center gap-2.5 rounded-md px-2 py-1.5 text-sm transition"
                         >
                           <input
                             id={checkboxId}
@@ -334,8 +333,8 @@ const AddNewRecord: FC = () => {
               )}
 
               {profileSpecificUtilities.length > 0 && (
-                <div className="rounded-lg border border-slate-700 bg-slate-800/30 p-3">
-                  <p className="mb-2 text-xs font-medium text-slate-400">
+                <div className="form-subsection rounded-lg p-3">
+                  <p className="mb-2 text-xs font-medium text-[var(--text-soft)]">
                     Utilidades del puesto seleccionado
                   </p>
                   <div className="flex flex-col gap-1">
@@ -346,7 +345,7 @@ const AddNewRecord: FC = () => {
                         <label
                           key={id}
                           htmlFor={checkboxId}
-                          className="flex cursor-pointer items-center gap-2.5 rounded-md px-2 py-1.5 text-sm transition hover:bg-slate-700/50"
+                          className="form-check-row flex cursor-pointer items-center gap-2.5 rounded-md px-2 py-1.5 text-sm transition"
                         >
                           <input
                             id={checkboxId}
@@ -367,7 +366,7 @@ const AddNewRecord: FC = () => {
               )}
 
               {profileSpecificUtilities.length === 0 && selectedJobPositionId && (
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-[var(--text-soft)]">
                   Este puesto no tiene utilidades específicas configuradas.
                 </p>
               )}

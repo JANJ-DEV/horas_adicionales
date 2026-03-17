@@ -10,7 +10,7 @@ type Props = Children & {
 const CardBody: FC<Props> = ({ children, className, style, variant = "default" }) => {
   const variantStyles = {
     default: "",
-    card: "space-y-4 text-slate-100",
+    card: "space-y-4 text-[var(--text)]",
   };
 
   return (
