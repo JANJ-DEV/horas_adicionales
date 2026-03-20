@@ -195,14 +195,16 @@ const Records = () => {
     <section className="flex min-w-0 flex-col gap-4 overflow-x-hidden">
       {hasCurrentUser && (
         <>
-          <RecordsFiltersBar
-            branches={branches}
-            jobProfiles={jobProfiles}
-            filters={filters}
-            onFilterChange={handleFilterChange}
-            onReset={handleResetFilters}
-          />
-          <RecordsPeriodSelector value={selectedPeriod} onChange={handlePeriodChange} />
+          <div className="flex flex-col gap-2">
+            <RecordsPeriodSelector value={selectedPeriod} onChange={handlePeriodChange} />
+            <RecordsFiltersBar
+              branches={branches}
+              jobProfiles={jobProfiles}
+              filters={filters}
+              onFilterChange={handleFilterChange}
+              onReset={handleResetFilters}
+            />
+          </div>
           <RecordsSummary
             period={selectedPeriod}
             recordsCount={recordsByPeriod.length}

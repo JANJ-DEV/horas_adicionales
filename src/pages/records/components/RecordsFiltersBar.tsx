@@ -37,8 +37,8 @@ const RecordsFiltersBar = ({
   const activeFiltersCount = Object.values(filters).filter((value) => value.trim() !== "").length;
 
   return (
-    <section className="app-surface flex flex-col gap-3 p-3">
-      <header className="flex flex-wrap items-center justify-between gap-2">
+    <div className="relative">
+      <div className="w-full flex justify-end">
         <button
           type="button"
           className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.12em] text-[var(--accent)] transition duration-200 hover:border-[var(--accent)]"
@@ -49,21 +49,27 @@ const RecordsFiltersBar = ({
           Filtros{activeFiltersCount > 0 ? ` (${activeFiltersCount})` : ""}
           <span className="text-[10px] text-[var(--text-soft)]">{isOpen ? "Ocultar" : "Mostrar"}</span>
         </button>
+      </div>
 
-        {isOpen && (
-          <button
-            type="button"
-            className="rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-1.5 text-xs font-semibold text-[var(--text)] transition duration-200 hover:border-[var(--accent)] hover:text-[var(--accent)]"
-            onClick={onReset}
-          >
-            Limpiar filtros
-          </button>
-        )}
-      </header>
-
-      {isOpen && (
-        <>
-          <div id="records-filters-panel" className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+      {/* Panel de filtros absoluto */}
+      <div
+        id="records-filters-panel"
+        className={`z-40 ${isOpen ? "fixed" : "hidden"} top-0 left-0 w-[100vw] h-[100vh] app-surface p-6 overflow-auto transition-all duration-200 rounded-none shadow-2xl
+        md:absolute md:top-auto md:left-auto md:right-0 md:mt-2 md:w-[380px] md:h-auto md:rounded-xl md:p-4 md:shadow-xl`}
+        style={{maxWidth: '100vw', maxHeight: '100vh'}}
+      >
+        <div className="flex justify-between items-center mb-4 md:hidden">
+          <span className="font-semibold text-lg">Filtros</span>
+          <button onClick={() => setIsOpen(false)} className="text-[var(--accent)] text-xl">✕</button>
+        </div>
+        <button
+          type="button"
+          className="rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-1.5 text-xs font-semibold text-[var(--text)] transition duration-200 hover:border-[var(--accent)] hover:text-[var(--accent)] mb-4 md:mb-0"
+          onClick={onReset}
+        >
+          Limpiar filtros
+        </button>
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
         <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-[var(--text-soft)]">
           Rama
           <select
@@ -184,14 +190,12 @@ const RecordsFiltersBar = ({
             className={inputCls}
           />
         </label>
-          </div>
-
-          <p className="text-xs text-[var(--text-soft)]">
-            Si defines rango de fechas, tiene prioridad sobre el selector rapido de periodo.
-          </p>
-        </>
-      )}
-    </section>
+        </div>
+        <p className="text-xs text-[var(--text-soft)] mt-4">
+          Si defines rango de fechas, tiene prioridad sobre el selector rápido de periodo.
+        </p>
+      </div>
+    </div>
   );
 };
 
