@@ -1,11 +1,7 @@
 import type { ActionFunctionArgs } from "react-router";
 import { authFirebase } from "@/apis/firebase";
 import { updateJobProfile } from "@/services/jobsProfile.service";
-import {
-  saveRecord,
-  updateRecord,
-  type RecordService,
-} from "@/services/records.service";
+import { saveRecord, updateRecord, type RecordService } from "@/services/records.service";
 import {
   getActiveUtilityIdsForProfile,
   getUtilitiesCatalogFromFirestore,
@@ -218,7 +214,7 @@ export async function update({ request, params }: ActionFunctionArgs) {
     jobProfileSyncFailed = true;
     console.error(
       "Error al sincronizar el perfil de puesto después de actualizar el registro",
-      error,
+      error
     );
   }
 

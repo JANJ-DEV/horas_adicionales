@@ -82,7 +82,10 @@ export const useEditRecord = () => {
 
       setRecord(fetchedRecord);
       setSelectedProfileId(fetchedRecord.jobProfileId ?? "");
-      setSelectedProfileContext(fetchedRecord.branchId ?? null, fetchedRecord.jobPositionId ?? null);
+      setSelectedProfileContext(
+        fetchedRecord.branchId ?? null,
+        fetchedRecord.jobPositionId ?? null
+      );
       setIsLoadingRecord(false);
     };
 

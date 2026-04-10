@@ -8,7 +8,7 @@ import RecordsPeriodSelector from "./components/RecordsPeriodSelector";
 import RecordsSummary from "./components/RecordsSummary";
 import RecordListItem from "./components/RecordListItem";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import RecordsFiltersBar, { type RecordsFiltersState } from "./components/RecordsFiltersBar";
 import {
   calculateRecordsSummary,
@@ -20,18 +20,6 @@ import {
 
 const PAGE_SIZE = 9;
 
-const DEFAULT_FILTERS: RecordsFiltersState = {
-  branchId: "",
-  jobPositionId: "",
-  jobProfileId: "",
-  dateFrom: "",
-  dateTo: "",
-  minHourlyRate: "",
-  maxHourlyRate: "",
-  minWorkedHours: "",
-  maxWorkedHours: "",
-};
-
 const parseOptionalNumber = (value: string) => {
   if (value.trim() === "") {
     return undefined;
@@ -42,7 +30,18 @@ const parseOptionalNumber = (value: string) => {
 };
 
 const Records = () => {
-  const [filters, setFilters] = useState<RecordsFiltersState>(DEFAULT_FILTERS);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const filters: RecordsFiltersState = {
+    branchId: searchParams.get("branchId") ?? "",
+    jobPositionId: searchParams.get("jobPositionId") ?? "",
+    jobProfileId: searchParams.get("jobProfileId") ?? "",
+    dateFrom: searchParams.get("dateFrom") ?? "",
+    dateTo: searchParams.get("dateTo") ?? "",
+    minHourlyRate: searchParams.get("minHourlyRate") ?? "",
+    maxHourlyRate: searchParams.get("maxHourlyRate") ?? "",
+    minWorkedHours: searchParams.get("minWorkedHours") ?? "",
+    maxWorkedHours: searchParams.get("maxWorkedHours") ?? "",
+  };
   const hasManualDateRange = Boolean(filters.dateFrom || filters.dateTo);
   const {
     records,
@@ -169,25 +168,26 @@ const Records = () => {
   };
 
   const handleFilterChange = (name: keyof RecordsFiltersState, value: string) => {
-    setFilters((current) => {
-      if (name === "branchId") {
-        return {
-          ...current,
-          branchId: value,
-          jobPositionId: "",
-        };
-      }
-
-      return {
-        ...current,
-        [name]: value,
-      };
-    });
+    setSearchParams(
+      (current) => {
+        const next = new URLSearchParams(current);
+        if (name === "branchId") {
+          next.delete("jobPositionId");
+        }
+        if (value) {
+          next.set(name, value);
+        } else {
+          next.delete(name);
+        }
+        return next;
+      },
+      { replace: true }
+    );
     setVisibleCount(PAGE_SIZE);
   };
 
   const handleResetFilters = () => {
-    setFilters(DEFAULT_FILTERS);
+    setSearchParams({}, { replace: true });
     setVisibleCount(PAGE_SIZE);
   };
 

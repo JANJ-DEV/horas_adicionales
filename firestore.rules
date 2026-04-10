@@ -2,9 +2,27 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Default deny-all. Tighten rules per collection before production deploy.
+    // Default deny-all
     match /{document=**} {
       allow read, write: if false;
+    }
+
+    // Branches catalog: public read, no client writes
+    match /branches/{branchId} {
+      allow read: if true;
+      match /jobsPositions/{jobPositionId} {
+        allow read: if true;
+      }
+    }
+
+    // Utilities catalog: public read, no client writes
+    match /utilities/{utilityId} {
+      allow read: if true;
+    }
+
+    // User-scoped data: only the authenticated owner
+    match /users/{userId}/{document=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
     }
   }
 }

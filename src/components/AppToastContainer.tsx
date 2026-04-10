@@ -13,7 +13,11 @@ type AppToastContainerProps = Omit<
   "theme" | "toastClassName" | "bodyClassName" | "progressClassName" | "transition"
 >;
 
-const AppToastContainer = ({ autoClose = 3200, hideProgressBar = false, ...props }: AppToastContainerProps) => {
+const AppToastContainer = ({
+  autoClose = 3200,
+  hideProgressBar = false,
+  ...props
+}: AppToastContainerProps) => {
   return (
     <ToastContainer
       {...props}
