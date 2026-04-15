@@ -161,6 +161,7 @@ const Records = () => {
   const visibleRecords = recordsByPeriod.slice(0, visibleCount);
 
   const summary = calculateRecordsSummary(recordsByPeriod);
+  const effectiveSummaryPeriod: RecordsPeriod | null = hasManualDateRange ? null : selectedPeriod;
 
   const handlePeriodChange = (nextPeriod: RecordsPeriod) => {
     setSelectedPeriod(nextPeriod);
@@ -186,27 +187,25 @@ const Records = () => {
     setVisibleCount(PAGE_SIZE);
   };
 
-  const handleResetFilters = () => {
-    setSearchParams({}, { replace: true });
-    setVisibleCount(PAGE_SIZE);
-  };
-
   return (
     <section className="flex min-w-0 flex-col gap-4 overflow-x-hidden">
       {hasCurrentUser && (
         <>
           <div className="flex flex-col gap-2">
-            <RecordsPeriodSelector value={selectedPeriod} onChange={handlePeriodChange} />
+            <RecordsPeriodSelector
+              value={selectedPeriod}
+              onChange={handlePeriodChange}
+              disabled={hasManualDateRange}
+            />
             <RecordsFiltersBar
               branches={branches}
               jobProfiles={jobProfiles}
               filters={filters}
               onFilterChange={handleFilterChange}
-              onReset={handleResetFilters}
             />
           </div>
           <RecordsSummary
-            period={selectedPeriod}
+            period={effectiveSummaryPeriod}
             recordsCount={recordsByPeriod.length}
             totalHoursDecimal={summary.totalHoursDecimal}
             totalSalary={summary.totalSalary}

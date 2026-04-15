@@ -1,16 +1,17 @@
 import type { RecordsPeriod } from "@/utils";
 
 type RecordsSummaryProps = {
-  period: RecordsPeriod;
+  period: RecordsPeriod | null;
   recordsCount: number;
   totalHoursDecimal: number;
   totalSalary: number;
 };
 
-const periodLabel: Record<RecordsPeriod, string> = {
+const periodLabel: Record<RecordsPeriod | "range", string> = {
   day: "hoy",
   week: "esta semana",
   month: "este mes",
+  range: "periodo seleccionado",
 };
 
 const formatCurrency = (value: number) =>
@@ -31,7 +32,7 @@ const RecordsSummary = ({
     <section className="app-surface grid gap-3 p-4 sm:grid-cols-3">
       <article className="app-card p-4">
         <p className="text-xs uppercase tracking-[0.18em] text-[var(--text-soft)]">
-          Registros ({periodLabel[period]})
+          Registros ({periodLabel[period ?? "range"]})
         </p>
         <strong className="mt-2 block text-2xl text-[var(--text)]">{recordsCount}</strong>
       </article>
