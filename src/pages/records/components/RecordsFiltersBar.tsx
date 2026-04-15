@@ -1,5 +1,5 @@
 import type { Branch, JobProfile, JobPosition } from "@/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export type RecordsFiltersState = {
   branchId: string;
@@ -18,7 +18,18 @@ type RecordsFiltersBarProps = {
   jobProfiles: JobProfile[];
   filters: RecordsFiltersState;
   onFilterChange: (name: keyof RecordsFiltersState, value: string) => void;
-  onReset: () => void;
+};
+
+const EMPTY_FILTERS: RecordsFiltersState = {
+  branchId: "",
+  jobPositionId: "",
+  jobProfileId: "",
+  dateFrom: "",
+  dateTo: "",
+  minHourlyRate: "",
+  maxHourlyRate: "",
+  minWorkedHours: "",
+  maxWorkedHours: "",
 };
 
 const inputCls =
@@ -29,10 +40,55 @@ const RecordsFiltersBar = ({
   jobProfiles,
   filters,
   onFilterChange,
-  onReset,
 }: RecordsFiltersBarProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const selectedBranch = branches.find((branch) => branch.id === filters.branchId) ?? null;
+  const [draftFilters, setDraftFilters] = useState<RecordsFiltersState>(filters);
+
+  useEffect(() => {
+    setDraftFilters(filters);
+  }, [filters]);
+
+  const isMobileViewport = () => {
+    if (typeof window === "undefined") return false;
+    return window.matchMedia("(max-width: 767px)").matches;
+  };
+
+  const handleDraftChange = (name: keyof RecordsFiltersState, value: string) => {
+    setDraftFilters((current) => {
+      const next = { ...current, [name]: value };
+
+      if (name === "branchId") {
+        next.jobPositionId = "";
+      }
+
+      return next;
+    });
+  };
+
+  const handleApply = () => {
+    const keys = Object.keys(draftFilters) as Array<keyof RecordsFiltersState>;
+
+    keys.forEach((key) => {
+      if (draftFilters[key] !== filters[key]) {
+        onFilterChange(key, draftFilters[key]);
+      }
+    });
+
+    if (isMobileViewport()) {
+      setIsOpen(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setDraftFilters(filters);
+    setIsOpen(false);
+  };
+
+  const handleResetDraft = () => {
+    setDraftFilters(EMPTY_FILTERS);
+  };
+
+  const selectedBranch = branches.find((branch) => branch.id === draftFilters.branchId) ?? null;
   const jobPositions: JobPosition[] = selectedBranch?.jobsPositions ?? [];
   const activeFiltersCount = Object.values(filters).filter((value) => value.trim() !== "").length;
 
@@ -56,7 +112,7 @@ const RecordsFiltersBar = ({
       {/* Panel de filtros absoluto */}
       <div
         id="records-filters-panel"
-        className={`z-40 ${isOpen ? "fixed" : "hidden"} top-0 left-0 w-[100vw] h-[100vh] app-surface p-6 overflow-auto transition-all duration-200 rounded-none shadow-2xl
+        className={`z-40 ${isOpen ? "fixed" : "hidden"} top-0 left-0 w-[100vw] h-[100vh] app-surface p-6 pb-24 overflow-auto transition-all duration-200 rounded-none shadow-2xl
         md:absolute md:top-auto md:left-auto md:right-0 md:mt-2 md:w-[380px] md:h-auto md:rounded-xl md:p-4 md:shadow-xl`}
         style={{ maxWidth: "100vw", maxHeight: "100vh" }}
       >
@@ -69,7 +125,7 @@ const RecordsFiltersBar = ({
         <button
           type="button"
           className="rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-1.5 text-xs font-semibold text-[var(--text)] transition duration-200 hover:border-[var(--accent)] hover:text-[var(--accent)] mb-4 md:mb-0"
-          onClick={onReset}
+          onClick={handleResetDraft}
         >
           Limpiar filtros
         </button>
@@ -77,8 +133,8 @@ const RecordsFiltersBar = ({
           <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-[var(--text-soft)]">
             Rama
             <select
-              value={filters.branchId}
-              onChange={(event) => onFilterChange("branchId", event.target.value)}
+              value={draftFilters.branchId}
+              onChange={(event) => handleDraftChange("branchId", event.target.value)}
               className={inputCls}
             >
               <option value="">Todas</option>
@@ -93,10 +149,10 @@ const RecordsFiltersBar = ({
           <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-[var(--text-soft)]">
             Puesto de trabajo
             <select
-              value={filters.jobPositionId}
-              onChange={(event) => onFilterChange("jobPositionId", event.target.value)}
+              value={draftFilters.jobPositionId}
+              onChange={(event) => handleDraftChange("jobPositionId", event.target.value)}
               className={inputCls}
-              disabled={!filters.branchId}
+              disabled={!draftFilters.branchId}
             >
               <option value="">Todos</option>
               {jobPositions.map((jobPosition) => (
@@ -110,8 +166,8 @@ const RecordsFiltersBar = ({
           <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-[var(--text-soft)]">
             Perfil
             <select
-              value={filters.jobProfileId}
-              onChange={(event) => onFilterChange("jobProfileId", event.target.value)}
+              value={draftFilters.jobProfileId}
+              onChange={(event) => handleDraftChange("jobProfileId", event.target.value)}
               className={inputCls}
             >
               <option value="">Todos</option>
@@ -127,8 +183,8 @@ const RecordsFiltersBar = ({
             Fecha desde
             <input
               type="date"
-              value={filters.dateFrom}
-              onChange={(event) => onFilterChange("dateFrom", event.target.value)}
+              value={draftFilters.dateFrom}
+              onChange={(event) => handleDraftChange("dateFrom", event.target.value)}
               className={inputCls}
             />
           </label>
@@ -137,8 +193,8 @@ const RecordsFiltersBar = ({
             Fecha hasta
             <input
               type="date"
-              value={filters.dateTo}
-              onChange={(event) => onFilterChange("dateTo", event.target.value)}
+              value={draftFilters.dateTo}
+              onChange={(event) => handleDraftChange("dateTo", event.target.value)}
               className={inputCls}
             />
           </label>
@@ -150,8 +206,8 @@ const RecordsFiltersBar = ({
               min="0"
               step="0.01"
               placeholder="0"
-              value={filters.minHourlyRate}
-              onChange={(event) => onFilterChange("minHourlyRate", event.target.value)}
+              value={draftFilters.minHourlyRate}
+              onChange={(event) => handleDraftChange("minHourlyRate", event.target.value)}
               className={inputCls}
             />
           </label>
@@ -163,8 +219,8 @@ const RecordsFiltersBar = ({
               min="0"
               step="0.01"
               placeholder="0"
-              value={filters.maxHourlyRate}
-              onChange={(event) => onFilterChange("maxHourlyRate", event.target.value)}
+              value={draftFilters.maxHourlyRate}
+              onChange={(event) => handleDraftChange("maxHourlyRate", event.target.value)}
               className={inputCls}
             />
           </label>
@@ -176,8 +232,8 @@ const RecordsFiltersBar = ({
               min="0"
               step="0.25"
               placeholder="0"
-              value={filters.minWorkedHours}
-              onChange={(event) => onFilterChange("minWorkedHours", event.target.value)}
+              value={draftFilters.minWorkedHours}
+              onChange={(event) => handleDraftChange("minWorkedHours", event.target.value)}
               className={inputCls}
             />
           </label>
@@ -189,15 +245,31 @@ const RecordsFiltersBar = ({
               min="0"
               step="0.25"
               placeholder="0"
-              value={filters.maxWorkedHours}
-              onChange={(event) => onFilterChange("maxWorkedHours", event.target.value)}
+              value={draftFilters.maxWorkedHours}
+              onChange={(event) => handleDraftChange("maxWorkedHours", event.target.value)}
               className={inputCls}
             />
           </label>
         </div>
-        <p className="text-xs text-[var(--text-soft)] mt-4">
-          Si defines rango de fechas, tiene prioridad sobre el selector rápido de periodo.
+        <p className="mt-4 text-xs text-[var(--text-soft)]">
+          Si defines rango de fechas, tiene prioridad sobre el selector rapido de periodo.
         </p>
+        <div className="fixed bottom-0 left-0 right-0 z-50 mt-4 flex items-center justify-center gap-2 border-t border-[var(--border)] bg-[var(--bg)] px-6 py-3 md:static md:z-auto md:mx-0 md:mt-4 md:justify-center md:border-t-0 md:bg-transparent md:p-0">
+          <button
+            type="button"
+            className="rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-2 text-[11px] font-semibold tracking-[0.02em] text-[var(--text)] transition duration-200 hover:border-[var(--border-strong)]"
+            onClick={handleCancel}
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            className="rounded-full border border-[var(--accent)] bg-[var(--accent)] px-4 py-2 text-[11px] font-semibold tracking-[0.02em] text-slate-950 transition duration-200 hover:bg-[var(--accent-strong)] hover:text-white"
+            onClick={handleApply}
+          >
+            Aplicar
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import type { RecordsPeriod } from "@/utils";
 type RecordsPeriodSelectorProps = {
   value: RecordsPeriod;
   onChange: (nextValue: RecordsPeriod) => void;
+  disabled?: boolean;
 };
 
 const PERIOD_OPTIONS: Array<{ value: RecordsPeriod; label: string }> = [
@@ -11,7 +12,7 @@ const PERIOD_OPTIONS: Array<{ value: RecordsPeriod; label: string }> = [
   { value: "month", label: "Mes" },
 ];
 
-const RecordsPeriodSelector = ({ value, onChange }: RecordsPeriodSelectorProps) => {
+const RecordsPeriodSelector = ({ value, onChange, disabled = false }: RecordsPeriodSelectorProps) => {
   return (
     <section className="app-surface flex flex-wrap items-center gap-2 p-2.5">
       <strong className="px-2 text-xs uppercase tracking-[0.18em] text-[var(--accent)]">
@@ -29,8 +30,13 @@ const RecordsPeriodSelector = ({ value, onChange }: RecordsPeriodSelectorProps) 
               isActive
                 ? "bg-[var(--accent)] text-slate-950 shadow-[0_2px_6px_rgba(105,211,192,0.15)]"
                 : "bg-[var(--bg-soft)] text-[var(--text)] hover:text-[var(--accent)]"
+            } ${
+              disabled
+                ? "cursor-not-allowed opacity-60 hover:text-[var(--text)]"
+                : "cursor-pointer"
             }`}
             aria-pressed={isActive}
+            disabled={disabled}
           >
             {option.label}
           </button>
