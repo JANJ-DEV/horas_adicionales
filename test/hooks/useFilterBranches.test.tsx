@@ -45,9 +45,12 @@ describe("useFilterBranches", () => {
     expect(result.current.selectedBranch).toBe("branch-1");
     expect(mocks.toastInfo).toHaveBeenCalledWith("Rama seleccionada: branch-1", {
       containerId: "profile",
-      autoClose: 2000,
+      autoClose: 3000,
       closeButton: false,
       closeOnClick: true,
+      pauseOnHover: false,
+      pauseOnFocusLoss: false,
+      draggable: false,
     });
 
     act(() => {
@@ -59,9 +62,12 @@ describe("useFilterBranches", () => {
     expect(result.current.selectedJobPosition).toBe("job-2");
     expect(mocks.toastInfo).toHaveBeenCalledWith("Puesto de trabajo seleccionado: job-2", {
       containerId: "profile",
-      autoClose: 2000,
+      autoClose: 3000,
       closeButton: false,
       closeOnClick: true,
+      pauseOnHover: false,
+      pauseOnFocusLoss: false,
+      draggable: false,
     });
   });
 

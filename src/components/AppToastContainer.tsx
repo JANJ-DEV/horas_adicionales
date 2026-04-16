@@ -1,4 +1,6 @@
 import { ToastContainer, cssTransition, type ToastContainerProps } from "react-toastify";
+import { DEFAULT_TOAST_AUTO_CLOSE } from "@/constants/toast";
+import "@/assets/css/toast-transition.css";
 
 const bubbleTransition = cssTransition({
   enter: "app-toast-bubble-enter",
@@ -14,7 +16,7 @@ type AppToastContainerProps = Omit<
 >;
 
 const AppToastContainer = ({
-  autoClose = 3200,
+  autoClose = DEFAULT_TOAST_AUTO_CLOSE,
   hideProgressBar = false,
   ...props
 }: AppToastContainerProps) => {
@@ -26,7 +28,7 @@ const AppToastContainer = ({
       closeOnClick
       pauseOnHover={false}
       pauseOnFocusLoss={false}
-      draggable
+      draggable={false}
       newestOnTop
       theme="light"
       transition={bubbleTransition}

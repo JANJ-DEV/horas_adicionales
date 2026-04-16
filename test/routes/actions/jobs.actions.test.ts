@@ -117,9 +117,12 @@ describe("jobs.actions", () => {
     expect(result).toBeUndefined();
     expect(mocks.toastError).toHaveBeenCalledWith("Todos los campos son requeridos", {
       containerId: "jobs-profiles",
-      autoClose: 2000,
+      autoClose: 3000,
       closeButton: false,
       closeOnClick: true,
+      pauseOnHover: false,
+      pauseOnFocusLoss: false,
+      draggable: false,
     });
     expect(mocks.getBranchById).not.toHaveBeenCalled();
     expect(mocks.saveJobProfile).not.toHaveBeenCalled();
@@ -156,9 +159,12 @@ describe("jobs.actions", () => {
     });
     expect(mocks.toastSuccess).toHaveBeenCalledWith("Perfil de trabajo guardado correctamente ", {
       containerId: "jobs-profiles",
-      autoClose: 2000,
+      autoClose: 3000,
       closeButton: false,
       closeOnClick: true,
+      pauseOnHover: false,
+      pauseOnFocusLoss: false,
+      draggable: false,
     });
     expect(result).toEqual({
       success: true,
@@ -190,9 +196,12 @@ describe("jobs.actions", () => {
     });
     expect(mocks.toastError).toHaveBeenCalledWith("El nombre de usuario es requerido", {
       containerId: "global",
-      autoClose: 2000,
+      autoClose: 3000,
       closeButton: false,
       closeOnClick: true,
+      pauseOnHover: false,
+      pauseOnFocusLoss: false,
+      draggable: false,
     });
     expect(mocks.updateAccount).not.toHaveBeenCalled();
   });
@@ -214,9 +223,12 @@ describe("jobs.actions", () => {
     expect(mocks.uploadFile).not.toHaveBeenCalled();
     expect(mocks.toastSuccess).toHaveBeenCalledWith("Cuenta actualizada correctamente", {
       containerId: "global",
-      autoClose: 2000,
+      autoClose: 3000,
       closeButton: false,
       closeOnClick: true,
+      pauseOnHover: false,
+      pauseOnFocusLoss: false,
+      draggable: false,
     });
     expect(result).toEqual({
       success: true,
@@ -273,9 +285,12 @@ describe("jobs.actions", () => {
     });
     expect(mocks.toastError).toHaveBeenCalledWith("Error al actualizar la cuenta", {
       containerId: "global",
-      autoClose: 2000,
+      autoClose: 3000,
       closeButton: false,
       closeOnClick: true,
+      pauseOnHover: false,
+      pauseOnFocusLoss: false,
+      draggable: false,
     });
     expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
   });

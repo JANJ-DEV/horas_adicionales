@@ -86,6 +86,9 @@ describe("AuthProvider", () => {
       autoClose: 3000,
       closeButton: false,
       closeOnClick: true,
+      pauseOnHover: false,
+      pauseOnFocusLoss: false,
+      draggable: false,
     });
     expect(result.current.isLoading).toBe(false);
     consoleErrorSpy.mockRestore();
@@ -115,7 +118,15 @@ describe("AuthProvider", () => {
     expect(result.current.isError).toBe(true);
     expect(mocks.toastError).toHaveBeenCalledWith(
       "No se pudo iniciar sesión con Google. Inténtalo de nuevo.",
-      { containerId: "global", autoClose: 2000, closeButton: false, closeOnClick: true }
+      {
+        containerId: "global",
+        autoClose: 3000,
+        closeButton: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        pauseOnFocusLoss: false,
+        draggable: false,
+      }
     );
 
     await act(async () => {
@@ -126,9 +137,12 @@ describe("AuthProvider", () => {
     expect(mocks.signOut).toHaveBeenCalled();
     expect(mocks.toastInfo).toHaveBeenCalledWith("Sesión cerrada, te esperamos pronto 😘😘", {
       containerId: "global",
-      autoClose: 2000,
+      autoClose: 3000,
       closeButton: false,
       closeOnClick: true,
+      pauseOnHover: false,
+      pauseOnFocusLoss: false,
+      draggable: false,
     });
     consoleErrorSpy.mockRestore();
   });

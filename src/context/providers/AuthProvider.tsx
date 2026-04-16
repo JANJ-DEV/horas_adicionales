@@ -44,7 +44,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (user)
         notify.info("Bienvenido " + user.user.displayName, {
           scope: TOAST_SCOPE.GLOBAL,
-          autoClose: 3000,
         });
     } catch (error) {
       handleAppError(error, "AuthProvider.signInWithGoogle");
@@ -73,7 +72,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       .then(() => {
         notify.info("Sesión cerrada, te esperamos pronto 😘😘", {
           scope: TOAST_SCOPE.GLOBAL,
-          autoClose: 2000,
         });
       })
       .catch((error) => {

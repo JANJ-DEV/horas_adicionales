@@ -1,0 +1,1 @@
+export const DEFAULT_TOAST_AUTO_CLOSE = 3000;

@@ -1,4 +1,5 @@
 import { toast, type ToastOptions } from "react-toastify";
+import { DEFAULT_TOAST_AUTO_CLOSE } from "@/constants/toast";
 
 export const TOAST_SCOPE = {
   GLOBAL: "global",
@@ -18,9 +19,12 @@ const buildOptions = ({
   ...options
 }: NotifyOptions = {}): ToastOptions => ({
   containerId: scope,
-  autoClose: 2000,
+  autoClose: DEFAULT_TOAST_AUTO_CLOSE,
   closeOnClick: true,
   closeButton: false,
+  pauseOnHover: false,
+  pauseOnFocusLoss: false,
+  draggable: false,
   ...options,
 });
 

@@ -149,9 +149,12 @@ describe("UtilitiesProvider", () => {
     expect(result.current.isErrorUtilities).toBe(true);
     expect(mocks.toastError).toHaveBeenCalledWith("Error al cargar utilidades", {
       containerId: "global",
-      autoClose: 2000,
+      autoClose: 3000,
       closeButton: false,
       closeOnClick: true,
+      pauseOnHover: false,
+      pauseOnFocusLoss: false,
+      draggable: false,
     });
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       "Error general en UtilitiesProvider.subscribeToUtilities: boom"
