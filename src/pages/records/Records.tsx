@@ -17,8 +17,10 @@ import {
   getRecordReferenceDate,
   type RecordsPeriod,
 } from "@/utils";
+import { clearPendingSelectedRecordId, getPendingSelectedRecordId } from "./recordNavigation";
 
 const PAGE_SIZE = 9;
+const DESKTOP_MEDIA_QUERY = "(min-width: 1024px)";
 
 const parseOptionalNumber = (value: string) => {
   if (value.trim() === "") {
@@ -64,6 +66,9 @@ const Records = () => {
   const [isLoadingProfiles, setIsLoadingProfiles] = useState(true);
   const [selectedPeriod, setSelectedPeriod] = useState<RecordsPeriod>("week");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [pendingSelectedRecordId, setPendingSelectedRecordId] = useState<string | null>(() =>
+    getPendingSelectedRecordId()
+  );
 
   useEffect(() => {
     if (!hasCurrentUser) {
@@ -142,8 +147,13 @@ const Records = () => {
   const recordsByPeriod = hasManualDateRange
     ? recordsByFilters
     : filterRecordsByPeriod(recordsByFilters, selectedPeriod);
+  const pendingSelectedRecordIndex = pendingSelectedRecordId
+    ? recordsByPeriod.findIndex((record) => record.id === pendingSelectedRecordId)
+    : -1;
+  const effectiveVisibleCount =
+    pendingSelectedRecordIndex >= 0 ? Math.max(visibleCount, pendingSelectedRecordIndex + 1) : visibleCount;
 
-  const hasMore = visibleCount < recordsByPeriod.length;
+  const hasMore = effectiveVisibleCount < recordsByPeriod.length;
 
   const loadMoreRecords = () => {
     setVisibleCount((current) => {
@@ -158,7 +168,7 @@ const Records = () => {
     disabled: !hasCurrentUser || isLoading || isError,
   });
 
-  const visibleRecords = recordsByPeriod.slice(0, visibleCount);
+  const visibleRecords = recordsByPeriod.slice(0, effectiveVisibleCount);
 
   const summary = calculateRecordsSummary(recordsByPeriod);
   const effectiveSummaryPeriod: RecordsPeriod | null = hasManualDateRange ? null : selectedPeriod;
@@ -187,11 +197,55 @@ const Records = () => {
     setVisibleCount(PAGE_SIZE);
   };
 
+  useEffect(() => {
+    if (!pendingSelectedRecordId || !hasCurrentUser || isLoading || isError) {
+      return;
+    }
+
+    if (pendingSelectedRecordIndex === -1) {
+      clearPendingSelectedRecordId();
+      window.setTimeout(() => {
+        setPendingSelectedRecordId(null);
+      }, 0);
+      return;
+    }
+
+    const isDesktopViewport = window.matchMedia(DESKTOP_MEDIA_QUERY).matches;
+    const variant = isDesktopViewport ? "desktop" : "mobile";
+    const targetElement = document.querySelector<HTMLElement>(
+      `[data-record-anchor="${pendingSelectedRecordId}"][data-record-variant="${variant}"]`
+    );
+
+    if (!targetElement) {
+      return;
+    }
+
+    if (effectiveVisibleCount > visibleCount) {
+      window.setTimeout(() => {
+        setVisibleCount((current) => Math.max(current, effectiveVisibleCount));
+      }, 0);
+    }
+
+    targetElement.scrollIntoView({ behavior: "auto", block: "center" });
+    clearPendingSelectedRecordId();
+    window.setTimeout(() => {
+      setPendingSelectedRecordId(null);
+    }, 0);
+  }, [
+    pendingSelectedRecordId,
+    pendingSelectedRecordIndex,
+    hasCurrentUser,
+    isLoading,
+    isError,
+    effectiveVisibleCount,
+    visibleCount,
+  ]);
+
   return (
     <section className="flex min-w-0 flex-col gap-4 overflow-x-hidden">
       {hasCurrentUser && (
         <>
-          <div className="flex flex-col gap-2">
+          <div className="app-surface flex items-center justify-between gap-2 p-4">
             <RecordsPeriodSelector
               value={selectedPeriod}
               onChange={handlePeriodChange}
@@ -267,37 +321,39 @@ const Records = () => {
 
       <section className="flex min-w-0 flex-col gap-4">
         {visibleRecords.map((record) => (
-          <RecordListItem
-            key={`mobile-${record.id}`}
-            record={record}
-            branchName={record.branchId ? (branchNameById[record.branchId] ?? "") : ""}
-            jobPositionName={
-              record.branchId && record.jobPositionId
-                ? (jobPositionNameByCompositeKey[`${record.branchId}:${record.jobPositionId}`] ??
-                  "")
-                : ""
-            }
-            onViewDetails={handlerViewDetails}
-            onDeleteRecord={handleDeleteRecord}
-          />
+          <div key={`mobile-${record.id}`} data-record-anchor={record.id} data-record-variant="mobile">
+            <RecordListItem
+              record={record}
+              branchName={record.branchId ? (branchNameById[record.branchId] ?? "") : ""}
+              jobPositionName={
+                record.branchId && record.jobPositionId
+                  ? (jobPositionNameByCompositeKey[`${record.branchId}:${record.jobPositionId}`] ??
+                    "")
+                  : ""
+              }
+              onViewDetails={handlerViewDetails}
+              onDeleteRecord={handleDeleteRecord}
+            />
+          </div>
         ))}
       </section>
 
       <section className="hidden min-w-0 gap-4 lg:grid lg:grid-cols-2 xl:grid-cols-3">
         {visibleRecords.map((record) => (
-          <RecordCard
-            key={record.id}
-            record={record}
-            branchName={record.branchId ? (branchNameById[record.branchId] ?? "") : ""}
-            jobPositionName={
-              record.branchId && record.jobPositionId
-                ? (jobPositionNameByCompositeKey[`${record.branchId}:${record.jobPositionId}`] ??
-                  "")
-                : ""
-            }
-            handlerViewDetails={handlerViewDetails}
-            handleDeleteRecord={handleDeleteRecord}
-          />
+          <div key={record.id} data-record-anchor={record.id} data-record-variant="desktop">
+            <RecordCard
+              record={record}
+              branchName={record.branchId ? (branchNameById[record.branchId] ?? "") : ""}
+              jobPositionName={
+                record.branchId && record.jobPositionId
+                  ? (jobPositionNameByCompositeKey[`${record.branchId}:${record.jobPositionId}`] ??
+                    "")
+                  : ""
+              }
+              handlerViewDetails={handlerViewDetails}
+              handleDeleteRecord={handleDeleteRecord}
+            />
+          </div>
         ))}
       </section>
 

@@ -1,5 +1,8 @@
 import type { Branch, JobProfile, JobPosition } from "@/types";
 import { useEffect, useState } from "react";
+import { MdFilterList } from "react-icons/md";
+import { MdFilterListOff } from "react-icons/md";
+
 
 export type RecordsFiltersState = {
   branchId: string;
@@ -97,14 +100,15 @@ const RecordsFiltersBar = ({
       <div className="w-full flex justify-end">
         <button
           type="button"
-          className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.12em] text-[var(--accent)] transition duration-200 hover:border-[var(--accent)]"
+          className="inline-flex items-center gap-2 rounded-full  px-3 py-1.5 text-[var(--accent)] transition duration-200 hover:border-[var(--accent)]"
           onClick={() => setIsOpen((current) => !current)}
           aria-expanded={isOpen}
           aria-controls="records-filters-panel"
         >
           Filtros{activeFiltersCount > 0 ? ` (${activeFiltersCount})` : ""}
+        
           <span className="text-[10px] text-[var(--text-soft)]">
-            {isOpen ? "Ocultar" : "Mostrar"}
+            {isOpen ? <MdFilterListOff size={32} className="text-red-300" /> : <MdFilterList size={32} />}
           </span>
         </button>
       </div>
@@ -113,7 +117,7 @@ const RecordsFiltersBar = ({
       <div
         id="records-filters-panel"
         className={`z-40 ${isOpen ? "fixed" : "hidden"} top-0 left-0 w-[100vw] h-[100vh] app-surface p-6 pb-24 overflow-auto transition-all duration-200 rounded-none shadow-2xl
-        md:absolute md:top-auto md:left-auto md:right-0 md:mt-2 md:w-[380px] md:h-auto md:rounded-xl md:p-4 md:shadow-xl`}
+        md:absolute md:top-15 md:left-auto md:right-0 md:mt-2 md:w-[380px] md:h-auto md:rounded-xl md:p-4 md:shadow-xl`}
         style={{ maxWidth: "100vw", maxHeight: "100vh" }}
       >
         <div className="flex justify-between items-center mb-4 md:hidden">

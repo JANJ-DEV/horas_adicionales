@@ -17,6 +17,10 @@ const DetailsRecord = () => {
   const [branchName, setBranchName] = useState<string>("");
   const [jobPositionName, setJobPositionName] = useState<string>("");
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, []);
+
   const utilityLabelsByStorageKey = Object.entries(catalog.utility_definitions).reduce<
     Record<string, string>
   >((acc, [utilityId, definition]) => {
@@ -85,13 +89,12 @@ const DetailsRecord = () => {
   }
 
   return (
-    <section className="app-surface mt-8 flex flex-col gap-6 rounded-[1.5rem] p-6">
+    <section id={record.id} className="app-surface mt-8 flex flex-col gap-6 rounded-[1.5rem] p-6">
       <header className="flex items-center justify-between border-b border-[var(--border)] pb-4">
         <section>
           <h2 className="font-[var(--font-display)] text-3xl font-bold text-[var(--text)]">
             {record.titleJobProfile}
           </h2>
-          <p className="text-[var(--text-muted)]">ID del registro: {record.id}</p>
         </section>
         <aside>
           <Btn

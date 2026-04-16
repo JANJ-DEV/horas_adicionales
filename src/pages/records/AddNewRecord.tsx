@@ -5,6 +5,7 @@ import useUtilities from "@/context/hooks/useUtilities.hook";
 import { useAddRecord } from "./hooks/useAddRecord";
 import { useState, type FC } from "react";
 import { Link } from "react-router";
+import type { AddRecordActionResponse } from "@/routes/actions/records.actions";
 
 const UTILITY_FIELD_PREFIX = "utility__";
 
@@ -20,6 +21,18 @@ const fieldCls = "flex flex-col gap-1.5";
 const labelCls = "form-label text-sm font-semibold";
 const inputCls =
   "form-input rounded-xl p-3 transition focus:outline-none disabled:cursor-not-allowed disabled:opacity-50";
+
+const isAddRecordError = (
+  data: AddRecordActionResponse | null | undefined
+): data is Extract<AddRecordActionResponse, { error: string }> => {
+  return Boolean(data && "error" in data);
+};
+
+const isAddRecordSuccess = (
+  data: AddRecordActionResponse | null | undefined
+): data is Extract<AddRecordActionResponse, { success: true }> => {
+  return Boolean(data && "success" in data && data.success);
+};
 
 const AddNewRecord: FC = () => {
   const {
@@ -70,6 +83,9 @@ const AddNewRecord: FC = () => {
 
   const showLivePreview =
     Boolean(estimatedHourlyRate) && startTime.length > 0 && endTime.length > 0;
+  const submitErrorData = isAddRecordError(formAction.data) ? formAction.data : null;
+  const submitSuccessData =
+    formAction.state === "idle" && isAddRecordSuccess(formAction.data) ? formAction.data : null;
 
   if (hasCurrentUser && !loading && !hasJobProfiles) {
     return (
@@ -451,20 +467,20 @@ const AddNewRecord: FC = () => {
       </formAction.Form>
 
       {/* Mensajes de estado */}
-      {formAction.data?.error && (
+      {submitErrorData && (
         <p
           role="alert"
           className="mt-3 rounded-xl border border-red-700 bg-red-900/30 p-3 text-sm text-red-400"
         >
-          {formAction.data.error}
+          {submitErrorData.error}
         </p>
       )}
-      {formAction.data && formAction.state === "idle" && !formAction.data?.error && (
+      {submitSuccessData && (
         <p
           role="status"
           className="mt-3 rounded-xl border border-green-700 bg-green-900/30 p-3 text-sm text-green-400"
         >
-          Registro para <strong>{formAction.data.titleJobProfile}</strong> guardado con éxito.
+          Registro para <strong>{submitSuccessData.titleJobProfile}</strong> guardado con éxito.
         </p>
       )}
     </section>

@@ -4,12 +4,21 @@ import { handleAppError } from "@/services/error.service";
 import { subscribeToJobProfiles } from "@/services/jobsProfile.service";
 import type { JobProfile } from "@/types";
 import { useEffect, useState } from "react";
-import { useFetcher } from "react-router";
+import { useFetcher, useNavigate } from "react-router";
+import type { AddRecordActionResponse } from "@/routes/actions/records.actions";
+import { rememberSelectedRecordId } from "../recordNavigation";
+
+const isAddRecordSuccess = (
+  data: AddRecordActionResponse | null | undefined
+): data is Extract<AddRecordActionResponse, { success: true }> => {
+  return Boolean(data && "success" in data && data.success);
+};
 
 export const useAddRecord = () => {
   const { currentUser } = useAuth();
   const { setSelectedProfileContext } = useUtilities();
-  const formAction = useFetcher();
+  const navigate = useNavigate();
+  const formAction = useFetcher<AddRecordActionResponse>();
   const hasCurrentUser = Boolean(currentUser?.uid);
 
   const [jobProfiles, setJobProfiles] = useState<JobProfile[]>([]);
@@ -58,6 +67,20 @@ export const useAddRecord = () => {
       }
     };
   }, [currentUser?.uid, setSelectedProfileContext]);
+
+  useEffect(() => {
+    if (formAction.state !== "idle") {
+      return;
+    }
+
+    const recordId = isAddRecordSuccess(formAction.data) ? formAction.data.record.id : undefined;
+    if (!recordId) {
+      return;
+    }
+
+    rememberSelectedRecordId(recordId);
+    navigate(`/records/details/${recordId}`);
+  }, [formAction.data, formAction.state, navigate]);
 
   return {
     jobProfiles,

@@ -53,7 +53,6 @@ const JobProfilesLayout = () => {
       <AppToastContainer
         containerId="jobs-profiles"
         position="top-center"
-        autoClose={3000}
         hideProgressBar={false}
       />
     </BranchesProvider>

@@ -63,7 +63,7 @@ const CurrentUser: FC = () => {
             <img
               src={currentUser.photoURL}
               alt="Foto de perfil"
-              className={`h-8 w-8 rounded-full border-2 ${currentUser.emailVerified ? "border-[var(--accent)]" : "border-[var(--danger)]"}`}
+              className={`h-10 w-10 rounded-full border-2 ${currentUser.emailVerified ? "border-[var(--accent)]" : "border-[var(--danger)]"}`}
             />
           ) : (
             <FaRegUserCircle size={28} className="text-[var(--text-muted)]" />
@@ -135,7 +135,7 @@ const CurrentUser: FC = () => {
       }}
       className="flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-2 text-[var(--text)] transition duration-300 hover:border-[var(--border-strong)] hover:bg-[var(--surface)] hover:text-[var(--accent)]"
     >
-      <FaRegUserCircle size={18} />
+      <FaRegUserCircle size={32} />
       <span className="hidden text-xs font-semibold sm:inline">Iniciar sesión</span>
     </button>
   );

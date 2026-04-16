@@ -23,7 +23,7 @@ const RecordsLayout = () => {
       <section className="flex min-h-[100dvh] flex-col pb-6">
         <MainHeader />
         <MainContent>
-          <nav className="app-surface flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+          <nav className="app-surface flex gap-3 p-4 sm:flex-row sm:items-center justify-between">
             <GoBack />
             <NavLink
               to="/records/add"
@@ -44,7 +44,6 @@ const RecordsLayout = () => {
           <AppToastContainer
             containerId="records"
             position="top-center"
-            autoClose={3000}
             hideProgressBar={false}
           />
         </MainContent>

@@ -14,11 +14,12 @@ const PERIOD_OPTIONS: Array<{ value: RecordsPeriod; label: string }> = [
 
 const RecordsPeriodSelector = ({ value, onChange, disabled = false }: RecordsPeriodSelectorProps) => {
   return (
-    <section className="app-surface flex flex-wrap items-center gap-2 p-2.5">
+    <section className="flex flex-col md:flex-row md:items-center gap-2 p-2.5">
       <strong className="px-2 text-xs uppercase tracking-[0.18em] text-[var(--accent)]">
         Periodo
       </strong>
-      {PERIOD_OPTIONS.map((option) => {
+      <div className="flex flex-col md:flex-row gap-2">
+        {PERIOD_OPTIONS.map((option) => {
         const isActive = option.value === value;
 
         return (
@@ -42,6 +43,7 @@ const RecordsPeriodSelector = ({ value, onChange, disabled = false }: RecordsPer
           </button>
         );
       })}
+      </div>
     </section>
   );
 };

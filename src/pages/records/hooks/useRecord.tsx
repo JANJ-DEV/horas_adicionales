@@ -9,6 +9,7 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { notify, TOAST_SCOPE } from "@/services/toast.service";
+import { rememberSelectedRecordId } from "../recordNavigation";
 
 export const useRecord = (queryFilters?: RecordsQueryFilters) => {
   const { currentUser } = useAuth();
@@ -40,6 +41,7 @@ export const useRecord = (queryFilters?: RecordsQueryFilters) => {
     notify.error("No se pudo eliminar el registro", { scope: TOAST_SCOPE.RECORDS });
   };
   const handlerViewDetails = (recordId: string) => {
+    rememberSelectedRecordId(recordId);
     navigate(`/records/details/${recordId}`);
   };
 

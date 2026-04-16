@@ -32,6 +32,20 @@ type ParseRecordFormResult =
       titleJobProfile: string;
     };
 
+export type AddRecordErrorResponse = {
+  error: string;
+};
+
+export type AddRecordSuccessResponse = {
+  success: true;
+  message: string;
+  record: RecordService;
+  jobProfileId: string;
+  titleJobProfile: string;
+};
+
+export type AddRecordActionResponse = AddRecordErrorResponse | AddRecordSuccessResponse;
+
 const parseRecordFormData = async (formData: FormData): Promise<ParseRecordFormResult> => {
   const jobProfileId = formData.get("jobProfileId") as string;
   const titleJobProfile = formData.get("titleJobProfile") as string;
@@ -145,7 +159,7 @@ const parseRecordFormData = async (formData: FormData): Promise<ParseRecordFormR
   };
 };
 
-export async function add({ request }: ActionFunctionArgs) {
+export async function add({ request }: ActionFunctionArgs): Promise<AddRecordActionResponse> {
   const formData = await request.formData();
   const parsedRecord = await parseRecordFormData(formData);
 

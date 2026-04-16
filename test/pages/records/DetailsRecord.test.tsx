@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   useDetailRecord: vi.fn(),
@@ -38,6 +38,11 @@ vi.mock("../../../src/components/RecordCalculationSummary", () => ({
 import DetailsRecord from "../../../src/pages/records/DetailsRecord";
 
 describe("DetailsRecord", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    window.scrollTo = vi.fn();
+  });
+
   it("renderiza EmptyState cuando no existe record y permite volver", () => {
     const navigate = vi.fn();
     mocks.useDetailRecord.mockReturnValue({
@@ -52,6 +57,7 @@ describe("DetailsRecord", () => {
 
     render(<DetailsRecord />);
 
+    expect(window.scrollTo).toHaveBeenCalledWith({ top: 0, left: 0, behavior: "auto" });
     expect(screen.getByText("No se encontraron detalles del registro.")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Volver a registros" }));
     expect(navigate).toHaveBeenCalledWith("/records");
@@ -105,6 +111,7 @@ describe("DetailsRecord", () => {
 
     render(<DetailsRecord />);
 
+    expect(window.scrollTo).toHaveBeenCalledWith({ top: 0, left: 0, behavior: "auto" });
     expect(screen.getByRole("heading", { name: "Turno noche" })).toBeInTheDocument();
     expect(screen.getByText("Resumen 08:00-17:00-20")).toBeInTheDocument();
 
