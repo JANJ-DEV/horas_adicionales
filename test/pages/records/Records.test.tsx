@@ -37,9 +37,13 @@ vi.mock("../../../src/pages/records/components/RecordsFiltersBar", () => ({
   default: () => <div>barra de filtros</div>,
 }));
 
-vi.mock("../../../src/pages/records/components/RecordListItem", () => ({
-  default: ({ record }: { record: { titleJobProfile: string } }) => (
-    <article>{record.titleJobProfile}</article>
+vi.mock("../../../src/pages/records/components/RecordsListGrid", () => ({
+  default: ({ records }: { records: Array<{ titleJobProfile: string }> }) => (
+    <>
+      {records.map((record) => (
+        <article key={record.titleJobProfile}>{record.titleJobProfile}</article>
+      ))}
+    </>
   ),
 }));
 

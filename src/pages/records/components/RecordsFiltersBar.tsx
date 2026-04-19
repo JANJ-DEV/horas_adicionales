@@ -96,8 +96,8 @@ const RecordsFiltersBar = ({
   const activeFiltersCount = Object.values(filters).filter((value) => value.trim() !== "").length;
 
   return (
-    <div className="relative">
-      <div className="w-full flex justify-end">
+    <div className="relative shrink-0">
+      <div className="flex justify-end">
         <button
           type="button"
           className="inline-flex items-center gap-2 rounded-full  px-3 py-1.5 text-[var(--accent)] transition duration-200 hover:border-[var(--accent)]"

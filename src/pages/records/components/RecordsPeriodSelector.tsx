@@ -14,35 +14,34 @@ const PERIOD_OPTIONS: Array<{ value: RecordsPeriod; label: string }> = [
 
 const RecordsPeriodSelector = ({ value, onChange, disabled = false }: RecordsPeriodSelectorProps) => {
   return (
-    <section className="flex flex-col md:flex-row md:items-center gap-2 p-2.5">
+    <section className="flex items-center gap-2">
       <strong className="px-2 text-xs uppercase tracking-[0.18em] text-[var(--accent)]">
         Periodo
       </strong>
-      <div className="flex flex-col md:flex-row gap-2">
-        {PERIOD_OPTIONS.map((option) => {
-        const isActive = option.value === value;
-
-        return (
-          <button
-            key={option.value}
-            type="button"
-            onClick={() => onChange(option.value)}
-            className={`rounded-full px-4 py-2 text-sm font-semibold transition duration-300 ${
-              isActive
-                ? "bg-[var(--accent)] text-slate-950 shadow-[0_2px_6px_rgba(105,211,192,0.15)]"
-                : "bg-[var(--bg-soft)] text-[var(--text)] hover:text-[var(--accent)]"
-            } ${
-              disabled
-                ? "cursor-not-allowed opacity-60 hover:text-[var(--text)]"
-                : "cursor-pointer"
-            }`}
-            aria-pressed={isActive}
-            disabled={disabled}
-          >
-            {option.label}
-          </button>
-        );
-      })}
+      <div className="relative">
+        <select
+          value={value}
+          onChange={(event) => onChange(event.target.value as RecordsPeriod)}
+          disabled={disabled}
+          aria-label="Seleccionar periodo"
+          className={`appearance-none rounded-full border border-[var(--border)] bg-[var(--bg-soft)] pl-4 pr-12 py-2 text-sm font-semibold transition duration-300 focus:border-[var(--accent)] focus:outline-none ${
+            disabled
+              ? "cursor-not-allowed text-[var(--text-muted)] opacity-60"
+              : "cursor-pointer text-[var(--text)] hover:border-[var(--accent)] hover:text-[var(--accent)]"
+          }`}
+        >
+          {PERIOD_OPTIONS.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-[var(--text-soft)]"
+        >
+          ▼
+        </span>
       </div>
     </section>
   );
