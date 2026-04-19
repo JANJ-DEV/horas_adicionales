@@ -158,6 +158,10 @@ button {
   border-radius: 1.5rem;
 }
 
+.app-surface-flat {
+  border-radius: 0;
+}
+
 .app-card {
   border: 1px solid var(--border);
   background: linear-gradient(
