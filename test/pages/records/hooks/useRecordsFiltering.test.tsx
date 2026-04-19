@@ -53,7 +53,10 @@ describe("useRecordsFiltering", () => {
     oldDate.setMonth(oldDate.getMonth() - 3);
 
     mocks.useRecord.mockReturnValue({
-      records: [buildRecord("current", currentDate), buildRecord("old", oldDate.toISOString().slice(0, 10))],
+      records: [
+        buildRecord("current", currentDate),
+        buildRecord("old", oldDate.toISOString().slice(0, 10)),
+      ],
       isLoading: false,
       isError: false,
       errorMessage: null,

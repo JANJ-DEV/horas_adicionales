@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useSearchParams } from "react-router";
 import type { RecordsQueryFilters, RecordService } from "@/services/records.service";
 import {
@@ -57,8 +57,8 @@ export const useRecordsFiltering = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedPeriod, setSelectedPeriod] = useState<RecordsPeriod>("week");
 
-  const filters = useMemo(() => buildFiltersFromSearchParams(searchParams), [searchParams]);
-  const queryFilters = useMemo(() => buildQueryFilters(filters), [filters]);
+  const filters = buildFiltersFromSearchParams(searchParams);
+  const queryFilters = buildQueryFilters(filters);
 
   const {
     records,
@@ -72,29 +72,21 @@ export const useRecordsFiltering = () => {
 
   const hasManualDateRange = Boolean(filters.dateFrom || filters.dateTo);
 
-  const orderedRecords = useMemo(() => sortRecordsByReferenceDate(records), [records]);
+  const orderedRecords = sortRecordsByReferenceDate(records);
 
-  const recordsByFilters = useMemo(
-    () =>
-      filterRecordsByAdvancedFilters(orderedRecords, {
-        ...queryFilters,
-        minHourlyRate: parseOptionalNumber(filters.minHourlyRate),
-        maxHourlyRate: parseOptionalNumber(filters.maxHourlyRate),
-        minWorkedHours: parseOptionalNumber(filters.minWorkedHours),
-        maxWorkedHours: parseOptionalNumber(filters.maxWorkedHours),
-      }),
-    [orderedRecords, queryFilters, filters]
-  );
+  const recordsByFilters = filterRecordsByAdvancedFilters(orderedRecords, {
+    ...queryFilters,
+    minHourlyRate: parseOptionalNumber(filters.minHourlyRate),
+    maxHourlyRate: parseOptionalNumber(filters.maxHourlyRate),
+    minWorkedHours: parseOptionalNumber(filters.minWorkedHours),
+    maxWorkedHours: parseOptionalNumber(filters.maxWorkedHours),
+  });
 
-  const recordsByPeriod = useMemo(() => {
-    if (hasManualDateRange) {
-      return recordsByFilters;
-    }
+  const recordsByPeriod = hasManualDateRange
+    ? recordsByFilters
+    : filterRecordsByPeriod(recordsByFilters, selectedPeriod);
 
-    return filterRecordsByPeriod(recordsByFilters, selectedPeriod);
-  }, [hasManualDateRange, recordsByFilters, selectedPeriod]);
-
-  const summary = useMemo(() => calculateRecordsSummary(recordsByPeriod), [recordsByPeriod]);
+  const summary = calculateRecordsSummary(recordsByPeriod);
   const effectiveSummaryPeriod: RecordsPeriod | null = hasManualDateRange ? null : selectedPeriod;
 
   const handlePeriodChange = (nextPeriod: RecordsPeriod) => {

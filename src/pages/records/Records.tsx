@@ -83,7 +83,9 @@ const Records = () => {
     getPendingSelectedRecordId()
   );
   const [viewMode, setViewMode] = useState<ViewMode>(() => getStoredViewMode());
-  const [isSummaryVisible, setIsSummaryVisible] = useState<boolean>(() => getStoredSummaryVisible());
+  const [isSummaryVisible, setIsSummaryVisible] = useState<boolean>(() =>
+    getStoredSummaryVisible()
+  );
 
   useEffect(() => {
     if (!hasCurrentUser) {
@@ -140,7 +142,9 @@ const Records = () => {
     ? recordsByPeriod.findIndex((record) => record.id === pendingSelectedRecordId)
     : -1;
   const effectiveVisibleCount =
-    pendingSelectedRecordIndex >= 0 ? Math.max(visibleCount, pendingSelectedRecordIndex + 1) : visibleCount;
+    pendingSelectedRecordIndex >= 0
+      ? Math.max(visibleCount, pendingSelectedRecordIndex + 1)
+      : visibleCount;
 
   const hasMore = effectiveVisibleCount < recordsByPeriod.length;
 
@@ -164,7 +168,10 @@ const Records = () => {
     setVisibleCount(PAGE_SIZE);
   };
 
-  const handleFilterChangeWithPaginationReset = (name: keyof RecordsFiltersState, value: string) => {
+  const handleFilterChangeWithPaginationReset = (
+    name: keyof RecordsFiltersState,
+    value: string
+  ) => {
     handleFilterChange(name, value);
     setVisibleCount(PAGE_SIZE);
   };
@@ -376,8 +383,9 @@ const Records = () => {
                 branchName={record.branchId ? (branchNameById[record.branchId] ?? "") : ""}
                 jobPositionName={
                   record.branchId && record.jobPositionId
-                    ? (jobPositionNameByCompositeKey[`${record.branchId}:${record.jobPositionId}`] ??
-                      "")
+                    ? (jobPositionNameByCompositeKey[
+                        `${record.branchId}:${record.jobPositionId}`
+                      ] ?? "")
                     : ""
                 }
                 handlerViewDetails={handlerViewDetails}

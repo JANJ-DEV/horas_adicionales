@@ -52,7 +52,9 @@ describe("useAddRecord", () => {
     });
 
     mocks.useFetcher.mockReturnValue({
-      Form: ({ children, ...props }: React.ComponentProps<"form">) => <form {...props}>{children}</form>,
+      Form: ({ children, ...props }: React.ComponentProps<"form">) => (
+        <form {...props}>{children}</form>
+      ),
       state: "idle",
       data: null,
     });
@@ -68,7 +70,9 @@ describe("useAddRecord", () => {
     const navigate = vi.fn();
     mocks.useNavigate.mockReturnValue(navigate);
     mocks.useFetcher.mockReturnValue({
-      Form: ({ children, ...props }: React.ComponentProps<"form">) => <form {...props}>{children}</form>,
+      Form: ({ children, ...props }: React.ComponentProps<"form">) => (
+        <form {...props}>{children}</form>
+      ),
       state: "idle",
       data: {
         success: true,
@@ -90,7 +94,9 @@ describe("useAddRecord", () => {
     const navigate = vi.fn();
     mocks.useNavigate.mockReturnValue(navigate);
     mocks.useFetcher.mockReturnValue({
-      Form: ({ children, ...props }: React.ComponentProps<"form">) => <form {...props}>{children}</form>,
+      Form: ({ children, ...props }: React.ComponentProps<"form">) => (
+        <form {...props}>{children}</form>
+      ),
       state: "idle",
       data: {
         error: "No se pudo guardar el registro",

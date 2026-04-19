@@ -41,11 +41,7 @@ const RecordsLayout = () => {
           <section className="flex flex-col gap-4">
             <Outlet />
           </section>
-          <AppToastContainer
-            containerId="records"
-            position="top-center"
-            hideProgressBar={false}
-          />
+          <AppToastContainer containerId="records" position="top-center" hideProgressBar={false} />
         </MainContent>
       </section>
     </UtilitiesProvider>

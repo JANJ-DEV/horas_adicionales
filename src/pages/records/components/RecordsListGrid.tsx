@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { AgGridReact } from "ag-grid-react";
 import {
   AllCommunityModule,
@@ -69,115 +69,110 @@ const RecordsListGrid = ({
     };
   }, []);
 
-  const rowData = useMemo<RecordGridRow[]>(() => {
-    return records.map((record) => {
-      const worked = calculateWorkedHours(record.workStartTime ?? "", record.workEndTime ?? "");
-      const salary = calculateSalary(worked.decimal, Number(record.estimatedHourlyRate ?? 0));
-      const branchLabel = record.branchId ? (branchNameById[record.branchId] ?? "") : "";
-      const jobPositionLabel =
-        record.branchId && record.jobPositionId
-          ? (jobPositionNameByCompositeKey[`${record.branchId}:${record.jobPositionId}`] ?? "")
-          : "";
+  const rowData: RecordGridRow[] = records.map((record) => {
+    const worked = calculateWorkedHours(record.workStartTime ?? "", record.workEndTime ?? "");
+    const salary = calculateSalary(worked.decimal, Number(record.estimatedHourlyRate ?? 0));
+    const branchLabel = record.branchId ? (branchNameById[record.branchId] ?? "") : "";
+    const jobPositionLabel =
+      record.branchId && record.jobPositionId
+        ? (jobPositionNameByCompositeKey[`${record.branchId}:${record.jobPositionId}`] ?? "")
+        : "";
 
-      return {
-        id: String(record.id ?? ""),
-        dateLabel: formatDateLabel(record.dateTimeRecord),
-        titleJobProfile: record.titleJobProfile,
-        branchLabel: branchLabel || "No especificada",
-        jobPositionLabel: jobPositionLabel || "No especificado",
-        workedHoursLabel: worked.formatted,
-        salaryLabel: `${salary.toFixed(2)} EUR`,
-      };
-    });
-  }, [records, branchNameById, jobPositionNameByCompositeKey]);
+    return {
+      id: String(record.id ?? ""),
+      dateLabel: formatDateLabel(record.dateTimeRecord),
+      titleJobProfile: record.titleJobProfile,
+      branchLabel: branchLabel || "No especificada",
+      jobPositionLabel: jobPositionLabel || "No especificado",
+      workedHoursLabel: worked.formatted,
+      salaryLabel: `${salary.toFixed(2)} EUR`,
+    };
+  });
 
-  const columnDefs = useMemo<ColDef<RecordGridRow>[]>(
-    () => [
-      {
-        field: "dateLabel",
-        headerName: "Fecha",
-        minWidth: 100,
-        width: isMobileViewport ? 112 : undefined,
-        flex: isMobileViewport ? undefined : 0.9,
-        cellRenderer: ({ data, value }: ICellRendererParams<RecordGridRow, string>) => (
-          <span data-record-anchor={data?.id} data-record-variant="mobile">
-            {value}
-          </span>
-        ),
-      },
-      {
-        field: "titleJobProfile",
-        headerName: "Perfil",
-        minWidth: 150,
-        width: isMobileViewport ? 170 : undefined,
-        flex: isMobileViewport ? undefined : 1.1,
-        hide: isMobileViewport,
-      },
-      {
-        field: "branchLabel",
-        headerName: "Rama",
-        minWidth: 140,
-        width: isMobileViewport ? 160 : undefined,
-        flex: isMobileViewport ? undefined : 1,
-        hide: isMobileViewport,
-      },
-      {
-        field: "jobPositionLabel",
-        headerName: "Puesto",
-        minWidth: 170,
-        width: isMobileViewport ? 190 : undefined,
-        flex: isMobileViewport ? undefined : 1.2,
-        hide: isMobileViewport,
-      },
-      {
-        field: "workedHoursLabel",
-        headerName: "Horas",
-        minWidth: 88,
-        width: isMobileViewport ? 96 : undefined,
-        flex: isMobileViewport ? undefined : 0.8,
-      },
-      {
-        field: "salaryLabel",
-        headerName: "Sueldo",
-        minWidth: 108,
-        width: isMobileViewport ? 120 : undefined,
-        flex: isMobileViewport ? undefined : 0.9,
-      },
-      {
-        field: "id",
-        headerName: "Acciones",
-        minWidth: 176,
-        width: isMobileViewport ? 188 : 220,
-        sortable: false,
-        filter: false,
-        suppressSizeToFit: true,
-        cellStyle: { paddingRight: "12px" },
-        cellRenderer: ({ value }: ICellRendererParams<RecordGridRow, string>) => {
-          const recordId = String(value ?? "");
+  const columnDefs: ColDef<RecordGridRow>[] = [
+    {
+      field: "dateLabel",
+      headerName: "Fecha",
+      minWidth: 100,
+      width: isMobileViewport ? 112 : undefined,
+      flex: isMobileViewport ? undefined : 0.9,
+      cellRenderer: ({ data, value }: ICellRendererParams<RecordGridRow, string>) => (
+        <span data-record-anchor={data?.id} data-record-variant="mobile">
+          {value}
+        </span>
+      ),
+    },
+    {
+      field: "titleJobProfile",
+      headerName: "Perfil",
+      minWidth: 150,
+      width: isMobileViewport ? 170 : undefined,
+      flex: isMobileViewport ? undefined : 1.1,
+      hide: isMobileViewport,
+    },
+    {
+      field: "branchLabel",
+      headerName: "Rama",
+      minWidth: 140,
+      width: isMobileViewport ? 160 : undefined,
+      flex: isMobileViewport ? undefined : 1,
+      hide: isMobileViewport,
+    },
+    {
+      field: "jobPositionLabel",
+      headerName: "Puesto",
+      minWidth: 170,
+      width: isMobileViewport ? 190 : undefined,
+      flex: isMobileViewport ? undefined : 1.2,
+      hide: isMobileViewport,
+    },
+    {
+      field: "workedHoursLabel",
+      headerName: "Horas",
+      minWidth: 88,
+      width: isMobileViewport ? 96 : undefined,
+      flex: isMobileViewport ? undefined : 0.8,
+    },
+    {
+      field: "salaryLabel",
+      headerName: "Sueldo",
+      minWidth: 108,
+      width: isMobileViewport ? 120 : undefined,
+      flex: isMobileViewport ? undefined : 0.9,
+    },
+    {
+      field: "id",
+      headerName: "Acciones",
+      minWidth: 176,
+      width: isMobileViewport ? 188 : 220,
+      sortable: false,
+      filter: false,
+      suppressSizeToFit: true,
+      cellStyle: { paddingRight: "12px" },
+      cellRenderer: ({ value }: ICellRendererParams<RecordGridRow, string>) => {
+        const recordId = String(value ?? "");
 
-          return (
-            <div className="flex h-full w-full items-center justify-end gap-2">
-              <button
-                type="button"
-                className="rounded-full bg-[var(--accent)] px-3 py-1 text-xs font-semibold text-slate-950 transition duration-200 hover:bg-[var(--accent-strong)] hover:text-white"
-                onClick={() => onViewDetails(recordId)}
-              >
-                Detalles
-              </button>
-              <button
-                type="button"
-                className="rounded-full bg-[var(--danger)] px-3 py-1 text-xs font-semibold text-white transition duration-200 hover:opacity-90"
-                onClick={() => onDeleteRecord(recordId)}
-              >
-                Eliminar
-              </button>
-            </div>
-          );
-        },
+        return (
+          <div className="flex h-full w-full items-center justify-end gap-2">
+            <button
+              type="button"
+              className="rounded-full bg-[var(--accent)] px-3 py-1 text-xs font-semibold text-slate-950 transition duration-200 hover:bg-[var(--accent-strong)] hover:text-white"
+              onClick={() => onViewDetails(recordId)}
+            >
+              Detalles
+            </button>
+            <button
+              type="button"
+              className="rounded-full bg-[var(--danger)] px-3 py-1 text-xs font-semibold text-white transition duration-200 hover:opacity-90"
+              onClick={() => onDeleteRecord(recordId)}
+            >
+              Eliminar
+            </button>
+          </div>
+        );
       },
-    ],
-    [isMobileViewport, onViewDetails, onDeleteRecord]
-  );
+    },
+  ];
 
   return (
     <article className="app-surface overflow-hidden p-2">

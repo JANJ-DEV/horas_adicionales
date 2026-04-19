@@ -12,7 +12,11 @@ const PERIOD_OPTIONS: Array<{ value: RecordsPeriod; label: string }> = [
   { value: "month", label: "Mes" },
 ];
 
-const RecordsPeriodSelector = ({ value, onChange, disabled = false }: RecordsPeriodSelectorProps) => {
+const RecordsPeriodSelector = ({
+  value,
+  onChange,
+  disabled = false,
+}: RecordsPeriodSelectorProps) => {
   return (
     <section className="flex items-center gap-2">
       <strong className="px-2 text-xs uppercase tracking-[0.18em] text-[var(--accent)]">

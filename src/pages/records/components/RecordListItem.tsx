@@ -29,10 +29,14 @@ const RecordListItem = ({
     <article className="app-card flex flex-col gap-3 p-3">
       <header className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="truncate text-sm font-semibold text-[var(--text)]">{record.titleJobProfile}</p>
+          <p className="truncate text-sm font-semibold text-[var(--text)]">
+            {record.titleJobProfile}
+          </p>
           <p className="text-xs text-[var(--text-muted)]">{dateLabel}</p>
         </div>
-        <p className="shrink-0 text-xs font-semibold text-[var(--accent)]">{workedHours.formatted}</p>
+        <p className="shrink-0 text-xs font-semibold text-[var(--accent)]">
+          {workedHours.formatted}
+        </p>
       </header>
 
       <div className="flex items-center justify-between gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-2">

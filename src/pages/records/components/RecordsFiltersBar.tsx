@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { MdFilterList } from "react-icons/md";
 import { MdFilterListOff } from "react-icons/md";
 
-
 export type RecordsFiltersState = {
   branchId: string;
   jobPositionId: string;
@@ -106,9 +105,12 @@ const RecordsFiltersBar = ({
           aria-controls="records-filters-panel"
         >
           Filtros{activeFiltersCount > 0 ? ` (${activeFiltersCount})` : ""}
-        
           <span className="text-[10px] text-[var(--text-soft)]">
-            {isOpen ? <MdFilterListOff size={32} className="text-red-300" /> : <MdFilterList size={32} />}
+            {isOpen ? (
+              <MdFilterListOff size={32} className="text-red-300" />
+            ) : (
+              <MdFilterList size={32} />
+            )}
           </span>
         </button>
       </div>
