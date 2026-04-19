@@ -116,7 +116,7 @@ const RecordsFiltersBar = ({
       {/* Panel de filtros absoluto */}
       <div
         id="records-filters-panel"
-        className={`z-40 ${isOpen ? "fixed" : "hidden"} top-0 left-0 w-[100vw] h-[100vh] app-surface p-6 pb-24 overflow-auto transition-all duration-200 rounded-none shadow-2xl
+        className={`z-100 ${isOpen ? "fixed" : "hidden"} top-0 left-0 w-[100vw] h-[100vh] app-surface p-6 pb-24 overflow-auto transition-all duration-200 rounded-none shadow-2xl
         md:absolute md:top-15 md:left-auto md:right-0 md:mt-2 md:w-[380px] md:h-auto md:rounded-xl md:p-4 md:shadow-xl`}
         style={{ maxWidth: "100vw", maxHeight: "100vh" }}
       >

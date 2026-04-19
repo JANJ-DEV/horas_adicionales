@@ -7,8 +7,8 @@
   --bg: #0d0d0d;
   --bg-elevated: rgba(20, 20, 20, 0.85);
   --bg-soft: rgba(35, 35, 35, 0.7);
-  --surface: rgba(25, 25, 25, 0.8);
-  --surface-strong: rgba(40, 40, 40, 0.95);
+  --surface: rgba(25, 25, 25, 1);
+  --surface-strong: rgba(40, 40, 40, 1);
   --border: rgba(255, 255, 255, 0.12);
   --border-strong: rgba(255, 107, 53, 0.4);
   --text: #f5f5f5;
@@ -39,8 +39,8 @@
   --bg: #f6f7fb;
   --bg-elevated: rgba(255, 255, 255, 0.92);
   --bg-soft: rgba(239, 244, 250, 0.92);
-  --surface: rgba(255, 255, 255, 0.94);
-  --surface-strong: rgba(255, 255, 255, 0.99);
+  --surface: rgba(255, 255, 255, 1);
+  --surface-strong: rgba(255, 255, 255, 1);
   --border: rgba(20, 32, 51, 0.12);
   --border-strong: rgba(255, 107, 53, 0.35);
   --text: #162033;

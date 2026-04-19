@@ -1,4 +1,3 @@
-import { useRecord } from "./hooks/useRecord";
 import RecordCard from "./components/RecordCard";
 import { useEffect, useState } from "react";
 import { subscribeToBranches } from "@/services/branches.services";
@@ -8,63 +7,35 @@ import RecordsPeriodSelector from "./components/RecordsPeriodSelector";
 import RecordsSummary from "./components/RecordsSummary";
 import RecordListItem from "./components/RecordListItem";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
-import { Link, useSearchParams } from "react-router";
+import { Link } from "react-router";
 import RecordsFiltersBar, { type RecordsFiltersState } from "./components/RecordsFiltersBar";
-import {
-  calculateRecordsSummary,
-  filterRecordsByAdvancedFilters,
-  filterRecordsByPeriod,
-  getRecordReferenceDate,
-  type RecordsPeriod,
-} from "@/utils";
+import { useRecordsFiltering } from "./hooks/useRecordsFiltering";
 import { clearPendingSelectedRecordId, getPendingSelectedRecordId } from "./recordNavigation";
 
 const PAGE_SIZE = 9;
 const DESKTOP_MEDIA_QUERY = "(min-width: 1024px)";
 
-const parseOptionalNumber = (value: string) => {
-  if (value.trim() === "") {
-    return undefined;
-  }
-
-  const parsed = Number(value);
-  return Number.isNaN(parsed) ? undefined : parsed;
-};
-
 const Records = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const filters: RecordsFiltersState = {
-    branchId: searchParams.get("branchId") ?? "",
-    jobPositionId: searchParams.get("jobPositionId") ?? "",
-    jobProfileId: searchParams.get("jobProfileId") ?? "",
-    dateFrom: searchParams.get("dateFrom") ?? "",
-    dateTo: searchParams.get("dateTo") ?? "",
-    minHourlyRate: searchParams.get("minHourlyRate") ?? "",
-    maxHourlyRate: searchParams.get("maxHourlyRate") ?? "",
-    minWorkedHours: searchParams.get("minWorkedHours") ?? "",
-    maxWorkedHours: searchParams.get("maxWorkedHours") ?? "",
-  };
-  const hasManualDateRange = Boolean(filters.dateFrom || filters.dateTo);
   const {
-    records,
+    filters,
+    hasManualDateRange,
+    selectedPeriod,
+    recordsByPeriod,
+    summary,
+    effectiveSummaryPeriod,
     isLoading,
     isError,
     errorMessage,
     hasCurrentUser,
     handleDeleteRecord,
     handlerViewDetails,
-  } = useRecord({
-    branchId: filters.branchId || undefined,
-    jobPositionId: filters.jobPositionId || undefined,
-    jobProfileId: filters.jobProfileId || undefined,
-    dateFrom: filters.dateFrom || undefined,
-    dateTo: filters.dateTo || undefined,
-  });
+    handlePeriodChange,
+    handleFilterChange,
+  } = useRecordsFiltering();
   const [branches, setBranches] = useState<Branch[]>([]);
   const [jobProfiles, setJobProfiles] = useState<JobProfile[]>([]);
   const [hasJobProfiles, setHasJobProfiles] = useState(true);
   const [isLoadingProfiles, setIsLoadingProfiles] = useState(true);
-  const [selectedPeriod, setSelectedPeriod] = useState<RecordsPeriod>("week");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [pendingSelectedRecordId, setPendingSelectedRecordId] = useState<string | null>(() =>
     getPendingSelectedRecordId()
@@ -121,32 +92,6 @@ const Records = () => {
     return acc;
   }, {});
 
-  const orderedRecords = [...records].sort((left, right) => {
-    const leftDate = getRecordReferenceDate(left);
-    const rightDate = getRecordReferenceDate(right);
-
-    if (!leftDate && !rightDate) return 0;
-    if (!leftDate) return 1;
-    if (!rightDate) return -1;
-
-    return rightDate.getTime() - leftDate.getTime();
-  });
-
-  const recordsByFilters = filterRecordsByAdvancedFilters(orderedRecords, {
-    branchId: filters.branchId || undefined,
-    jobPositionId: filters.jobPositionId || undefined,
-    jobProfileId: filters.jobProfileId || undefined,
-    dateFrom: filters.dateFrom || undefined,
-    dateTo: filters.dateTo || undefined,
-    minHourlyRate: parseOptionalNumber(filters.minHourlyRate),
-    maxHourlyRate: parseOptionalNumber(filters.maxHourlyRate),
-    minWorkedHours: parseOptionalNumber(filters.minWorkedHours),
-    maxWorkedHours: parseOptionalNumber(filters.maxWorkedHours),
-  });
-
-  const recordsByPeriod = hasManualDateRange
-    ? recordsByFilters
-    : filterRecordsByPeriod(recordsByFilters, selectedPeriod);
   const pendingSelectedRecordIndex = pendingSelectedRecordId
     ? recordsByPeriod.findIndex((record) => record.id === pendingSelectedRecordId)
     : -1;
@@ -170,30 +115,13 @@ const Records = () => {
 
   const visibleRecords = recordsByPeriod.slice(0, effectiveVisibleCount);
 
-  const summary = calculateRecordsSummary(recordsByPeriod);
-  const effectiveSummaryPeriod: RecordsPeriod | null = hasManualDateRange ? null : selectedPeriod;
-
-  const handlePeriodChange = (nextPeriod: RecordsPeriod) => {
-    setSelectedPeriod(nextPeriod);
+  const handlePeriodChangeWithPaginationReset = (nextPeriod: "day" | "week" | "month") => {
+    handlePeriodChange(nextPeriod);
     setVisibleCount(PAGE_SIZE);
   };
 
-  const handleFilterChange = (name: keyof RecordsFiltersState, value: string) => {
-    setSearchParams(
-      (current) => {
-        const next = new URLSearchParams(current);
-        if (name === "branchId") {
-          next.delete("jobPositionId");
-        }
-        if (value) {
-          next.set(name, value);
-        } else {
-          next.delete(name);
-        }
-        return next;
-      },
-      { replace: true }
-    );
+  const handleFilterChangeWithPaginationReset = (name: keyof RecordsFiltersState, value: string) => {
+    handleFilterChange(name, value);
     setVisibleCount(PAGE_SIZE);
   };
 
@@ -242,20 +170,20 @@ const Records = () => {
   ]);
 
   return (
-    <section className="flex min-w-0 flex-col gap-4 overflow-x-hidden">
+    <section className="flex min-w-0 min-h-[60vh] flex-col gap-4 overflow-x-hidden">
       {hasCurrentUser && (
         <>
           <div className="app-surface flex items-center justify-between gap-2 p-4">
             <RecordsPeriodSelector
               value={selectedPeriod}
-              onChange={handlePeriodChange}
+              onChange={handlePeriodChangeWithPaginationReset}
               disabled={hasManualDateRange}
             />
             <RecordsFiltersBar
               branches={branches}
               jobProfiles={jobProfiles}
               filters={filters}
-              onFilterChange={handleFilterChange}
+              onFilterChange={handleFilterChangeWithPaginationReset}
             />
           </div>
           <RecordsSummary
