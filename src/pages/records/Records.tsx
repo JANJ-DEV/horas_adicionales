@@ -9,12 +9,13 @@ import RecordListItem from "./components/RecordListItem";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 import { Link } from "react-router";
 import RecordsFiltersBar, { type RecordsFiltersState } from "./components/RecordsFiltersBar";
-import { MdViewList, MdViewAgenda } from "react-icons/md";
+import { MdViewList, MdViewAgenda, MdVisibility, MdVisibilityOff } from "react-icons/md";
 import { useRecordsFiltering } from "./hooks/useRecordsFiltering";
 import { clearPendingSelectedRecordId, getPendingSelectedRecordId } from "./recordNavigation";
 
 const PAGE_SIZE = 9;
 const VIEW_MODE_STORAGE_KEY = "records:view-mode";
+const SUMMARY_VISIBLE_STORAGE_KEY = "records:summary-visible";
 
 type ViewMode = "card" | "list";
 
@@ -32,6 +33,25 @@ const setStoredViewMode = (mode: ViewMode) => {
   if (typeof window === "undefined") return;
   try {
     localStorage.setItem(VIEW_MODE_STORAGE_KEY, mode);
+  } catch {
+    // localStorage no disponible
+  }
+};
+
+const getStoredSummaryVisible = (): boolean => {
+  if (typeof window === "undefined") return true;
+  try {
+    const stored = localStorage.getItem(SUMMARY_VISIBLE_STORAGE_KEY);
+    return stored !== "false";
+  } catch {
+    return true;
+  }
+};
+
+const setStoredSummaryVisible = (isVisible: boolean) => {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(SUMMARY_VISIBLE_STORAGE_KEY, String(isVisible));
   } catch {
     // localStorage no disponible
   }
@@ -63,6 +83,7 @@ const Records = () => {
     getPendingSelectedRecordId()
   );
   const [viewMode, setViewMode] = useState<ViewMode>(() => getStoredViewMode());
+  const [isSummaryVisible, setIsSummaryVisible] = useState<boolean>(() => getStoredSummaryVisible());
 
   useEffect(() => {
     if (!hasCurrentUser) {
@@ -153,6 +174,14 @@ const Records = () => {
     setStoredViewMode(mode);
   };
 
+  const handleSummaryVisibilityToggle = () => {
+    setIsSummaryVisible((current) => {
+      const next = !current;
+      setStoredSummaryVisible(next);
+      return next;
+    });
+  };
+
   const renderViewModeToggle = () => (
     <div className="flex gap-1 rounded-full border border-[var(--border)] bg-[var(--bg-soft)] p-1">
       <button
@@ -240,20 +269,41 @@ const Records = () => {
               onChange={handlePeriodChangeWithPaginationReset}
               disabled={hasManualDateRange}
             />
-            {renderViewModeToggle()}
-            <RecordsFiltersBar
-              branches={branches}
-              jobProfiles={jobProfiles}
-              filters={filters}
-              onFilterChange={handleFilterChangeWithPaginationReset}
-            />
+            <div className="flex w-full items-center justify-between gap-2 sm:w-auto sm:justify-end">
+              <button
+                type="button"
+                onClick={handleSummaryVisibilityToggle}
+                className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-2 py-1.5 text-sm font-semibold text-[var(--text)] transition duration-200 hover:border-[var(--accent)] hover:text-[var(--accent)] md:px-3"
+                aria-pressed={isSummaryVisible}
+                aria-label={isSummaryVisible ? "Ocultar resumen" : "Mostrar resumen"}
+                title={isSummaryVisible ? "Ocultar resumen" : "Mostrar resumen"}
+              >
+                {isSummaryVisible ? (
+                  <MdVisibilityOff className="text-[24px] md:text-[18px]" />
+                ) : (
+                  <MdVisibility className="text-[24px] md:text-[18px]" />
+                )}
+                <span className="hidden md:inline">
+                  {isSummaryVisible ? "Ocultar resumen" : "Mostrar resumen"}
+                </span>
+              </button>
+              {renderViewModeToggle()}
+              <RecordsFiltersBar
+                branches={branches}
+                jobProfiles={jobProfiles}
+                filters={filters}
+                onFilterChange={handleFilterChangeWithPaginationReset}
+              />
+            </div>
           </div>
-          <RecordsSummary
-            period={effectiveSummaryPeriod}
-            recordsCount={recordsByPeriod.length}
-            totalHoursDecimal={summary.totalHoursDecimal}
-            totalSalary={summary.totalSalary}
-          />
+          {isSummaryVisible && (
+            <RecordsSummary
+              period={effectiveSummaryPeriod}
+              recordsCount={recordsByPeriod.length}
+              totalHoursDecimal={summary.totalHoursDecimal}
+              totalSalary={summary.totalSalary}
+            />
+          )}
         </>
       )}
 
