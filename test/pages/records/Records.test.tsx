@@ -117,7 +117,7 @@ describe("Records", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getAllByText("Registro record-10")).toHaveLength(2);
+      expect(screen.getByText("Registro record-10")).toBeInTheDocument();
     });
 
     await waitFor(() => {
