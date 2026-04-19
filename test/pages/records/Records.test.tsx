@@ -37,9 +37,13 @@ vi.mock("../../../src/pages/records/components/RecordsFiltersBar", () => ({
   default: () => <div>barra de filtros</div>,
 }));
 
-vi.mock("../../../src/pages/records/components/RecordListItem", () => ({
-  default: ({ record }: { record: { titleJobProfile: string } }) => (
-    <article>{record.titleJobProfile}</article>
+vi.mock("../../../src/pages/records/components/RecordsListGrid", () => ({
+  default: ({ records }: { records: Array<{ titleJobProfile: string }> }) => (
+    <>
+      {records.map((record) => (
+        <article key={record.titleJobProfile}>{record.titleJobProfile}</article>
+      ))}
+    </>
   ),
 }));
 
@@ -117,7 +121,7 @@ describe("Records", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getAllByText("Registro record-10")).toHaveLength(2);
+      expect(screen.getByText("Registro record-10")).toBeInTheDocument();
     });
 
     await waitFor(() => {

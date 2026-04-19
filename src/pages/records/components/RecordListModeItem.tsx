@@ -2,7 +2,7 @@ import Btn from "@/components/Btn";
 import { calculateSalary, calculateWorkedHours } from "@/utils";
 import type { RecordService } from "@/services/records.service";
 
-type RecordListItemProps = {
+type RecordListModeItemProps = {
   record: RecordService;
   branchName?: string;
   jobPositionName?: string;
@@ -10,13 +10,13 @@ type RecordListItemProps = {
   onDeleteRecord: (recordId: string) => void;
 };
 
-const RecordListItem = ({
+const RecordListModeItem = ({
   record,
   branchName,
   jobPositionName,
   onViewDetails,
   onDeleteRecord,
-}: RecordListItemProps) => {
+}: RecordListModeItemProps) => {
   const hasWorkedTime = Boolean(record.workStartTime && record.workEndTime);
   const workedHours = hasWorkedTime
     ? calculateWorkedHours(record.workStartTime as string, record.workEndTime as string)
@@ -34,22 +34,22 @@ const RecordListItem = ({
         </div>
       </header>
 
-      <div className="grid grid-cols-2 gap-2 text-sm text-[var(--text)]">
-        <p>
+      <div className="grid grid-cols-1 gap-2 text-sm text-[var(--text)] sm:grid-cols-2">
+        <p className="app-panel p-2">
           <strong>Rama:</strong> {branchName || "No especificada"}
         </p>
-        <p>
+        <p className="app-panel p-2">
           <strong>Puesto:</strong> {jobPositionName || "No especificado"}
         </p>
-        <p>
+        <p className="app-panel p-2">
           <strong>Horas:</strong> {workedHours.formatted}
         </p>
-        <p>
+        <p className="app-panel p-2">
           <strong>Sueldo:</strong> {salary.toFixed(2)} EUR
         </p>
       </div>
 
-      <footer className="mt-1 flex items-center justify-end gap-2">
+      <footer className="mt-1 flex flex-col gap-2 sm:flex-row sm:justify-end">
         <Btn label="Detalles" variant="info" onClick={() => onViewDetails(record.id as string)} />
         <Btn
           label="Eliminar"
@@ -61,4 +61,4 @@ const RecordListItem = ({
   );
 };
 
-export default RecordListItem;
+export default RecordListModeItem;
