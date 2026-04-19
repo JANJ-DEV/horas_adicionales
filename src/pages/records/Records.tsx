@@ -9,33 +9,11 @@ import RecordListItem from "./components/RecordListItem";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 import { Link } from "react-router";
 import RecordsFiltersBar, { type RecordsFiltersState } from "./components/RecordsFiltersBar";
-import { MdViewList, MdViewAgenda } from "react-icons/md";
 import { useRecordsFiltering } from "./hooks/useRecordsFiltering";
 import { clearPendingSelectedRecordId, getPendingSelectedRecordId } from "./recordNavigation";
 
 const PAGE_SIZE = 9;
-const VIEW_MODE_STORAGE_KEY = "records:view-mode";
-
-type ViewMode = "card" | "list";
-
-const getStoredViewMode = (): ViewMode => {
-  if (typeof window === "undefined") return "card";
-  try {
-    const stored = localStorage.getItem(VIEW_MODE_STORAGE_KEY);
-    return stored === "list" ? "list" : "card";
-  } catch {
-    return "card";
-  }
-};
-
-const setStoredViewMode = (mode: ViewMode) => {
-  if (typeof window === "undefined") return;
-  try {
-    localStorage.setItem(VIEW_MODE_STORAGE_KEY, mode);
-  } catch {
-    // localStorage no disponible
-  }
-};
+const DESKTOP_MEDIA_QUERY = "(min-width: 1024px)";
 
 const Records = () => {
   const {
@@ -62,7 +40,6 @@ const Records = () => {
   const [pendingSelectedRecordId, setPendingSelectedRecordId] = useState<string | null>(() =>
     getPendingSelectedRecordId()
   );
-  const [viewMode, setViewMode] = useState<ViewMode>(() => getStoredViewMode());
 
   useEffect(() => {
     if (!hasCurrentUser) {
@@ -148,44 +125,6 @@ const Records = () => {
     setVisibleCount(PAGE_SIZE);
   };
 
-  const handleViewModeChange = (mode: ViewMode) => {
-    setViewMode(mode);
-    setStoredViewMode(mode);
-  };
-
-  const renderViewModeToggle = () => (
-    <div className="flex gap-1 rounded-full border border-[var(--border)] bg-[var(--bg-soft)] p-1">
-      <button
-        type="button"
-        onClick={() => handleViewModeChange("card")}
-        className={`rounded-full p-2 transition duration-200 ${
-          viewMode === "card"
-            ? "bg-[var(--accent)] text-slate-950"
-            : "text-[var(--text-muted)] hover:text-[var(--text)]"
-        }`}
-        title="Vista de tarjetas"
-        aria-label="Vista de tarjetas"
-        aria-pressed={viewMode === "card"}
-      >
-        <MdViewAgenda size={20} />
-      </button>
-      <button
-        type="button"
-        onClick={() => handleViewModeChange("list")}
-        className={`rounded-full p-2 transition duration-200 ${
-          viewMode === "list"
-            ? "bg-[var(--accent)] text-slate-950"
-            : "text-[var(--text-muted)] hover:text-[var(--text)]"
-        }`}
-        title="Vista de listado"
-        aria-label="Vista de listado"
-        aria-pressed={viewMode === "list"}
-      >
-        <MdViewList size={20} />
-      </button>
-    </div>
-  );
-
   useEffect(() => {
     if (!pendingSelectedRecordId || !hasCurrentUser || isLoading || isError) {
       return;
@@ -199,7 +138,8 @@ const Records = () => {
       return;
     }
 
-    const variant = viewMode === "card" ? "desktop" : "mobile";
+    const isDesktopViewport = window.matchMedia(DESKTOP_MEDIA_QUERY).matches;
+    const variant = isDesktopViewport ? "desktop" : "mobile";
     const targetElement = document.querySelector<HTMLElement>(
       `[data-record-anchor="${pendingSelectedRecordId}"][data-record-variant="${variant}"]`
     );
@@ -227,7 +167,6 @@ const Records = () => {
     isError,
     effectiveVisibleCount,
     visibleCount,
-    viewMode,
   ]);
 
   return (
@@ -240,7 +179,6 @@ const Records = () => {
               onChange={handlePeriodChangeWithPaginationReset}
               disabled={hasManualDateRange}
             />
-            {renderViewModeToggle()}
             <RecordsFiltersBar
               branches={branches}
               jobProfiles={jobProfiles}
@@ -309,36 +247,40 @@ const Records = () => {
           </aside>
         )}
 
-      <section className={viewMode === "list" ? "flex min-w-0 flex-col gap-4" : "hidden min-w-0 gap-4 lg:grid lg:grid-cols-2 xl:grid-cols-3"}>
+      <section className="flex min-w-0 flex-col gap-4">
         {visibleRecords.map((record) => (
-          <div key={viewMode === "list" ? `list-${record.id}` : record.id} data-record-anchor={record.id} data-record-variant={viewMode === "list" ? "mobile" : "desktop"}>
-            {viewMode === "list" ? (
-              <RecordListItem
-                record={record}
-                branchName={record.branchId ? (branchNameById[record.branchId] ?? "") : ""}
-                jobPositionName={
-                  record.branchId && record.jobPositionId
-                    ? (jobPositionNameByCompositeKey[`${record.branchId}:${record.jobPositionId}`] ??
-                      "")
-                    : ""
-                }
-                onViewDetails={handlerViewDetails}
-                onDeleteRecord={handleDeleteRecord}
-              />
-            ) : (
-              <RecordCard
-                record={record}
-                branchName={record.branchId ? (branchNameById[record.branchId] ?? "") : ""}
-                jobPositionName={
-                  record.branchId && record.jobPositionId
-                    ? (jobPositionNameByCompositeKey[`${record.branchId}:${record.jobPositionId}`] ??
-                      "")
-                    : ""
-                }
-                handlerViewDetails={handlerViewDetails}
-                handleDeleteRecord={handleDeleteRecord}
-              />
-            )}
+          <div key={`mobile-${record.id}`} data-record-anchor={record.id} data-record-variant="mobile">
+            <RecordListItem
+              record={record}
+              branchName={record.branchId ? (branchNameById[record.branchId] ?? "") : ""}
+              jobPositionName={
+                record.branchId && record.jobPositionId
+                  ? (jobPositionNameByCompositeKey[`${record.branchId}:${record.jobPositionId}`] ??
+                    "")
+                  : ""
+              }
+              onViewDetails={handlerViewDetails}
+              onDeleteRecord={handleDeleteRecord}
+            />
+          </div>
+        ))}
+      </section>
+
+      <section className="hidden min-w-0 gap-4 lg:grid lg:grid-cols-2 xl:grid-cols-3">
+        {visibleRecords.map((record) => (
+          <div key={record.id} data-record-anchor={record.id} data-record-variant="desktop">
+            <RecordCard
+              record={record}
+              branchName={record.branchId ? (branchNameById[record.branchId] ?? "") : ""}
+              jobPositionName={
+                record.branchId && record.jobPositionId
+                  ? (jobPositionNameByCompositeKey[`${record.branchId}:${record.jobPositionId}`] ??
+                    "")
+                  : ""
+              }
+              handlerViewDetails={handlerViewDetails}
+              handleDeleteRecord={handleDeleteRecord}
+            />
           </div>
         ))}
       </section>
