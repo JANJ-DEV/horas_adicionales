@@ -14,7 +14,6 @@ import { useRecordsFiltering } from "./hooks/useRecordsFiltering";
 import { clearPendingSelectedRecordId, getPendingSelectedRecordId } from "./recordNavigation";
 
 const PAGE_SIZE = 9;
-const DESKTOP_MEDIA_QUERY = "(min-width: 1024px)";
 const VIEW_MODE_STORAGE_KEY = "records:view-mode";
 
 type ViewMode = "card" | "list";
@@ -200,8 +199,7 @@ const Records = () => {
       return;
     }
 
-    const isDesktopViewport = window.matchMedia(DESKTOP_MEDIA_QUERY).matches;
-    const variant = isDesktopViewport ? "desktop" : "mobile";
+    const variant = viewMode === "card" ? "desktop" : "mobile";
     const targetElement = document.querySelector<HTMLElement>(
       `[data-record-anchor="${pendingSelectedRecordId}"][data-record-variant="${variant}"]`
     );
@@ -229,6 +227,7 @@ const Records = () => {
     isError,
     effectiveVisibleCount,
     visibleCount,
+    viewMode,
   ]);
 
   return (
