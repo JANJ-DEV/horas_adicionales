@@ -181,7 +181,7 @@ const RecordsListGrid = ({
 
   return (
     <article className="app-surface overflow-hidden p-2">
-      <div className="records-list-grid ag-theme-quartz-dark min-h-[120px] w-full overflow-x-auto rounded-xl">
+      <div className="records-list-grid ag-theme-quartz min-h-[120px] w-full overflow-x-auto rounded-xl">
         <AgGridReact<RecordGridRow>
           theme="legacy"
           rowData={rowData}
