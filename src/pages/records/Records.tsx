@@ -5,7 +5,7 @@ import { subscribeToJobProfiles } from "@/services/jobsProfile.service";
 import type { Branch, JobProfile } from "@/types";
 import RecordsPeriodSelector from "./components/RecordsPeriodSelector";
 import RecordsSummary from "./components/RecordsSummary";
-import RecordListItem from "./components/RecordListItem";
+import RecordsListGrid from "./components/RecordsListGrid";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 import { Link } from "react-router";
 import RecordsFiltersBar, { type RecordsFiltersState } from "./components/RecordsFiltersBar";
@@ -359,23 +359,18 @@ const Records = () => {
           </aside>
         )}
 
-      <section className={viewMode === "list" ? "flex min-w-0 flex-col gap-4" : "hidden min-w-0 gap-4 lg:grid lg:grid-cols-2 xl:grid-cols-3"}>
-        {visibleRecords.map((record) => (
-          <div key={viewMode === "list" ? `list-${record.id}` : record.id} data-record-anchor={record.id} data-record-variant={viewMode === "list" ? "mobile" : "desktop"}>
-            {viewMode === "list" ? (
-              <RecordListItem
-                record={record}
-                branchName={record.branchId ? (branchNameById[record.branchId] ?? "") : ""}
-                jobPositionName={
-                  record.branchId && record.jobPositionId
-                    ? (jobPositionNameByCompositeKey[`${record.branchId}:${record.jobPositionId}`] ??
-                      "")
-                    : ""
-                }
-                onViewDetails={handlerViewDetails}
-                onDeleteRecord={handleDeleteRecord}
-              />
-            ) : (
+      {viewMode === "list" ? (
+        <RecordsListGrid
+          records={visibleRecords}
+          branchNameById={branchNameById}
+          jobPositionNameByCompositeKey={jobPositionNameByCompositeKey}
+          onViewDetails={handlerViewDetails}
+          onDeleteRecord={handleDeleteRecord}
+        />
+      ) : (
+        <section className="grid min-w-0 gap-4 grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
+          {visibleRecords.map((record) => (
+            <div key={record.id} data-record-anchor={record.id} data-record-variant="desktop">
               <RecordCard
                 record={record}
                 branchName={record.branchId ? (branchNameById[record.branchId] ?? "") : ""}
@@ -388,10 +383,10 @@ const Records = () => {
                 handlerViewDetails={handlerViewDetails}
                 handleDeleteRecord={handleDeleteRecord}
               />
-            )}
-          </div>
-        ))}
-      </section>
+            </div>
+          ))}
+        </section>
+      )}
 
       {hasCurrentUser && !isLoading && !isError && hasMore && (
         <div ref={sentinelRef} className="h-8 w-full" aria-hidden="true" />
