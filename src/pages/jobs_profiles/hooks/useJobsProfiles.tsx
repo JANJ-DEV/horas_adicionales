@@ -14,14 +14,8 @@ export const useJobsProfiles = () => {
 
   useEffect(() => {
     if (!currentUser?.uid) {
-      setJobs([]);
-      setIsError(false);
-      setErrorMessage(null);
-      setIsLoading(false);
       return;
     }
-
-    setIsLoading(true);
 
     const unsubscribe = subscribeToJobProfiles(
       (profiles) => {
@@ -56,11 +50,16 @@ export const useJobsProfiles = () => {
     };
   }, [currentUser?.uid]);
 
+  const normalizedJobs = hasCurrentUser ? jobs : [];
+  const normalizedIsError = hasCurrentUser ? isError : false;
+  const normalizedErrorMessage = hasCurrentUser ? errorMessage : null;
+  const normalizedIsLoading = hasCurrentUser ? isLoading : false;
+
   return {
-    isLoading,
-    isError,
-    errorMessage,
-    jobs,
+    isLoading: normalizedIsLoading,
+    isError: normalizedIsError,
+    errorMessage: normalizedErrorMessage,
+    jobs: normalizedJobs,
     hasCurrentUser,
   };
 };

@@ -44,11 +44,7 @@ describe("useJobsProfiles", () => {
 
   it("marca error solo cuando falla la suscripcion", async () => {
     mocks.subscribeToJobProfiles.mockImplementation(
-      (
-        _onUpdate: (profiles: unknown[]) => void,
-        onError: (error: Error) => void,
-        _onComplete: () => void
-      ) => {
+      (_onUpdate: (profiles: unknown[]) => void, onError: (error: Error) => void) => {
         onError(new Error("snapshot failed"));
         return vi.fn();
       }

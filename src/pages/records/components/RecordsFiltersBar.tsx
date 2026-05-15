@@ -1,5 +1,5 @@
 import type { Branch, JobProfile, JobPosition } from "@/types";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { MdFilterList } from "react-icons/md";
 import { MdFilterListOff } from "react-icons/md";
 
@@ -46,9 +46,13 @@ const RecordsFiltersBar = ({
   const [isOpen, setIsOpen] = useState(false);
   const [draftFilters, setDraftFilters] = useState<RecordsFiltersState>(filters);
 
-  useEffect(() => {
-    setDraftFilters(filters);
-  }, [filters]);
+  const handleToggleFilters = () => {
+    if (!isOpen) {
+      setDraftFilters(filters);
+    }
+
+    setIsOpen((current) => !current);
+  };
 
   const isMobileViewport = () => {
     if (typeof window === "undefined") return false;
@@ -100,7 +104,7 @@ const RecordsFiltersBar = ({
         <button
           type="button"
           className="inline-flex items-center gap-2 rounded-full  px-3 py-1.5 text-[var(--accent)] transition duration-200 hover:border-[var(--accent)]"
-          onClick={() => setIsOpen((current) => !current)}
+          onClick={handleToggleFilters}
           aria-expanded={isOpen}
           aria-controls="records-filters-panel"
         >
