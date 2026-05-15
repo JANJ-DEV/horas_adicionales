@@ -72,20 +72,25 @@ export const useEditRecord = () => {
       }
 
       setIsLoadingRecord(true);
-      const fetchedRecord = await getRecordById(id);
-      if (!fetchedRecord) {
-        notify.error("No se encontró el documento", { scope: TOAST_SCOPE.RECORDS });
-        setRecord(null);
-        setIsLoadingRecord(false);
-        return;
-      }
+      try {
+        const fetchedRecord = await getRecordById(id);
+        if (!fetchedRecord) {
+          notify.error("No se encontró el documento", { scope: TOAST_SCOPE.RECORDS });
+          setRecord(null);
+          setIsLoadingRecord(false);
+          return;
+        }
 
-      setRecord(fetchedRecord);
-      setSelectedProfileId(fetchedRecord.jobProfileId ?? "");
-      setSelectedProfileContext(
-        fetchedRecord.branchId ?? null,
-        fetchedRecord.jobPositionId ?? null
-      );
+        setRecord(fetchedRecord);
+        setSelectedProfileId(fetchedRecord.jobProfileId ?? "");
+        setSelectedProfileContext(
+          fetchedRecord.branchId ?? null,
+          fetchedRecord.jobPositionId ?? null
+        );
+      } catch {
+        notify.error("No se pudo cargar el registro", { scope: TOAST_SCOPE.RECORDS });
+        setRecord(null);
+      }
       setIsLoadingRecord(false);
     };
 

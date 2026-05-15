@@ -186,6 +186,35 @@ describe("jobs.actions", () => {
     });
   });
 
+  it("add devuelve undefined y notifica error si saveJobProfile falla", async () => {
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    mocks.saveJobProfile.mockRejectedValue(new Error("write failed"));
+
+    const result = await add(
+      buildActionArgs(
+        buildRequest([
+          ["title", "Turno noche"],
+          ["branch", "branch-1"],
+          ["jobPosition", "job-1"],
+          ["estimatedHourlyRate", "12.5"],
+        ]),
+        "/jobs-profiles/add"
+      )
+    );
+
+    expect(result).toBeUndefined();
+    expect(mocks.toastError).toHaveBeenCalledWith("No se pudo guardar el perfil de trabajo", {
+      containerId: "jobs-profiles",
+      autoClose: 3000,
+      closeButton: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      pauseOnFocusLoss: false,
+      draggable: false,
+    });
+    expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+  });
+
   it("update rechaza displayName vacio", async () => {
     const result = await update(
       buildActionArgs(buildRequest([["displayName", ""]]), "/account/update")

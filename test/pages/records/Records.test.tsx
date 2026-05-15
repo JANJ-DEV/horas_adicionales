@@ -3,14 +3,14 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { MemoryRouter } from "react-router";
 
 const mocks = vi.hoisted(() => ({
-  useRecord: vi.fn(),
+  useRecordsFiltering: vi.fn(),
   subscribeToBranches: vi.fn(),
   subscribeToJobProfiles: vi.fn(),
   useInfiniteScroll: vi.fn(),
 }));
 
-vi.mock("../../../src/pages/records/hooks/useRecord", () => ({
-  useRecord: mocks.useRecord,
+vi.mock("../../../src/pages/records/hooks/useRecordsFiltering", () => ({
+  useRecordsFiltering: mocks.useRecordsFiltering,
 }));
 
 vi.mock("@/services/branches.services", () => ({
@@ -102,14 +102,34 @@ describe("Records", () => {
   it("restaura el scroll al registro seleccionado aunque quede fuera del primer bloque visible", async () => {
     const records = Array.from({ length: 10 }, (_, index) => buildRecord(`record-${index + 1}`));
 
-    mocks.useRecord.mockReturnValue({
-      records,
+    mocks.useRecordsFiltering.mockReturnValue({
+      filters: {
+        branchId: "",
+        jobPositionId: "",
+        jobProfileId: "",
+        dateFrom: "",
+        dateTo: "",
+        minHourlyRate: "",
+        maxHourlyRate: "",
+        minWorkedHours: "",
+        maxWorkedHours: "",
+      },
+      selectedPeriod: "week",
+      hasManualDateRange: false,
+      recordsByPeriod: records,
+      summary: {
+        totalHoursDecimal: 0,
+        totalSalary: 0,
+      },
+      effectiveSummaryPeriod: "week",
       isLoading: false,
       isError: false,
       errorMessage: null,
       hasCurrentUser: true,
       handleDeleteRecord: vi.fn(),
       handlerViewDetails: vi.fn(),
+      handlePeriodChange: vi.fn(),
+      handleFilterChange: vi.fn(),
     });
 
     rememberSelectedRecordId("record-10");

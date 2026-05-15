@@ -45,12 +45,31 @@ type LegacyRecordMatcher = {
   jobPositionId?: string;
 };
 
+type RecordWithLegacyDate = RecordService & {
+  fecha?: string | Date;
+};
+
 export type RecordsQueryFilters = {
   branchId?: string;
   jobPositionId?: string;
   jobProfileId?: string;
   dateFrom?: string;
   dateTo?: string;
+};
+
+const getRecordDateValue = (record: RecordWithLegacyDate): string | Date | undefined => {
+  return record.dateTimeRecord ?? record.fecha;
+};
+
+const normalizeRecordDate = (record: RecordWithLegacyDate) => {
+  const recordWithoutLegacyDate = { ...record };
+  delete recordWithoutLegacyDate.fecha;
+  const normalizedDate = getRecordDateValue(record);
+
+  return {
+    ...recordWithoutLegacyDate,
+    ...(normalizedDate ? { dateTimeRecord: normalizedDate } : {}),
+  };
 };
 
 const buildRecordsQueryConstraints = (filters?: RecordsQueryFilters) => {
@@ -125,12 +144,13 @@ export const subscribeToRecords = (
   return unsubscribe;
 };
 
-export const saveRecord = async (record: RecordService) => {
+export const saveRecord = async (record: RecordService): Promise<RecordService> => {
   const userId = authFirebase.currentUser?.uid;
 
   if (!userId) {
-    handleAppError(new Error("No hay un usuario autenticado"), "records.service.saveRecord");
-    return null;
+    const authError = new Error("No hay un usuario autenticado");
+    handleAppError(authError, "records.service.saveRecord");
+    throw authError;
   }
 
   try {
@@ -157,19 +177,25 @@ export const saveRecord = async (record: RecordService) => {
     return { ...record, id: newDocRef.id } as RecordService;
   } catch (error) {
     handleAppError(error, "records.service.saveRecord");
-    return null;
+    throw error;
   }
 };
 
-export const getRecords = async (userId: string) => {
+export const getRecords = async (userId: string): Promise<RecordService[]> => {
+  if (!userId) {
+    const authError = new Error("No hay un usuario autenticado");
+    handleAppError(authError, "records.service.getRecords");
+    throw authError;
+  }
+
   try {
     const collectionRef = collection(firestore, "users", userId, NAME_COLLECTION);
     const querySnapshot = await getDocs(collectionRef);
     const records = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-    return records;
+    return records as RecordService[];
   } catch (error) {
     handleAppError(error, "records.service.getRecords");
-    return [];
+    throw error;
   }
 };
 
@@ -177,7 +203,13 @@ export const updateRecord = async (
   userId: string,
   recordId: string,
   updatedData: Partial<RecordService>
-) => {
+): Promise<true> => {
+  if (!userId) {
+    const authError = new Error("No hay un usuario autenticado");
+    handleAppError(authError, "records.service.updateRecord");
+    throw authError;
+  }
+
   try {
     const docRef = doc(firestore, "users", userId, NAME_COLLECTION, recordId);
     await updateDoc(docRef, {
@@ -187,7 +219,7 @@ export const updateRecord = async (
     return true;
   } catch (error) {
     handleAppError(error, "records.service.updateRecord");
-    return false;
+    throw error;
   }
 };
 
@@ -268,12 +300,14 @@ export const deleteRecord = async (recordId: string): Promise<boolean> => {
 };
 
 export const getRecordById = async (recordId: string): Promise<RecordService | null> => {
+  const userId = authFirebase.currentUser?.uid;
+  if (!userId) {
+    const authError = new Error("No hay un usuario autenticado");
+    handleAppError(authError, "records.service.getRecordById");
+    throw authError;
+  }
+
   try {
-    const userId = authFirebase.currentUser?.uid;
-    if (!userId) {
-      handleAppError(new Error("No hay un usuario autenticado"), "records.service.getRecordById");
-      return null;
-    }
     const docRef = doc(firestore, "users", userId, NAME_COLLECTION, recordId);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
@@ -283,42 +317,70 @@ export const getRecordById = async (recordId: string): Promise<RecordService | n
     }
   } catch (error) {
     handleAppError(error, "records.service.getRecordById");
-    return null;
+    throw error;
   }
 };
 
-export const getRecordsByDateRange = async (userId: string, startDate: Date, endDate: Date) => {
+export const getRecordsByDateRange = async (
+  userId: string,
+  startDate: Date,
+  endDate: Date
+): Promise<RecordService[]> => {
+  if (!userId) {
+    const authError = new Error("No hay un usuario autenticado");
+    handleAppError(authError, "records.service.getRecordsByDateRange");
+    throw authError;
+  }
+
   try {
     const collectionRef = collection(firestore, "users", userId, NAME_COLLECTION);
     const querySnapshot = await getDocs(collectionRef);
-    const records = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      titleJobProfile: doc.data().titleJobProfile,
-      fecha: doc.data().fecha,
-      ...doc.data(),
-    }));
+    const records = querySnapshot.docs.map((doc) =>
+      normalizeRecordDate({
+        id: doc.id,
+        ...(doc.data() as RecordWithLegacyDate),
+      })
+    );
     // Filtrar registros por rango de fechas
     const filteredRecords = records.filter((record) => {
-      const recordDate = new Date(record.fecha as string | Date);
+      const recordDateValue = getRecordDateValue(record as RecordWithLegacyDate);
+      if (!recordDateValue) {
+        return false;
+      }
+
+      const recordDate = new Date(recordDateValue);
+      if (Number.isNaN(recordDate.getTime())) {
+        return false;
+      }
+
       return recordDate >= startDate && recordDate <= endDate;
     });
     return filteredRecords;
   } catch (error) {
     handleAppError(error, "records.service.getRecordsByDateRange");
-    return [];
+    throw error;
   }
 };
 
-export const getRecordsByCompanyName = async (userId: string, companyName: string) => {
+export const getRecordsByCompanyName = async (
+  userId: string,
+  companyName: string
+): Promise<RecordService[]> => {
+  if (!userId) {
+    const authError = new Error("No hay un usuario autenticado");
+    handleAppError(authError, "records.service.getRecordsByCompanyName");
+    throw authError;
+  }
+
   try {
     const collectionRef = collection(firestore, "users", userId, NAME_COLLECTION);
     const querySnapshot = await getDocs(collectionRef);
-    const records = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      titleJobProfile: doc.data().titleJobProfile,
-      fecha: doc.data().fecha,
-      ...doc.data(),
-    }));
+    const records = querySnapshot.docs.map((doc) =>
+      normalizeRecordDate({
+        id: doc.id,
+        ...(doc.data() as RecordWithLegacyDate),
+      })
+    );
     // Filtrar registros por nombre de empresa
     const filteredRecords = records.filter((record) =>
       record.titleJobProfile.toLowerCase().includes(companyName.toLowerCase())
@@ -326,6 +388,6 @@ export const getRecordsByCompanyName = async (userId: string, companyName: strin
     return filteredRecords;
   } catch (error) {
     handleAppError(error, "records.service.getRecordsByCompanyName");
-    return [];
+    throw error;
   }
 };

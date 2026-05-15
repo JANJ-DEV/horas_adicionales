@@ -96,12 +96,35 @@ describe("jobsProfile.service", () => {
     expect(result).toBe(unsubscribe);
   });
 
-  it("saveJobProfile devuelve null si no hay usuario autenticado", async () => {
+  it("subscribeToJobProfiles reporta error y completa si no hay usuario autenticado", () => {
+    const callback = vi.fn();
+    const onError = vi.fn();
+    const onComplete = vi.fn();
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     mocks.authFirebase.currentUser = null;
 
-    const result = await saveJobProfile({ title: "Perfil noche" } as never);
+    const unsubscribe = subscribeToJobProfiles(callback, onError, onComplete);
 
-    expect(result).toBeNull();
+    expect(mocks.onSnapshot).not.toHaveBeenCalled();
+    expect(onError).toHaveBeenCalledWith(expect.any(Error));
+    expect(onComplete).toHaveBeenCalledTimes(1);
+    expect(typeof unsubscribe).toBe("function");
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "Error general en jobsProfile.service.subscribeToJobProfiles: No hay un usuario autenticado"
+    );
+  });
+
+  it("saveJobProfile propaga error si no hay usuario autenticado", async () => {
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    mocks.authFirebase.currentUser = null;
+
+    await expect(saveJobProfile({ title: "Perfil noche" } as never)).rejects.toThrow(
+      "No hay un usuario autenticado"
+    );
+
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "Error general en jobsProfile.service.saveJobProfile: No hay un usuario autenticado"
+    );
   });
 
   it("saveJobProfile persiste el payload y devuelve el perfil con id", async () => {
@@ -128,7 +151,6 @@ describe("jobsProfile.service", () => {
   });
 
   it("getJobProfileById devuelve null si no hay documento", async () => {
-    const consoleWarnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     mocks.getDoc.mockResolvedValue({
       exists: () => false,
       id: "profile-404",
@@ -138,9 +160,16 @@ describe("jobsProfile.service", () => {
     const result = await getJobProfileById("profile-404");
 
     expect(result).toBeNull();
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      "No se encontró el perfil de trabajo con ID:",
-      "profile-404"
+  });
+
+  it("getJobProfileById propaga error si no hay usuario autenticado", async () => {
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    mocks.authFirebase.currentUser = null;
+
+    await expect(getJobProfileById("profile-1")).rejects.toThrow("No hay un usuario autenticado");
+
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "Error general en jobsProfile.service.getJobProfileById: No hay un usuario autenticado"
     );
   });
 
@@ -163,6 +192,21 @@ describe("jobsProfile.service", () => {
     });
   });
 
+  it("updateJobProfile propaga error si no hay usuario autenticado", async () => {
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    mocks.authFirebase.currentUser = null;
+
+    await expect(
+      updateJobProfile("profile-1", {
+        title: "Perfil tarde",
+      })
+    ).rejects.toThrow("No hay un usuario autenticado");
+
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "Error general en jobsProfile.service.updateJobProfile: No hay un usuario autenticado"
+    );
+  });
+
   it("deleteJobProfile elimina el documento y devuelve true", async () => {
     const result = await deleteJobProfile("profile-1");
 
@@ -171,5 +215,16 @@ describe("jobsProfile.service", () => {
       path: "users/user-123/jobsProfiles/profile-1",
     });
     expect(result).toBe(true);
+  });
+
+  it("deleteJobProfile propaga error si no hay usuario autenticado", async () => {
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    mocks.authFirebase.currentUser = null;
+
+    await expect(deleteJobProfile("profile-1")).rejects.toThrow("No hay un usuario autenticado");
+
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "Error general en jobsProfile.service.deleteJobProfile: No hay un usuario autenticado"
+    );
   });
 });

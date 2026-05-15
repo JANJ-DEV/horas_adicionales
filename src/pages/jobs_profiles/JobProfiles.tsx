@@ -4,6 +4,7 @@ import { lazy, Suspense } from "react";
 import ErrorApp from "@/components/Error";
 import CardsLayout from "./components/CardsLayout";
 import ProfileCardSkeleton from "./components/ProfileCardSkeleton";
+import EmptyState from "@/components/EmptyState";
 
 const JobProfileCard = lazy(() => import("./components/JobProfileCard"));
 
@@ -25,7 +26,13 @@ const JobProfiles = ({ variant = "default" }: PropsJobProfiles) => {
     <section className={variantsStyles[variant]}>
       {hasCurrentUser && isLoading && <CardsLayout variant="default">{skeletonCards}</CardsLayout>}
       {hasCurrentUser && !isLoading && <ErrorApp isError={isError} errorMessage={errorMessage} />}
-      {hasCurrentUser && !isLoading && !isError && (
+      {hasCurrentUser && !isLoading && !isError && jobs.length === 0 && (
+        <EmptyState
+          title="Aún no tienes perfiles de trabajo"
+          description="Crea tu primer perfil para comenzar a registrar jornadas."
+        />
+      )}
+      {hasCurrentUser && !isLoading && !isError && jobs.length > 0 && (
         <Suspense fallback={<CardsLayout variant="default">{skeletonCards}</CardsLayout>}>
           <CardsLayout variant="default">
             {jobs.map((jobProfile) => {

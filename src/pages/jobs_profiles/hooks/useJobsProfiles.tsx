@@ -8,8 +8,7 @@ export const useJobsProfiles = () => {
   const { currentUser } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>("");
-  const customErrorMessage = "No tienes registros";
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [jobs, setJobs] = useState<JobProfile[]>([]);
   const hasCurrentUser = Boolean(currentUser?.uid);
 
@@ -22,13 +21,13 @@ export const useJobsProfiles = () => {
       (profiles) => {
         if (!profiles || profiles.length === 0) {
           setJobs([]);
-          setIsError(true);
-          setErrorMessage(customErrorMessage);
+          setIsError(false);
+          setErrorMessage(null);
           setIsLoading(false);
         } else {
           setJobs(profiles);
           setIsError(false);
-          setErrorMessage("");
+          setErrorMessage(null);
           setIsLoading(false);
         }
       },
@@ -51,11 +50,16 @@ export const useJobsProfiles = () => {
     };
   }, [currentUser?.uid]);
 
+  const normalizedJobs = hasCurrentUser ? jobs : [];
+  const normalizedIsError = hasCurrentUser ? isError : false;
+  const normalizedErrorMessage = hasCurrentUser ? errorMessage : null;
+  const normalizedIsLoading = hasCurrentUser ? isLoading : false;
+
   return {
-    isLoading,
-    isError,
-    errorMessage,
-    jobs,
+    isLoading: normalizedIsLoading,
+    isError: normalizedIsError,
+    errorMessage: normalizedErrorMessage,
+    jobs: normalizedJobs,
     hasCurrentUser,
   };
 };

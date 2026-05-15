@@ -174,8 +174,10 @@ export async function add({ request }: ActionFunctionArgs): Promise<AddRecordAct
     };
   }
 
-  const savedRecord = await saveRecord(parsedRecord.data);
-  if (!savedRecord) {
+  let savedRecord: RecordService;
+  try {
+    savedRecord = await saveRecord(parsedRecord.data);
+  } catch {
     return {
       error: "No se pudo guardar el registro",
     };
@@ -212,8 +214,9 @@ export async function update({ request, params }: ActionFunctionArgs) {
     };
   }
 
-  const updated = await updateRecord(userId, recordId, parsedRecord.data);
-  if (!updated) {
+  try {
+    await updateRecord(userId, recordId, parsedRecord.data);
+  } catch {
     return {
       error: "No se pudo actualizar el registro",
     };

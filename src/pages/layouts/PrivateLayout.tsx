@@ -5,9 +5,14 @@ import MainHeader from "./MainHeader";
 import MainContent from "./MainContent";
 import Footer from "@/components/Footer";
 import UtilitiesProvider from "@/context/providers/UtilitiesProvider";
+import Loading from "@/components/Loading";
 
 const PrivateLayout: FC = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isAuthResolved } = useAuth();
+
+  if (!isAuthResolved) {
+    return <Loading />;
+  }
 
   if (!isAuthenticated) {
     return <Navigate to="/" replace />;
