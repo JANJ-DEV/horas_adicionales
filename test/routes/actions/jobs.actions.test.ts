@@ -62,11 +62,12 @@ const buildRequest = (entries: Array<[string, string]>) => {
   });
 };
 
-const buildActionArgs = (request: Request, unstablePattern: string): ActionFunctionArgs => ({
+const buildActionArgs = (request: Request, pattern: string): ActionFunctionArgs => ({
   request,
   params: {},
   context: undefined,
-  unstable_pattern: unstablePattern,
+  url: new URL(request.url),
+  pattern,
 });
 
 const setUploadInput = (file?: File) => {
