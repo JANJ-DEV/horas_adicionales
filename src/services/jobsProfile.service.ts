@@ -18,10 +18,18 @@ const nameCollection = "jobsProfiles";
 
 export const subscribeToJobProfiles = (
   callback: (profiles: JobProfile[]) => void,
-  onError: (error: FirestoreError) => void,
+  onError: (error: FirestoreError | Error) => void,
   onComplete: () => void
 ): Unsubscribe => {
   const userId = authFirebase.currentUser?.uid;
+  if (!userId) {
+    const authError = new Error("No hay un usuario autenticado");
+    handleAppError(authError, "jobsProfile.service.subscribeToJobProfiles");
+    onError(authError);
+    onComplete();
+    return () => {};
+  }
+
   const refUser = collection(firestore, `users/${userId}/${nameCollection}`);
   const unsubscribe = onSnapshot(
     refUser,
@@ -52,7 +60,9 @@ export const subscribeToJobProfiles = (
 export const saveJobProfile = async (payload: JobProfile) => {
   const userId = authFirebase.currentUser?.uid;
   if (!userId) {
-    return null;
+    const authError = new Error("No hay un usuario autenticado");
+    handleAppError(authError, "jobsProfile.service.saveJobProfile");
+    throw authError;
   }
   try {
     // 1. Referencia a la colección
@@ -77,11 +87,9 @@ export const saveJobProfile = async (payload: JobProfile) => {
 export const getJobProfileById = async (id: string): Promise<JobProfile | null> => {
   const userId = authFirebase.currentUser?.uid;
   if (!userId) {
-    handleAppError(
-      new Error("No hay un usuario autenticado"),
-      "jobsProfile.service.getJobProfileById"
-    );
-    return null;
+    const authError = new Error("No hay un usuario autenticado");
+    handleAppError(authError, "jobsProfile.service.getJobProfileById");
+    throw authError;
   }
   try {
     const docRef = doc(firestore, "users", userId, nameCollection, id);
@@ -89,7 +97,6 @@ export const getJobProfileById = async (id: string): Promise<JobProfile | null> 
     if (docSnap.exists()) {
       return { id: docSnap.id, ...docSnap.data() } as JobProfile;
     } else {
-      console.warn("No se encontró el perfil de trabajo con ID:", id);
       return null;
     }
   } catch (error) {
@@ -101,11 +108,9 @@ export const getJobProfileById = async (id: string): Promise<JobProfile | null> 
 export const updateJobProfile = async (id: string, payload: Partial<JobProfile>) => {
   const userId = authFirebase.currentUser?.uid;
   if (!userId) {
-    handleAppError(
-      new Error("No hay un usuario autenticado"),
-      "jobsProfile.service.updateJobProfile"
-    );
-    return;
+    const authError = new Error("No hay un usuario autenticado");
+    handleAppError(authError, "jobsProfile.service.updateJobProfile");
+    throw authError;
   }
   try {
     const docRef = doc(firestore, "users", userId, nameCollection, id);
@@ -127,11 +132,9 @@ export const updateJobProfile = async (id: string, payload: Partial<JobProfile>)
 export const deleteJobProfile = async (id: string) => {
   const userId = authFirebase.currentUser?.uid;
   if (!userId) {
-    handleAppError(
-      new Error("No hay un usuario autenticado"),
-      "jobsProfile.service.deleteJobProfile"
-    );
-    return;
+    const authError = new Error("No hay un usuario autenticado");
+    handleAppError(authError, "jobsProfile.service.deleteJobProfile");
+    throw authError;
   }
   try {
     const docRef = doc(firestore, "users", userId, nameCollection, id);

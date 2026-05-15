@@ -21,50 +21,54 @@ export const add = async ({ request }: ActionFunctionArgs) => {
     return;
   }
 
-  const branch = (await getBranchById(idBranch)) as Branch | null;
-  if (!branch) {
-    notify.error("No se encontró la rama seleccionada", { scope: TOAST_SCOPE.JOBS_PROFILES });
-    return;
-  }
+  try {
+    const branch = (await getBranchById(idBranch)) as Branch | null;
+    if (!branch) {
+      notify.error("No se encontró la rama seleccionada", { scope: TOAST_SCOPE.JOBS_PROFILES });
+      return;
+    }
 
-  const jobPositions = (await getJobPositionFromBranchId(
-    idJobPosition,
-    idBranch
-  )) as JobPosition | null;
-  if (!jobPositions) {
-    notify.error("No se encontró el puesto de trabajo seleccionado", {
+    const jobPositions = (await getJobPositionFromBranchId(
+      idJobPosition,
+      idBranch
+    )) as JobPosition | null;
+    if (!jobPositions) {
+      notify.error("No se encontró el puesto de trabajo seleccionado", {
+        scope: TOAST_SCOPE.JOBS_PROFILES,
+      });
+      return;
+    }
+
+    const newJobProfile: JobProfile = {
+      title,
+      branch: {
+        id: idBranch,
+        name: branch.name,
+        description: branch.description,
+      },
+      jobPosition: {
+        id: idJobPosition,
+        name: jobPositions.name,
+        description: jobPositions.description,
+      },
+      estimatedHourlyRate: parseFloat(estimatedHourlyRate),
+    };
+
+    const jobProfile = await saveJobProfile(newJobProfile);
+
+    notify.success("Perfil de trabajo guardado correctamente ", {
       scope: TOAST_SCOPE.JOBS_PROFILES,
     });
-    return;
-  }
-
-  const newJobProfile: JobProfile = {
-    title,
-    branch: {
-      id: idBranch,
-      name: branch.name,
-      description: branch.description,
-    },
-    jobPosition: {
-      id: idJobPosition,
-      name: jobPositions.name,
-      description: jobPositions.description,
-    },
-    estimatedHourlyRate: parseFloat(estimatedHourlyRate),
-  };
-
-  const jobProfile = (await saveJobProfile(newJobProfile)) as JobProfile | null;
-  if (!jobProfile) {
+    return {
+      success: true,
+      message: "Perfil de trabajo guardado correctamente",
+      jobProfile,
+    };
+  } catch (error) {
+    handleAppError(error, "jobs.actions.add");
     notify.error("No se pudo guardar el perfil de trabajo", { scope: TOAST_SCOPE.JOBS_PROFILES });
     return;
   }
-
-  notify.success("Perfil de trabajo guardado correctamente ", { scope: TOAST_SCOPE.JOBS_PROFILES });
-  return {
-    success: true,
-    message: "Perfil de trabajo guardado correctamente",
-    jobProfile,
-  };
 };
 
 export const update = async ({ request }: ActionFunctionArgs) => {

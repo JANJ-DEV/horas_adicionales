@@ -279,6 +279,27 @@ describe("records.actions", () => {
     });
   });
 
+  it("add devuelve error cuando saveRecord falla con excepción", async () => {
+    mocks.saveRecord.mockRejectedValue(new Error("firestore down"));
+
+    const result = await add(
+      buildActionArgs(
+        buildRequest([
+          ["jobProfileId", "profile-1"],
+          ["titleJobProfile", "Turno noche"],
+          ["dateTimeRecord", "2026-03-14"],
+          ["workStartTime", "08:00"],
+          ["workEndTime", "17:00"],
+          ["estimatedHourlyRate", "15"],
+        ])
+      )
+    );
+
+    expect(result).toEqual({
+      error: "No se pudo guardar el registro",
+    });
+  });
+
   it("update falla si no llega el id del registro", async () => {
     const result = await update({
       ...buildActionArgs(buildRequest([])),
@@ -342,5 +363,28 @@ describe("records.actions", () => {
       jobProfileId: "profile-2",
       titleJobProfile: "Turno tarde",
     });
+  });
+
+  it("update devuelve error cuando updateRecord lanza excepción", async () => {
+    mocks.updateRecord.mockRejectedValue(new Error("write failed"));
+
+    const result = await update({
+      ...buildActionArgs(
+        buildRequest([
+          ["jobProfileId", "profile-2"],
+          ["titleJobProfile", "Turno tarde"],
+          ["dateTimeRecord", "2026-03-18"],
+          ["workStartTime", "09:00"],
+          ["workEndTime", "18:00"],
+          ["estimatedHourlyRate", "20"],
+        ])
+      ),
+      params: { id: "record-9" },
+    });
+
+    expect(result).toEqual({
+      error: "No se pudo actualizar el registro",
+    });
+    expect(mocks.updateJobProfile).not.toHaveBeenCalled();
   });
 });

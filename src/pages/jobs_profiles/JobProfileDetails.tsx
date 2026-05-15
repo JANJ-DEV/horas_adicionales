@@ -27,6 +27,9 @@ const JobProfileDetails: React.FC = () => {
       })
       .catch((error) => {
         handleAppError(error, "JobProfileDetails.getJobProfileById");
+        notify.error("No se pudo cargar el perfil de trabajo", {
+          scope: TOAST_SCOPE.JOBS_PROFILES,
+        });
       });
   }, [id]);
 

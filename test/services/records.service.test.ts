@@ -44,6 +44,9 @@ vi.mock("@/apis/firebase", () => ({
 
 import {
   deleteRecord,
+  getRecords,
+  getRecordsByCompanyName,
+  getRecordsByDateRange,
   getRecordById,
   saveRecord,
   subscribeToRecords,
@@ -182,14 +185,16 @@ describe("records.service", () => {
     );
   });
 
-  it("saveRecord no persiste si no hay usuario", async () => {
+  it("saveRecord no persiste si no hay usuario y propaga error", async () => {
     const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     mocks.authFirebase.currentUser = null;
 
-    await saveRecord({
-      titleJobProfile: "Turno noche",
-      dateTimeRecord: "2026-03-14",
-    });
+    await expect(
+      saveRecord({
+        titleJobProfile: "Turno noche",
+        dateTimeRecord: "2026-03-14",
+      })
+    ).rejects.toThrow("No hay un usuario autenticado");
 
     expect(mocks.setDoc).not.toHaveBeenCalled();
     expect(consoleErrorSpy).toHaveBeenCalledWith(
@@ -257,6 +262,29 @@ describe("records.service", () => {
     expect(result).toBeNull();
   });
 
+  it("getRecordById propaga error cuando no hay usuario autenticado", async () => {
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    mocks.authFirebase.currentUser = null;
+
+    await expect(getRecordById("record-1")).rejects.toThrow("No hay un usuario autenticado");
+
+    expect(mocks.getDoc).not.toHaveBeenCalled();
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "Error general en records.service.getRecordById: No hay un usuario autenticado"
+    );
+  });
+
+  it("getRecordById propaga error cuando falla la lectura en Firestore", async () => {
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    mocks.getDoc.mockRejectedValue(new Error("firestore unavailable"));
+
+    await expect(getRecordById("record-1")).rejects.toThrow("firestore unavailable");
+
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "Error general en records.service.getRecordById: firestore unavailable"
+    );
+  });
+
   it("updateRecord actualiza el documento y agrega updatedAt", async () => {
     const result = await updateRecord("user-123", "record-1", {
       titleJobProfile: "Turno tarde",
@@ -270,6 +298,21 @@ describe("records.service", () => {
       }
     );
     expect(result).toBe(true);
+  });
+
+  it("updateRecord propaga error cuando no hay usuario", async () => {
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    await expect(
+      updateRecord("", "record-1", {
+        titleJobProfile: "Turno tarde",
+      })
+    ).rejects.toThrow("No hay un usuario autenticado");
+
+    expect(mocks.updateDoc).not.toHaveBeenCalled();
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "Error general en records.service.updateRecord: No hay un usuario autenticado"
+    );
   });
 
   it("updateEstimatedHourlyRateByJobProfile sincroniza la tarifa en los registros relacionados", async () => {
@@ -393,5 +436,167 @@ describe("records.service", () => {
       path: "users/user-123/records/record-1",
     });
     expect(result).toBe(true);
+  });
+
+  it("getRecordsByDateRange usa dateTimeRecord y fallback de fecha legacy", async () => {
+    mocks.getDocs.mockResolvedValue({
+      docs: [
+        {
+          id: "record-1",
+          data: () => ({
+            titleJobProfile: "Turno noche",
+            dateTimeRecord: "2026-03-14",
+          }),
+        },
+        {
+          id: "record-2",
+          data: () => ({
+            titleJobProfile: "Turno legacy",
+            fecha: "2026-03-15",
+          }),
+        },
+        {
+          id: "record-3",
+          data: () => ({
+            titleJobProfile: "Turno fuera de rango",
+            dateTimeRecord: "2026-03-30",
+          }),
+        },
+      ],
+    });
+
+    const result = await getRecordsByDateRange(
+      "user-123",
+      new Date("2026-03-14"),
+      new Date("2026-03-16")
+    );
+
+    expect(result).toHaveLength(2);
+    expect(result[0]).toEqual(
+      expect.objectContaining({
+        id: "record-1",
+        dateTimeRecord: "2026-03-14",
+      })
+    );
+    expect(result[1]).toEqual(
+      expect.objectContaining({
+        id: "record-2",
+        dateTimeRecord: "2026-03-15",
+      })
+    );
+    expect(result[1]).not.toHaveProperty("fecha");
+  });
+
+  it("getRecordsByCompanyName filtra por titulo sin depender de fecha legacy", async () => {
+    mocks.getDocs.mockResolvedValue({
+      docs: [
+        {
+          id: "record-1",
+          data: () => ({
+            titleJobProfile: "Empresa Uno",
+            dateTimeRecord: "2026-03-10",
+          }),
+        },
+        {
+          id: "record-2",
+          data: () => ({
+            titleJobProfile: "Otra empresa",
+            fecha: "2026-03-11",
+          }),
+        },
+      ],
+    });
+
+    const result = await getRecordsByCompanyName("user-123", "empresa");
+
+    expect(result).toHaveLength(2);
+    expect(result[0]).toEqual(
+      expect.objectContaining({
+        id: "record-1",
+        titleJobProfile: "Empresa Uno",
+      })
+    );
+    expect(result[1]).toEqual(
+      expect.objectContaining({
+        id: "record-2",
+        titleJobProfile: "Otra empresa",
+        dateTimeRecord: "2026-03-11",
+      })
+    );
+    expect(result[1]).not.toHaveProperty("fecha");
+  });
+
+  it("getRecords devuelve los documentos cuando la lectura es exitosa", async () => {
+    mocks.getDocs.mockResolvedValue({
+      docs: [
+        {
+          id: "record-1",
+          data: () => ({
+            titleJobProfile: "Turno uno",
+            dateTimeRecord: "2026-03-10",
+          }),
+        },
+      ],
+    });
+
+    const result = await getRecords("user-123");
+
+    expect(result).toEqual([
+      {
+        id: "record-1",
+        titleJobProfile: "Turno uno",
+        dateTimeRecord: "2026-03-10",
+      },
+    ]);
+  });
+
+  it("getRecords propaga error cuando no hay usuario", async () => {
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    await expect(getRecords("")).rejects.toThrow("No hay un usuario autenticado");
+
+    expect(mocks.getDocs).not.toHaveBeenCalled();
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "Error general en records.service.getRecords: No hay un usuario autenticado"
+    );
+  });
+
+  it("getRecordsByDateRange propaga error cuando falla Firestore", async () => {
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    mocks.getDocs.mockRejectedValue(new Error("read failed"));
+
+    await expect(
+      getRecordsByDateRange("user-123", new Date("2026-03-01"), new Date("2026-03-31"))
+    ).rejects.toThrow("read failed");
+
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "Error general en records.service.getRecordsByDateRange: read failed"
+    );
+  });
+
+  it("getRecordsByCompanyName propaga error cuando no hay usuario", async () => {
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    await expect(getRecordsByCompanyName("", "empresa")).rejects.toThrow(
+      "No hay un usuario autenticado"
+    );
+
+    expect(mocks.getDocs).not.toHaveBeenCalled();
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "Error general en records.service.getRecordsByCompanyName: No hay un usuario autenticado"
+    );
+  });
+
+  it("getRecordsByCompanyName propaga error cuando falla Firestore", async () => {
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    mocks.getDocs.mockRejectedValue(new Error("query failed"));
+
+    await expect(getRecordsByCompanyName("user-123", "empresa")).rejects.toThrow(
+      "query failed"
+    );
+
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "Error general en records.service.getRecordsByCompanyName: query failed"
+    );
   });
 });
