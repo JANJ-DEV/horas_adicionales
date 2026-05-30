@@ -11,6 +11,7 @@ const periodLabel: Record<RecordsPeriod | "range", string> = {
   day: "hoy",
   week: "esta semana",
   month: "este mes",
+  custom_cycle: "este ciclo de facturación",
   range: "periodo seleccionado",
 };
 

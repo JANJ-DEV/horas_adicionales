@@ -97,6 +97,23 @@ describe("utils", () => {
       expect(isDateInPeriod(new Date("2026-02-28T12:00:00.000Z"), "month", referenceDate)).toBe(
         false
       );
+
+      // Custom cycle tests (reference: 2026-03-14)
+      // If cycle starts on the 10th, the current cycle is 2026-03-10 to 2026-04-09
+      expect(isDateInPeriod(new Date("2026-03-15T12:00:00.000Z"), "custom_cycle", referenceDate, 10)).toBe(true);
+      expect(isDateInPeriod(new Date("2026-03-10T12:00:00.000Z"), "custom_cycle", referenceDate, 10)).toBe(true);
+      expect(isDateInPeriod(new Date("2026-03-09T12:00:00.000Z"), "custom_cycle", referenceDate, 10)).toBe(false);
+      expect(isDateInPeriod(new Date("2026-04-09T12:00:00.000Z"), "custom_cycle", referenceDate, 10)).toBe(true);
+      expect(isDateInPeriod(new Date("2026-04-10T12:00:00.000Z"), "custom_cycle", referenceDate, 10)).toBe(false);
+
+      // What if reference date is BEFORE the cycle start day in the current month?
+      // e.g., reference is 2026-03-05, cycle starts on the 10th.
+      // Current cycle should be 2026-02-10 to 2026-03-09
+      const earlyReferenceDate = new Date("2026-03-05T12:00:00.000Z");
+      expect(isDateInPeriod(new Date("2026-02-15T12:00:00.000Z"), "custom_cycle", earlyReferenceDate, 10)).toBe(true);
+      expect(isDateInPeriod(new Date("2026-03-08T12:00:00.000Z"), "custom_cycle", earlyReferenceDate, 10)).toBe(true);
+      expect(isDateInPeriod(new Date("2026-03-10T12:00:00.000Z"), "custom_cycle", earlyReferenceDate, 10)).toBe(false);
+
     });
 
     it("filtra registros por periodo y calcula resumen acumulado", () => {
