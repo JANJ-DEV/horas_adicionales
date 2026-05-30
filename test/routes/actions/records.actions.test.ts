@@ -56,7 +56,8 @@ const buildActionArgs = (request: Request): ActionFunctionArgs => ({
   request,
   params: {},
   context: undefined,
-  unstable_pattern: "/records/add",
+  url: new URL(request.url),
+  pattern: "/records/add",
 });
 
 describe("records.actions", () => {

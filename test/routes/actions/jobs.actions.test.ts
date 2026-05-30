@@ -62,11 +62,12 @@ const buildRequest = (entries: Array<[string, string]>) => {
   });
 };
 
-const buildActionArgs = (request: Request, unstablePattern: string): ActionFunctionArgs => ({
+const buildActionArgs = (request: Request): ActionFunctionArgs => ({
   request,
   params: {},
   context: undefined,
-  unstable_pattern: unstablePattern,
+  url: new URL(request.url),
+  pattern: "*",
 });
 
 const setUploadInput = (file?: File) => {
@@ -109,8 +110,7 @@ describe("jobs.actions", () => {
           ["branch", "branch-1"],
           ["jobPosition", "job-1"],
           ["estimatedHourlyRate", "12.5"],
-        ]),
-        "/jobs-profiles/add"
+        ])
       )
     );
 
@@ -136,8 +136,7 @@ describe("jobs.actions", () => {
           ["branch", "branch-1"],
           ["jobPosition", "job-1"],
           ["estimatedHourlyRate", "12.5"],
-        ]),
-        "/jobs-profiles/add"
+        ])
       )
     );
 
@@ -197,8 +196,7 @@ describe("jobs.actions", () => {
           ["branch", "branch-1"],
           ["jobPosition", "job-1"],
           ["estimatedHourlyRate", "12.5"],
-        ]),
-        "/jobs-profiles/add"
+        ])
       )
     );
 
@@ -217,7 +215,7 @@ describe("jobs.actions", () => {
 
   it("update rechaza displayName vacio", async () => {
     const result = await update(
-      buildActionArgs(buildRequest([["displayName", ""]]), "/account/update")
+      buildActionArgs(buildRequest([["displayName", ""]]))
     );
 
     expect(result).toEqual({
@@ -243,8 +241,7 @@ describe("jobs.actions", () => {
         buildRequest([
           ["displayName", "Juan"],
           ["photoURL", ""],
-        ]),
-        "/account/update"
+        ])
       )
     );
 
@@ -276,8 +273,7 @@ describe("jobs.actions", () => {
         buildRequest([
           ["displayName", "Juan"],
           ["photoURL", ""],
-        ]),
-        "/account/update"
+        ])
       )
     );
 
@@ -304,8 +300,7 @@ describe("jobs.actions", () => {
         buildRequest([
           ["displayName", "Juan"],
           ["photoURL", ""],
-        ]),
-        "/account/update"
+        ])
       )
     );
 
