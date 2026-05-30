@@ -67,7 +67,7 @@ export const calculateSalary = (decimalHours: number, hourlyRate: number): numbe
   return Number(totalSalary.toFixed(2));
 };
 
-export type RecordsPeriod = "day" | "week" | "month";
+export type RecordsPeriod = "day" | "week" | "month" | "custom_cycle";
 
 export type RecordsAdvancedFilters = {
   branchId?: string;
@@ -134,7 +134,8 @@ export const getRecordReferenceDate = (
 export const isDateInPeriod = (
   value: Date,
   period: RecordsPeriod,
-  referenceDate: Date = new Date()
+  referenceDate: Date = new Date(),
+  cycleStartDay: number = 1
 ) => {
   const normalizedValue = startOfDay(value).getTime();
 
@@ -149,6 +150,21 @@ export const isDateInPeriod = (
     return normalizedValue >= start && normalizedValue < end.getTime();
   }
 
+  if (period === "custom_cycle") {
+    const dayOfReference = referenceDate.getDate();
+    let startMonth = referenceDate.getMonth();
+    const startYear = referenceDate.getFullYear();
+
+    if (dayOfReference < cycleStartDay) {
+      startMonth -= 1;
+    }
+
+    const start = new Date(startYear, startMonth, cycleStartDay, 0, 0, 0, 0);
+    const end = new Date(startYear, startMonth + 1, cycleStartDay, 0, 0, 0, 0);
+
+    return normalizedValue >= start.getTime() && normalizedValue < end.getTime();
+  }
+
   const start = startOfMonth(referenceDate).getTime();
   const end = new Date(startOfMonth(referenceDate));
   end.setMonth(end.getMonth() + 1);
@@ -158,12 +174,13 @@ export const isDateInPeriod = (
 export const filterRecordsByPeriod = <T extends RecordLike>(
   records: T[],
   period: RecordsPeriod,
-  referenceDate: Date = new Date()
+  referenceDate: Date = new Date(),
+  cycleStartDay: number = 1
 ) => {
   return records.filter((record) => {
     const reference = getRecordReferenceDate(record);
     if (!reference) return false;
-    return isDateInPeriod(reference, period, referenceDate);
+    return isDateInPeriod(reference, period, referenceDate, cycleStartDay);
   });
 };
 

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { subscribeToBranches } from "@/services/branches.services";
 import { subscribeToJobProfiles } from "@/services/jobsProfile.service";
 import type { Branch, JobProfile } from "@/types";
+import type { RecordsPeriod } from "@/utils";
 import RecordsPeriodSelector from "./components/RecordsPeriodSelector";
 import RecordsSummary from "./components/RecordsSummary";
 import RecordsListGrid from "./components/RecordsListGrid";
@@ -73,6 +74,8 @@ const Records = () => {
     handlerViewDetails,
     handlePeriodChange,
     handleFilterChange,
+    cycleStartDay,
+    handleCycleStartDayChange,
   } = useRecordsFiltering();
   const [branches, setBranches] = useState<Branch[]>([]);
   const [jobProfiles, setJobProfiles] = useState<JobProfile[]>([]);
@@ -163,7 +166,7 @@ const Records = () => {
 
   const visibleRecords = recordsByPeriod.slice(0, effectiveVisibleCount);
 
-  const handlePeriodChangeWithPaginationReset = (nextPeriod: "day" | "week" | "month") => {
+  const handlePeriodChangeWithPaginationReset = (nextPeriod: RecordsPeriod) => {
     handlePeriodChange(nextPeriod);
     setVisibleCount(PAGE_SIZE);
   };
@@ -274,6 +277,8 @@ const Records = () => {
             <RecordsPeriodSelector
               value={selectedPeriod}
               onChange={handlePeriodChangeWithPaginationReset}
+              cycleStartDay={cycleStartDay}
+              onChangeCycleStartDay={handleCycleStartDayChange}
               disabled={hasManualDateRange}
             />
             <div className="flex w-full items-center justify-between gap-2 sm:w-auto sm:justify-end">

@@ -35,7 +35,7 @@ const EMPTY_FILTERS: RecordsFiltersState = {
 };
 
 const inputCls =
-  "w-full rounded-xl border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-2 text-sm text-[var(--text)] outline-none transition duration-200 focus:border-[var(--accent)]";
+  "w-full h-[38px] rounded-xl border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-2 text-sm text-[var(--text)] outline-none transition duration-200 focus:border-[var(--accent)]";
 
 const RecordsFiltersBar = ({
   branches,
@@ -122,25 +122,22 @@ const RecordsFiltersBar = ({
       {/* Panel de filtros absoluto */}
       <div
         id="records-filters-panel"
-        className={`z-100 ${isOpen ? "fixed" : "hidden"} top-0 left-0 w-[100vw] h-[100vh] app-surface p-6 pb-24 overflow-auto transition-all duration-200 rounded-none shadow-2xl
-        md:absolute md:top-15 md:left-auto md:right-0 md:mt-2 md:w-[380px] md:h-auto md:rounded-xl md:p-4 md:shadow-xl`}
+        className={`z-100 ${isOpen ? "fixed" : "hidden"} top-0 left-0 w-[100vw] h-[100vh] app-surface p-6 pb-24 overflow-auto transition-all duration-200 rounded-none shadow-2xl md:absolute md:top-15 md:left-auto md:right-0 md:mt-2 md:w-[480px] md:h-auto md:rounded-xl md:p-6 md:shadow-2xl md:border md:border-[var(--border)]`}
         style={{ maxWidth: "100vw", maxHeight: "100vh" }}
       >
-        <div className="flex justify-between items-center mb-4 md:hidden">
-          <span className="font-semibold text-lg">Filtros</span>
-          <button onClick={() => setIsOpen(false)} className="text-[var(--accent)] text-xl">
-            ✕
+        <div className="flex justify-between items-center mb-4 mt-2">
+          <span className="font-semibold text-lg md:hidden">Filtros Avanzados</span>
+          <button
+            type="button"
+            className="rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-1.5 text-[11px] uppercase tracking-wider font-semibold text-[var(--text)] transition duration-200 hover:border-[var(--accent)] hover:text-[var(--accent)]"
+            onClick={handleResetDraft}
+          >
+            Limpiar filtros
           </button>
         </div>
-        <button
-          type="button"
-          className="rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-1.5 text-xs font-semibold text-[var(--text)] transition duration-200 hover:border-[var(--accent)] hover:text-[var(--accent)] mb-4 md:mb-0"
-          onClick={handleResetDraft}
-        >
-          Limpiar filtros
-        </button>
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
-          <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-[var(--text-soft)]">
+        
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <label className="flex flex-col gap-1.5 text-[10px] font-bold uppercase tracking-wider text-[var(--text-soft)]">
             Rama
             <select
               value={draftFilters.branchId}
@@ -156,8 +153,8 @@ const RecordsFiltersBar = ({
             </select>
           </label>
 
-          <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-[var(--text-soft)]">
-            Puesto de trabajo
+          <label className="flex flex-col gap-1.5 text-[10px] font-bold uppercase tracking-wider text-[var(--text-soft)]">
+            <span className="truncate" title="Puesto de trabajo">Puesto</span>
             <select
               value={draftFilters.jobPositionId}
               onChange={(event) => handleDraftChange("jobPositionId", event.target.value)}
@@ -173,7 +170,7 @@ const RecordsFiltersBar = ({
             </select>
           </label>
 
-          <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-[var(--text-soft)]">
+          <label className="flex flex-col gap-1.5 text-[10px] font-bold uppercase tracking-wider text-[var(--text-soft)]">
             Perfil
             <select
               value={draftFilters.jobProfileId}
@@ -189,7 +186,9 @@ const RecordsFiltersBar = ({
             </select>
           </label>
 
-          <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-[var(--text-soft)]">
+          <div className="col-span-1 md:col-span-3 h-px bg-[var(--border)] my-1" />
+
+          <label className="flex flex-col gap-1.5 text-[10px] font-bold uppercase tracking-wider text-[var(--text-soft)]">
             Fecha desde
             <input
               type="date"
@@ -199,7 +198,7 @@ const RecordsFiltersBar = ({
             />
           </label>
 
-          <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-[var(--text-soft)]">
+          <label className="flex flex-col gap-1.5 text-[10px] font-bold uppercase tracking-wider text-[var(--text-soft)]">
             Fecha hasta
             <input
               type="date"
@@ -208,8 +207,10 @@ const RecordsFiltersBar = ({
               className={inputCls}
             />
           </label>
+          
+          <div className="hidden md:block"></div>
 
-          <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-[var(--text-soft)]">
+          <label className="flex flex-col gap-1.5 text-[10px] font-bold uppercase tracking-wider text-[var(--text-soft)]">
             Tarifa min
             <input
               type="number"
@@ -222,7 +223,7 @@ const RecordsFiltersBar = ({
             />
           </label>
 
-          <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-[var(--text-soft)]">
+          <label className="flex flex-col gap-1.5 text-[10px] font-bold uppercase tracking-wider text-[var(--text-soft)]">
             Tarifa max
             <input
               type="number"
@@ -234,8 +235,10 @@ const RecordsFiltersBar = ({
               className={inputCls}
             />
           </label>
+          
+          <div className="hidden md:block"></div>
 
-          <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-[var(--text-soft)]">
+          <label className="flex flex-col gap-1.5 text-[10px] font-bold uppercase tracking-wider text-[var(--text-soft)]">
             Horas min
             <input
               type="number"
@@ -248,7 +251,7 @@ const RecordsFiltersBar = ({
             />
           </label>
 
-          <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-[var(--text-soft)]">
+          <label className="flex flex-col gap-1.5 text-[10px] font-bold uppercase tracking-wider text-[var(--text-soft)]">
             Horas max
             <input
               type="number"
@@ -261,20 +264,24 @@ const RecordsFiltersBar = ({
             />
           </label>
         </div>
-        <p className="mt-4 text-xs text-[var(--text-soft)]">
-          Si defines rango de fechas, tiene prioridad sobre el selector rapido de periodo.
-        </p>
+        
+        <div className="mt-5 rounded-lg bg-[var(--bg-soft)] p-3 text-center border border-[var(--border)]">
+          <p className="text-[11px] leading-relaxed text-[var(--text-soft)]">
+            <strong className="text-[var(--text)]">Nota:</strong> El rango de fechas manual tiene prioridad sobre el selector rápido de periodo.
+          </p>
+        </div>
+
         <div className="fixed bottom-0 left-0 right-0 z-50 mt-4 flex items-center justify-center gap-2 border-t border-[var(--border)] bg-[var(--bg)] px-6 py-3 md:static md:z-auto md:mx-0 md:mt-4 md:justify-center md:border-t-0 md:bg-transparent md:p-0">
           <button
             type="button"
-            className="rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-2 text-[11px] font-semibold tracking-[0.02em] text-[var(--text)] transition duration-200 hover:border-[var(--border-strong)]"
+            className="w-full md:w-auto rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-6 py-2.5 text-xs font-bold tracking-wide text-[var(--text)] transition duration-200 hover:border-[var(--border-strong)]"
             onClick={handleCancel}
           >
             Cancelar
           </button>
           <button
             type="button"
-            className="rounded-full border border-[var(--accent)] bg-[var(--accent)] px-4 py-2 text-[11px] font-semibold tracking-[0.02em] text-slate-950 transition duration-200 hover:bg-[var(--accent-strong)] hover:text-white"
+            className="w-full md:w-auto rounded-full border border-[var(--accent)] bg-[var(--accent)] px-8 py-2.5 text-xs font-bold tracking-wide text-white transition duration-200 shadow-md hover:bg-[var(--accent-strong)] hover:shadow-lg"
             onClick={handleApply}
           >
             Aplicar

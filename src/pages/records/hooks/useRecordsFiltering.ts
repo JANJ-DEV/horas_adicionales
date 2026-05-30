@@ -56,6 +56,7 @@ const sortRecordsByReferenceDate = (records: RecordService[]) => {
 export const useRecordsFiltering = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedPeriod, setSelectedPeriod] = useState<RecordsPeriod>("week");
+  const [cycleStartDay, setCycleStartDay] = useState<number>(10);
 
   const filters = buildFiltersFromSearchParams(searchParams);
   const queryFilters = buildQueryFilters(filters);
@@ -84,13 +85,17 @@ export const useRecordsFiltering = () => {
 
   const recordsByPeriod = hasManualDateRange
     ? recordsByFilters
-    : filterRecordsByPeriod(recordsByFilters, selectedPeriod);
+    : filterRecordsByPeriod(recordsByFilters, selectedPeriod, new Date(), cycleStartDay);
 
   const summary = calculateRecordsSummary(recordsByPeriod);
   const effectiveSummaryPeriod: RecordsPeriod | null = hasManualDateRange ? null : selectedPeriod;
 
   const handlePeriodChange = (nextPeriod: RecordsPeriod) => {
     setSelectedPeriod(nextPeriod);
+  };
+
+  const handleCycleStartDayChange = (day: number) => {
+    setCycleStartDay(day);
   };
 
   const handleFilterChange = (name: keyof RecordsFiltersState, value: string) => {
@@ -129,5 +134,7 @@ export const useRecordsFiltering = () => {
     handlerViewDetails,
     handlePeriodChange,
     handleFilterChange,
+    cycleStartDay,
+    handleCycleStartDayChange,
   };
 };
