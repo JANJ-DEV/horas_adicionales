@@ -52,13 +52,11 @@ const buildRequest = (entries: Array<[string, string]>) => {
   });
 };
 
-const buildActionArgs = (request: Request): ActionFunctionArgs => ({
+const buildActionArgs = (request: Request) => ({
   request,
   params: {},
   context: undefined,
-  url: new URL(request.url),
-  pattern: "/records/add",
-});
+} as unknown as ActionFunctionArgs);
 
 describe("records.actions", () => {
   beforeEach(() => {
@@ -354,9 +352,7 @@ describe("records.actions", () => {
         tolls: 45,
       },
     });
-    expect(mocks.updateJobProfile).toHaveBeenCalledWith("profile-2", {
-      estimatedHourlyRate: 20,
-    });
+    expect(mocks.updateJobProfile).not.toHaveBeenCalled();
     expect(result).toEqual({
       success: true,
       message: "Registro actualizado correctamente",
@@ -387,5 +383,59 @@ describe("records.actions", () => {
       error: "No se pudo actualizar el registro",
     });
     expect(mocks.updateJobProfile).not.toHaveBeenCalled();
+  });
+
+  it("add actualiza la tarifa del perfil si syncWithProfile es true", async () => {
+    const result = await add(
+      buildActionArgs(
+        buildRequest([
+          ["jobProfileId", "profile-1"],
+          ["titleJobProfile", "Turno noche"],
+          ["dateTimeRecord", "2026-03-14"],
+          ["workStartTime", "08:00"],
+          ["workEndTime", "17:00"],
+          ["estimatedHourlyRate", "15.5"],
+          ["syncWithProfile", "true"],
+        ])
+      )
+    );
+
+    expect(mocks.saveRecord).toHaveBeenCalled();
+    expect(mocks.updateJobProfile).toHaveBeenCalledWith("profile-1", {
+      estimatedHourlyRate: 15.5,
+    });
+    expect(result).toEqual(expect.objectContaining({
+      success: true,
+      message: "Registro guardado correctamente",
+    }));
+  });
+
+  it("update actualiza la tarifa del perfil si syncWithProfile es true", async () => {
+    const result = await update({
+      ...buildActionArgs(
+        buildRequest([
+          ["jobProfileId", "profile-2"],
+          ["titleJobProfile", "Turno tarde"],
+          ["dateTimeRecord", "2026-03-18"],
+          ["workStartTime", "09:00"],
+          ["workEndTime", "18:00"],
+          ["estimatedHourlyRate", "20"],
+          ["syncWithProfile", "true"],
+        ])
+      ),
+      params: { id: "record-9" },
+    });
+
+    expect(mocks.updateRecord).toHaveBeenCalled();
+    expect(mocks.updateJobProfile).toHaveBeenCalledWith("profile-2", {
+      estimatedHourlyRate: 20,
+    });
+    expect(result).toEqual({
+      success: true,
+      message: "Registro actualizado correctamente",
+      recordId: "record-9",
+      jobProfileId: "profile-2",
+      titleJobProfile: "Turno tarde",
+    });
   });
 });

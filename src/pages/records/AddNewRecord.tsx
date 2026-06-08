@@ -3,7 +3,7 @@ import InfoTooltip from "@/components/InfoTooltip";
 import RecordCalculationSummary from "@/components/RecordCalculationSummary";
 import useUtilities from "@/context/hooks/useUtilities.hook";
 import { useAddRecord } from "./hooks/useAddRecord";
-import { useState, type FC } from "react";
+import { useState, useEffect, type FC } from "react";
 import { Link } from "react-router";
 import type { AddRecordActionResponse } from "@/routes/actions/records.actions";
 
@@ -50,6 +50,15 @@ const AddNewRecord: FC = () => {
   const [selectedUtilityIds, setSelectedUtilityIds] = useState<string[]>([]);
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
+  const [localRate, setLocalRate] = useState("");
+
+  useEffect(() => {
+    if (estimatedHourlyRate !== undefined) {
+      setLocalRate(String(estimatedHourlyRate));
+    } else {
+      setLocalRate("");
+    }
+  }, [estimatedHourlyRate]);
 
   const isSubmitting = formAction.state === "submitting";
 
@@ -77,12 +86,12 @@ const AddNewRecord: FC = () => {
   };
 
   const formResetKey = formAction.data ? JSON.stringify(formAction.data) : "initial";
-  const estimatedHourlyRateValue =
-    estimatedHourlyRate !== undefined ? String(estimatedHourlyRate) : "";
   const hasJobProfiles = jobProfiles.length > 0;
 
+  const localRateNumber = Number(localRate);
+  const hasValidRate = localRate !== "" && !Number.isNaN(localRateNumber);
   const showLivePreview =
-    Boolean(estimatedHourlyRate) && startTime.length > 0 && endTime.length > 0;
+    hasValidRate && startTime.length > 0 && endTime.length > 0;
   const submitErrorData = isAddRecordError(formAction.data) ? formAction.data : null;
   const submitSuccessData =
     formAction.state === "idle" && isAddRecordSuccess(formAction.data) ? formAction.data : null;
@@ -163,9 +172,51 @@ const AddNewRecord: FC = () => {
                 ))}
               </select>
               {selectedTitle && (
-                <p className="text-xs text-[var(--accent-strong)]">
-                  Perfil activo: <span className="font-medium">{selectedTitle}</span>
-                </p>
+                <>
+                  <p className="text-xs text-[var(--accent-strong)]">
+                    Perfil activo: <span className="font-medium">{selectedTitle}</span>
+                  </p>
+                  <div className={fieldCls + " mt-3"}>
+                    <div className="flex items-center gap-2">
+                      <label htmlFor="estimatedHourlyRate" className={labelCls}>
+                        Tarifa horaria estimada
+                      </label>
+                      <InfoTooltip
+                        ariaLabel="Información sobre la tarifa horaria estimada"
+                        content={
+                          <p>
+                            Valor por hora trabajada. Puedes modificarlo si para esta jornada aplica una tarifa especial.
+                          </p>
+                        }
+                      />
+                    </div>
+                    <input
+                      id="estimatedHourlyRate"
+                      type="number"
+                      name="estimatedHourlyRate"
+                      min="0"
+                      step="0.01"
+                      className={inputCls}
+                      value={localRate}
+                      onChange={(event) => setLocalRate(event.target.value)}
+                      disabled={isSubmitting}
+                      placeholder="0.00"
+                    />
+                  </div>
+
+                  <div className="mt-3 flex items-start gap-3 text-sm text-[var(--text-muted)]">
+                    <input
+                      id="syncWithProfile"
+                      type="checkbox"
+                      name="syncWithProfile"
+                      disabled={isSubmitting}
+                      className="mt-1 h-4 w-4 rounded border-[var(--border)] accent-[var(--accent)]"
+                    />
+                    <label htmlFor="syncWithProfile" className="cursor-pointer">
+                      Actualizar también la tarifa predeterminada de este perfil
+                    </label>
+                  </div>
+                </>
               )}
             </div>
           )}
@@ -173,12 +224,6 @@ const AddNewRecord: FC = () => {
 
         {/* Hidden inputs */}
         <input id="titleJobProfile" type="hidden" name="titleJobProfile" value={selectedTitle} />
-        <input
-          id="estimatedHourlyRate"
-          type="hidden"
-          name="estimatedHourlyRate"
-          value={estimatedHourlyRateValue}
-        />
         <input id="branchId" type="hidden" name="branchId" value={selectedBranchId} />
         <input
           id="jobPositionId"
@@ -275,7 +320,7 @@ const AddNewRecord: FC = () => {
             <RecordCalculationSummary
               startTime={startTime}
               endTime={endTime}
-              hourlyRate={estimatedHourlyRate!}
+              hourlyRate={localRateNumber}
             />
           )}
 

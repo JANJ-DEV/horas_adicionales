@@ -212,6 +212,19 @@ const EditRecordForm: FC<EditRecordFormProps> = ({
               placeholder="0.00"
             />
           </div>
+
+          <div className="mt-3 flex items-start gap-3 text-sm text-[var(--text-muted)]">
+            <input
+              id="syncWithProfile"
+              type="checkbox"
+              name="syncWithProfile"
+              disabled={isSubmitting}
+              className="mt-1 h-4 w-4 rounded border-[var(--border)] accent-[var(--accent)]"
+            />
+            <label htmlFor="syncWithProfile" className="cursor-pointer">
+              Actualizar también la tarifa predeterminada de este perfil
+            </label>
+          </div>
         </fieldset>
 
         <input id="titleJobProfile" type="hidden" name="titleJobProfile" value={selectedTitle} />

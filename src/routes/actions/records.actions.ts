@@ -183,6 +183,17 @@ export async function add({ request }: ActionFunctionArgs): Promise<AddRecordAct
     };
   }
 
+  const syncWithProfile = formData.get("syncWithProfile") === "on" || formData.get("syncWithProfile") === "true";
+  if (syncWithProfile) {
+    try {
+      await updateJobProfile(parsedRecord.jobProfileId, {
+        estimatedHourlyRate: parsedRecord.data.estimatedHourlyRate,
+      });
+    } catch (error) {
+      console.error("Error al sincronizar el perfil al crear el registro", error);
+    }
+  }
+
   return {
     success: true,
     message: "Registro guardado correctamente",
@@ -222,17 +233,20 @@ export async function update({ request, params }: ActionFunctionArgs) {
     };
   }
 
+  const syncWithProfile = formData.get("syncWithProfile") === "on" || formData.get("syncWithProfile") === "true";
   let jobProfileSyncFailed = false;
-  try {
-    await updateJobProfile(parsedRecord.jobProfileId, {
-      estimatedHourlyRate: parsedRecord.data.estimatedHourlyRate,
-    });
-  } catch (error) {
-    jobProfileSyncFailed = true;
-    console.error(
-      "Error al sincronizar el perfil de puesto después de actualizar el registro",
-      error
-    );
+  if (syncWithProfile) {
+    try {
+      await updateJobProfile(parsedRecord.jobProfileId, {
+        estimatedHourlyRate: parsedRecord.data.estimatedHourlyRate,
+      });
+    } catch (error) {
+      jobProfileSyncFailed = true;
+      console.error(
+        "Error al sincronizar el perfil de puesto después de actualizar el registro",
+        error
+      );
+    }
   }
 
   return {

@@ -62,13 +62,11 @@ const buildRequest = (entries: Array<[string, string]>) => {
   });
 };
 
-const buildActionArgs = (request: Request): ActionFunctionArgs => ({
+const buildActionArgs = (request: Request) => ({
   request,
   params: {},
   context: undefined,
-  url: new URL(request.url),
-  pattern: "*",
-});
+} as unknown as ActionFunctionArgs);
 
 const setUploadInput = (file?: File) => {
   document.body.innerHTML = '<input id="uploadPhoto" type="file" />';

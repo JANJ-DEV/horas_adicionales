@@ -70,7 +70,11 @@ describe("AddNewRecord", () => {
       isLoadingUtilities: true,
     });
 
-    render(<AddNewRecord />);
+    render(
+      <MemoryRouter>
+        <AddNewRecord />
+      </MemoryRouter>
+    );
 
     expect(screen.getByText("Cargando perfiles...")).toBeInTheDocument();
     expect(screen.getByText("Cargando utilidades...")).toBeInTheDocument();
@@ -102,7 +106,11 @@ describe("AddNewRecord", () => {
       ],
     });
 
-    const { container } = render(<AddNewRecord />);
+    const { container } = render(
+      <MemoryRouter>
+        <AddNewRecord />
+      </MemoryRouter>
+    );
 
     fireEvent.change(screen.getByRole("combobox", { name: /Perfil/ }), {
       target: { value: "profile-1" },
@@ -146,7 +154,7 @@ describe("AddNewRecord", () => {
       isLoadingUtilities: false,
     });
 
-    const { rerender } = render(<AddNewRecord />);
+    const { rerender } = render(<AddNewRecord />, { wrapper: MemoryRouter });
 
     expect(screen.getByText("Todos los campos son requeridos")).toBeInTheDocument();
     // Cuando hay error, el mensaje de éxito no debe aparecer
