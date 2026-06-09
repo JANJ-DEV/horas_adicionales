@@ -52,11 +52,12 @@ const buildRequest = (entries: Array<[string, string]>) => {
   });
 };
 
-const buildActionArgs = (request: Request) => ({
-  request,
-  params: {},
-  context: undefined,
-} as unknown as ActionFunctionArgs);
+const buildActionArgs = (request: Request) =>
+  ({
+    request,
+    params: {},
+    context: undefined,
+  }) as unknown as ActionFunctionArgs;
 
 describe("records.actions", () => {
   beforeEach(() => {
@@ -404,10 +405,12 @@ describe("records.actions", () => {
     expect(mocks.updateJobProfile).toHaveBeenCalledWith("profile-1", {
       estimatedHourlyRate: 15.5,
     });
-    expect(result).toEqual(expect.objectContaining({
-      success: true,
-      message: "Registro guardado correctamente",
-    }));
+    expect(result).toEqual(
+      expect.objectContaining({
+        success: true,
+        message: "Registro guardado correctamente",
+      })
+    );
   });
 
   it("update actualiza la tarifa del perfil si syncWithProfile es true", async () => {

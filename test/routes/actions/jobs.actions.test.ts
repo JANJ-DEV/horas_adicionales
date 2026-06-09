@@ -62,11 +62,12 @@ const buildRequest = (entries: Array<[string, string]>) => {
   });
 };
 
-const buildActionArgs = (request: Request) => ({
-  request,
-  params: {},
-  context: undefined,
-} as unknown as ActionFunctionArgs);
+const buildActionArgs = (request: Request) =>
+  ({
+    request,
+    params: {},
+    context: undefined,
+  }) as unknown as ActionFunctionArgs;
 
 const setUploadInput = (file?: File) => {
   document.body.innerHTML = '<input id="uploadPhoto" type="file" />';
@@ -212,9 +213,7 @@ describe("jobs.actions", () => {
   });
 
   it("update rechaza displayName vacio", async () => {
-    const result = await update(
-      buildActionArgs(buildRequest([["displayName", ""]]))
-    );
+    const result = await update(buildActionArgs(buildRequest([["displayName", ""]])));
 
     expect(result).toEqual({
       error: "El nombre de usuario es requerido",

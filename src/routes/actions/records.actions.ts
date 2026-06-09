@@ -183,7 +183,8 @@ export async function add({ request }: ActionFunctionArgs): Promise<AddRecordAct
     };
   }
 
-  const syncWithProfile = formData.get("syncWithProfile") === "on" || formData.get("syncWithProfile") === "true";
+  const syncWithProfile =
+    formData.get("syncWithProfile") === "on" || formData.get("syncWithProfile") === "true";
   if (syncWithProfile) {
     try {
       await updateJobProfile(parsedRecord.jobProfileId, {
@@ -233,7 +234,8 @@ export async function update({ request, params }: ActionFunctionArgs) {
     };
   }
 
-  const syncWithProfile = formData.get("syncWithProfile") === "on" || formData.get("syncWithProfile") === "true";
+  const syncWithProfile =
+    formData.get("syncWithProfile") === "on" || formData.get("syncWithProfile") === "true";
   let jobProfileSyncFailed = false;
   if (syncWithProfile) {
     try {

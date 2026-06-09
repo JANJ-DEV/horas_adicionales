@@ -89,7 +89,9 @@ const migrateLegacyRecordIfNeeded = async (
         fecha: deleteField(),
         updatedAt: serverTimestamp(),
       });
-      console.log(`[Migration] Migrated legacy record ${recordId} (transferred 'fecha' to 'dateTimeRecord')`);
+      console.log(
+        `[Migration] Migrated legacy record ${recordId} (transferred 'fecha' to 'dateTimeRecord')`
+      );
     }
   } catch (error) {
     console.warn(`[Migration] Failed to migrate legacy record ${recordId}:`, error);
@@ -166,11 +168,7 @@ export const subscribeToRecords = (
     recordsQuery,
     (snapshot) => {
       const records = snapshot.docs.map((doc) =>
-        processDocAndNormalize(
-          userId,
-          doc.id,
-          doc.data() as RecordWithLegacyDate
-        )
+        processDocAndNormalize(userId, doc.id, doc.data() as RecordWithLegacyDate)
       );
       onUpdate(records as RecordService[]);
     },
@@ -234,11 +232,7 @@ export const getRecords = async (userId: string): Promise<RecordService[]> => {
     const collectionRef = collection(firestore, "users", userId, NAME_COLLECTION);
     const querySnapshot = await getDocs(collectionRef);
     const records = querySnapshot.docs.map((doc) =>
-      processDocAndNormalize(
-        userId,
-        doc.id,
-        doc.data() as RecordWithLegacyDate
-      )
+      processDocAndNormalize(userId, doc.id, doc.data() as RecordWithLegacyDate)
     );
     return records as RecordService[];
   } catch (error) {
@@ -359,11 +353,7 @@ export const getRecordById = async (recordId: string): Promise<RecordService | n
     const docRef = doc(firestore, "users", userId, NAME_COLLECTION, recordId);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      return processDocAndNormalize(
-        userId,
-        docSnap.id,
-        docSnap.data() as RecordWithLegacyDate
-      );
+      return processDocAndNormalize(userId, docSnap.id, docSnap.data() as RecordWithLegacyDate);
     } else {
       return null;
     }
@@ -388,11 +378,7 @@ export const getRecordsByDateRange = async (
     const collectionRef = collection(firestore, "users", userId, NAME_COLLECTION);
     const querySnapshot = await getDocs(collectionRef);
     const records = querySnapshot.docs.map((doc) =>
-      processDocAndNormalize(
-        userId,
-        doc.id,
-        doc.data() as RecordWithLegacyDate
-      )
+      processDocAndNormalize(userId, doc.id, doc.data() as RecordWithLegacyDate)
     );
     // Filtrar registros por rango de fechas
     const filteredRecords = records.filter((record) => {
@@ -429,11 +415,7 @@ export const getRecordsByCompanyName = async (
     const collectionRef = collection(firestore, "users", userId, NAME_COLLECTION);
     const querySnapshot = await getDocs(collectionRef);
     const records = querySnapshot.docs.map((doc) =>
-      processDocAndNormalize(
-        userId,
-        doc.id,
-        doc.data() as RecordWithLegacyDate
-      )
+      processDocAndNormalize(userId, doc.id, doc.data() as RecordWithLegacyDate)
     );
     // Filtrar registros por nombre de empresa
     const filteredRecords = records.filter((record) =>

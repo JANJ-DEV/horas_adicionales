@@ -13,11 +13,11 @@ export const useDetailRecord = () => {
     const fetchRecord = async () => {
       if (id) {
         try {
-        const fetchedRecord = await getRecordById(id);
-        if (!fetchedRecord) {
-          notify.error("No se encontró el documento", { scope: TOAST_SCOPE.RECORDS });
-        }
-        setRecord(fetchedRecord);
+          const fetchedRecord = await getRecordById(id);
+          if (!fetchedRecord) {
+            notify.error("No se encontró el documento", { scope: TOAST_SCOPE.RECORDS });
+          }
+          setRecord(fetchedRecord);
         } catch {
           notify.error("No se pudo cargar el registro", { scope: TOAST_SCOPE.RECORDS });
           setRecord(null);

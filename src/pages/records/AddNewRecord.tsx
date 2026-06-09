@@ -50,7 +50,9 @@ const AddNewRecord: FC = () => {
   const [selectedUtilityIds, setSelectedUtilityIds] = useState<string[]>([]);
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
-  const [prevEstimatedHourlyRate, setPrevEstimatedHourlyRate] = useState<number | undefined>(estimatedHourlyRate);
+  const [prevEstimatedHourlyRate, setPrevEstimatedHourlyRate] = useState<number | undefined>(
+    estimatedHourlyRate
+  );
   const [localRate, setLocalRate] = useState(
     estimatedHourlyRate !== undefined ? String(estimatedHourlyRate) : ""
   );
@@ -90,8 +92,7 @@ const AddNewRecord: FC = () => {
 
   const localRateNumber = Number(localRate);
   const hasValidRate = localRate !== "" && !Number.isNaN(localRateNumber);
-  const showLivePreview =
-    hasValidRate && startTime.length > 0 && endTime.length > 0;
+  const showLivePreview = hasValidRate && startTime.length > 0 && endTime.length > 0;
   const submitErrorData = isAddRecordError(formAction.data) ? formAction.data : null;
   const submitSuccessData =
     formAction.state === "idle" && isAddRecordSuccess(formAction.data) ? formAction.data : null;
@@ -185,7 +186,8 @@ const AddNewRecord: FC = () => {
                         ariaLabel="Información sobre la tarifa horaria estimada"
                         content={
                           <p>
-                            Valor por hora trabajada. Puedes modificarlo si para esta jornada aplica una tarifa especial.
+                            Valor por hora trabajada. Puedes modificarlo si para esta jornada aplica
+                            una tarifa especial.
                           </p>
                         }
                       />

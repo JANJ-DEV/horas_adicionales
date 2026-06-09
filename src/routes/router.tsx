@@ -13,11 +13,7 @@ export const routers = [
   ...publicRouter,
   {
     element: <PrivateLayout />,
-    children: [
-      ...recordsRouter,
-      ...jobProfilesRouter,
-      ...accountRouter,
-    ],
+    children: [...recordsRouter, ...jobProfilesRouter, ...accountRouter],
   },
   {
     path: "*",

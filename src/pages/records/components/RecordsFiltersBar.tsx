@@ -135,7 +135,7 @@ const RecordsFiltersBar = ({
             Limpiar filtros
           </button>
         </div>
-        
+
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <label className="flex flex-col gap-1.5 text-[10px] font-bold uppercase tracking-wider text-[var(--text-soft)]">
             Rama
@@ -154,7 +154,9 @@ const RecordsFiltersBar = ({
           </label>
 
           <label className="flex flex-col gap-1.5 text-[10px] font-bold uppercase tracking-wider text-[var(--text-soft)]">
-            <span className="truncate" title="Puesto de trabajo">Puesto</span>
+            <span className="truncate" title="Puesto de trabajo">
+              Puesto
+            </span>
             <select
               value={draftFilters.jobPositionId}
               onChange={(event) => handleDraftChange("jobPositionId", event.target.value)}
@@ -207,7 +209,7 @@ const RecordsFiltersBar = ({
               className={inputCls}
             />
           </label>
-          
+
           <div className="hidden md:block"></div>
 
           <label className="flex flex-col gap-1.5 text-[10px] font-bold uppercase tracking-wider text-[var(--text-soft)]">
@@ -235,7 +237,7 @@ const RecordsFiltersBar = ({
               className={inputCls}
             />
           </label>
-          
+
           <div className="hidden md:block"></div>
 
           <label className="flex flex-col gap-1.5 text-[10px] font-bold uppercase tracking-wider text-[var(--text-soft)]">
@@ -264,10 +266,11 @@ const RecordsFiltersBar = ({
             />
           </label>
         </div>
-        
+
         <div className="mt-5 rounded-lg bg-[var(--bg-soft)] p-3 text-center border border-[var(--border)]">
           <p className="text-[11px] leading-relaxed text-[var(--text-soft)]">
-            <strong className="text-[var(--text)]">Nota:</strong> El rango de fechas manual tiene prioridad sobre el selector rápido de periodo.
+            <strong className="text-[var(--text)]">Nota:</strong> El rango de fechas manual tiene
+            prioridad sobre el selector rápido de periodo.
           </p>
         </div>
 

@@ -593,9 +593,7 @@ describe("records.service", () => {
     const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     mocks.getDocs.mockRejectedValue(new Error("query failed"));
 
-    await expect(getRecordsByCompanyName("user-123", "empresa")).rejects.toThrow(
-      "query failed"
-    );
+    await expect(getRecordsByCompanyName("user-123", "empresa")).rejects.toThrow("query failed");
 
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       "Error general en records.service.getRecordsByCompanyName: query failed"
