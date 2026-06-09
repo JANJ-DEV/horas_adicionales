@@ -15,6 +15,7 @@ import {
   type QueryConstraint,
   type FirestoreError,
   Timestamp,
+  deleteField,
 } from "firebase/firestore";
 import { firestore } from "@/apis/firebase";
 import { authFirebase } from "@/apis/firebase";
@@ -70,6 +71,41 @@ const normalizeRecordDate = (record: RecordWithLegacyDate) => {
     ...recordWithoutLegacyDate,
     ...(normalizedDate ? { dateTimeRecord: normalizedDate } : {}),
   };
+};
+
+const migrateLegacyRecordIfNeeded = async (
+  userId: string,
+  recordId: string,
+  rawData: RecordWithLegacyDate
+) => {
+  if (rawData.fecha === undefined) return;
+
+  try {
+    const docRef = doc(firestore, "users", userId, NAME_COLLECTION, recordId);
+    const normalizedDate = rawData.dateTimeRecord ?? rawData.fecha;
+    if (normalizedDate) {
+      await updateDoc(docRef, {
+        dateTimeRecord: normalizedDate,
+        fecha: deleteField(),
+        updatedAt: serverTimestamp(),
+      });
+      console.log(`[Migration] Migrated legacy record ${recordId} (transferred 'fecha' to 'dateTimeRecord')`);
+    }
+  } catch (error) {
+    console.warn(`[Migration] Failed to migrate legacy record ${recordId}:`, error);
+  }
+};
+
+const processDocAndNormalize = (
+  userId: string,
+  docId: string,
+  rawData: RecordWithLegacyDate
+): RecordService => {
+  void migrateLegacyRecordIfNeeded(userId, docId, rawData);
+  return normalizeRecordDate({
+    id: docId,
+    ...rawData,
+  }) as RecordService;
 };
 
 const buildRecordsQueryConstraints = (filters?: RecordsQueryFilters) => {
@@ -129,7 +165,13 @@ export const subscribeToRecords = (
   const unsubscribe = onSnapshot(
     recordsQuery,
     (snapshot) => {
-      const records = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      const records = snapshot.docs.map((doc) =>
+        processDocAndNormalize(
+          userId,
+          doc.id,
+          doc.data() as RecordWithLegacyDate
+        )
+      );
       onUpdate(records as RecordService[]);
     },
     (error) => {
@@ -191,7 +233,13 @@ export const getRecords = async (userId: string): Promise<RecordService[]> => {
   try {
     const collectionRef = collection(firestore, "users", userId, NAME_COLLECTION);
     const querySnapshot = await getDocs(collectionRef);
-    const records = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    const records = querySnapshot.docs.map((doc) =>
+      processDocAndNormalize(
+        userId,
+        doc.id,
+        doc.data() as RecordWithLegacyDate
+      )
+    );
     return records as RecordService[];
   } catch (error) {
     handleAppError(error, "records.service.getRecords");
@@ -311,7 +359,11 @@ export const getRecordById = async (recordId: string): Promise<RecordService | n
     const docRef = doc(firestore, "users", userId, NAME_COLLECTION, recordId);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      return { id: docSnap.id, ...docSnap.data() } as RecordService;
+      return processDocAndNormalize(
+        userId,
+        docSnap.id,
+        docSnap.data() as RecordWithLegacyDate
+      );
     } else {
       return null;
     }
@@ -336,10 +388,11 @@ export const getRecordsByDateRange = async (
     const collectionRef = collection(firestore, "users", userId, NAME_COLLECTION);
     const querySnapshot = await getDocs(collectionRef);
     const records = querySnapshot.docs.map((doc) =>
-      normalizeRecordDate({
-        id: doc.id,
-        ...(doc.data() as RecordWithLegacyDate),
-      })
+      processDocAndNormalize(
+        userId,
+        doc.id,
+        doc.data() as RecordWithLegacyDate
+      )
     );
     // Filtrar registros por rango de fechas
     const filteredRecords = records.filter((record) => {
@@ -376,10 +429,11 @@ export const getRecordsByCompanyName = async (
     const collectionRef = collection(firestore, "users", userId, NAME_COLLECTION);
     const querySnapshot = await getDocs(collectionRef);
     const records = querySnapshot.docs.map((doc) =>
-      normalizeRecordDate({
-        id: doc.id,
-        ...(doc.data() as RecordWithLegacyDate),
-      })
+      processDocAndNormalize(
+        userId,
+        doc.id,
+        doc.data() as RecordWithLegacyDate
+      )
     );
     // Filtrar registros por nombre de empresa
     const filteredRecords = records.filter((record) =>

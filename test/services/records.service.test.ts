@@ -14,6 +14,7 @@ const mocks = vi.hoisted(() => ({
   query: vi.fn(),
   where: vi.fn(),
   orderBy: vi.fn(),
+  deleteField: vi.fn(),
   authFirebase: {
     currentUser: { uid: "user-123" },
   } as { currentUser: { uid: string } | null },
@@ -34,6 +35,7 @@ vi.mock("firebase/firestore", () => ({
   query: mocks.query,
   where: mocks.where,
   orderBy: mocks.orderBy,
+  deleteField: mocks.deleteField,
   Timestamp: class Timestamp {},
 }));
 
@@ -598,5 +600,145 @@ describe("records.service", () => {
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       "Error general en records.service.getRecordsByCompanyName: query failed"
     );
+  });
+
+  describe("Normalización y migración transparente de fecha legacy", () => {
+    beforeEach(() => {
+      mocks.deleteField.mockReturnValue("DELETE_FIELD_TOKEN");
+    });
+
+    it("normaliza y migra un registro antiguo (con fecha) en getRecordById", async () => {
+      mocks.getDoc.mockResolvedValue({
+        exists: () => true,
+        id: "record-legacy-1",
+        data: () => ({
+          titleJobProfile: "Turno antiguo",
+          fecha: "2026-06-01",
+        }),
+      });
+
+      const result = await getRecordById("record-legacy-1");
+
+      expect(result).toEqual({
+        id: "record-legacy-1",
+        titleJobProfile: "Turno antiguo",
+        dateTimeRecord: "2026-06-01",
+      });
+
+      // Damos un pequeño respiro para la promesa asíncrona de fondo
+      await new Promise((resolve) => setTimeout(resolve, 5));
+
+      expect(mocks.updateDoc).toHaveBeenCalledWith(
+        { id: "record-legacy-1", path: "users/user-123/records/record-legacy-1" },
+        {
+          dateTimeRecord: "2026-06-01",
+          fecha: "DELETE_FIELD_TOKEN",
+          updatedAt: "SERVER_TIMESTAMP",
+        }
+      );
+    });
+
+    it("normaliza y migra registros antiguos en getRecords", async () => {
+      mocks.getDocs.mockResolvedValue({
+        docs: [
+          {
+            id: "record-legacy-2",
+            data: () => ({
+              titleJobProfile: "Turno antiguo 2",
+              fecha: "2026-06-02",
+            }),
+          },
+          {
+            id: "record-normal",
+            data: () => ({
+              titleJobProfile: "Turno moderno",
+              dateTimeRecord: "2026-06-03",
+            }),
+          },
+        ],
+      });
+
+      const result = await getRecords("user-123");
+
+      expect(result).toEqual([
+        {
+          id: "record-legacy-2",
+          titleJobProfile: "Turno antiguo 2",
+          dateTimeRecord: "2026-06-02",
+        },
+        {
+          id: "record-normal",
+          titleJobProfile: "Turno moderno",
+          dateTimeRecord: "2026-06-03",
+        },
+      ]);
+
+      await new Promise((resolve) => setTimeout(resolve, 5));
+
+      expect(mocks.updateDoc).toHaveBeenCalledWith(
+        { id: "record-legacy-2", path: "users/user-123/records/record-legacy-2" },
+        {
+          dateTimeRecord: "2026-06-02",
+          fecha: "DELETE_FIELD_TOKEN",
+          updatedAt: "SERVER_TIMESTAMP",
+        }
+      );
+      // El normal no debe lanzar migración
+      expect(mocks.updateDoc).not.toHaveBeenCalledWith(
+        { id: "record-normal", path: "users/user-123/records/record-normal" },
+        expect.any(Object)
+      );
+    });
+
+    it("normaliza y migra registros en tiempo real en subscribeToRecords", () => {
+      const onUpdate = vi.fn();
+      const unsubscribe = vi.fn();
+
+      mocks.onSnapshot.mockImplementation(
+        (
+          _ref: unknown,
+          next: (snapshot: { docs: Array<{ id: string; data: () => unknown }> }) => void
+        ) => {
+          next({
+            docs: [
+              {
+                id: "record-legacy-3",
+                data: () => ({
+                  titleJobProfile: "Turno antiguo 3",
+                  fecha: "2026-06-04",
+                }),
+              },
+            ],
+          });
+          return unsubscribe;
+        }
+      );
+
+      const result = subscribeToRecords(onUpdate, vi.fn(), vi.fn());
+
+      expect(result).toBe(unsubscribe);
+      expect(onUpdate).toHaveBeenCalledWith([
+        {
+          id: "record-legacy-3",
+          titleJobProfile: "Turno antiguo 3",
+          dateTimeRecord: "2026-06-04",
+        },
+      ]);
+
+      // Esperar microtask para la promesa asíncrona de fondo
+      return new Promise<void>((resolve) => {
+        setTimeout(() => {
+          expect(mocks.updateDoc).toHaveBeenCalledWith(
+            { id: "record-legacy-3", path: "users/user-123/records/record-legacy-3" },
+            {
+              dateTimeRecord: "2026-06-04",
+              fecha: "DELETE_FIELD_TOKEN",
+              updatedAt: "SERVER_TIMESTAMP",
+            }
+          );
+          resolve();
+        }, 5);
+      });
+    });
   });
 });
