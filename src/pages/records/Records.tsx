@@ -1,6 +1,6 @@
 import RecordCard from "./components/RecordCard";
 import { useEffect, useState } from "react";
-import { subscribeToBranches } from "@/services/branches.services";
+import { subscribeToBranches } from "@/services/branches.service";
 import { subscribeToJobProfiles } from "@/services/jobsProfile.service";
 import type { Branch, JobProfile } from "@/types";
 import type { RecordsPeriod } from "@/utils";

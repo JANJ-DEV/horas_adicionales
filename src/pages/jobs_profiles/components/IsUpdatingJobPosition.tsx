@@ -1,6 +1,6 @@
 import { useEffect, useState, type ChangeEvent, type FC, type SubmitEvent } from "react";
 import type { JobPosition, JobProfile } from "@/types";
-import { getBranchById } from "@/services/branches.services";
+import { getBranchById } from "@/services/branches.service";
 import { handleAppError } from "@/services/error.service";
 import { updateJobProfile } from "@/services/jobsProfile.service";
 import SelectJobPositionFromBranchId from "./SelectJobPosition";

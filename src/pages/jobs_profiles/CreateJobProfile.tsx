@@ -1,8 +1,8 @@
-import useBranches from "@/context/hooks/useBranches.hook.";
+import useBranches from "@/context/hooks/useBranches.hook";
 import { useState, type FC, useEffect, type ChangeEvent } from "react";
 import { Link, useFetcher } from "react-router";
 import SelectJobProfile from "./components/SelectJobProfile";
-import { getBranchById } from "@/services/branches.services";
+import { getBranchById } from "@/services/branches.service";
 import type { JobPosition } from "@/types";
 import Btn from "@/components/Btn";
 import SelectJobPositionFromBranchId from "./components/SelectJobPosition";

@@ -1,4 +1,4 @@
-import { getBranchById } from "@/services/branches.services";
+import { getBranchById } from "@/services/branches.service";
 import type { JobPosition } from "@/types";
 import { useEffect, useState, type ChangeEvent, type FC } from "react";
 import SelectField from "@/components/SelectField";

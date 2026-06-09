@@ -3,7 +3,7 @@ import type { ActionFunctionArgs } from "react-router";
 import { updateAccount } from "@/services/auth.service";
 import { uploadFile } from "@/services/uploadFile.service";
 import { authFirebase } from "@/apis/firebase";
-import { getBranchById } from "@/services/branches.services";
+import { getBranchById } from "@/services/branches.service";
 import { handleAppError } from "@/services/error.service";
 import { getJobPositionFromBranchId } from "@/services/jobsPositions.service";
 import { saveJobProfile } from "@/services/jobsProfile.service";

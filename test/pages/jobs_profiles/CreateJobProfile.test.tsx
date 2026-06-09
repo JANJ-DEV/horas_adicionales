@@ -16,11 +16,11 @@ vi.mock("react-router", async (importOriginal) => {
   };
 });
 
-vi.mock("@/context/hooks/useBranches.hook.", () => ({
+vi.mock("@/context/hooks/useBranches.hook", () => ({
   default: mocks.useBranches,
 }));
 
-vi.mock("@/services/branches.services", () => ({
+vi.mock("@/services/branches.service", () => ({
   getBranchById: mocks.getBranchById,
 }));
 

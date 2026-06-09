@@ -35,7 +35,7 @@ vi.mock("@/apis/firebase", () => ({
   authFirebase: mocks.authFirebase,
 }));
 
-vi.mock("@/services/branches.services", () => ({
+vi.mock("@/services/branches.service", () => ({
   getBranchById: mocks.getBranchById,
 }));
 

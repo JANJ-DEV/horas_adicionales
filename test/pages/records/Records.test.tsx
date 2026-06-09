@@ -13,7 +13,7 @@ vi.mock("../../../src/pages/records/hooks/useRecordsFiltering", () => ({
   useRecordsFiltering: mocks.useRecordsFiltering,
 }));
 
-vi.mock("@/services/branches.services", () => ({
+vi.mock("@/services/branches.service", () => ({
   subscribeToBranches: mocks.subscribeToBranches,
 }));
 

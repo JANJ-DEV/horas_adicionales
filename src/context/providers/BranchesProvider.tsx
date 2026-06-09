@@ -2,7 +2,7 @@ import type { Branch, Children } from "@/types";
 import { useEffect, useState, type FC } from "react";
 import BranchesCtx from "../BranchesCtx";
 import { handleAppError } from "@/services/error.service";
-import { subscribeToBranches } from "@/services/branches.services";
+import { subscribeToBranches } from "@/services/branches.service";
 import { notify, TOAST_SCOPE } from "@/services/toast.service";
 
 const BranchesProvider: FC<Children> = ({ children }) => {

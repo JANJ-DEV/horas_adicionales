@@ -1,10 +1,10 @@
 import Btn from "@/components/Btn";
 import RecordCalculationSummary from "@/components/RecordCalculationSummary";
-import { useDetailRecord } from "./hooks/useDeyailsRecord";
+import { useDetailRecord } from "./hooks/useDetailsRecord";
 import EmptyState from "@/components/EmptyState";
 import { useEffect, useState } from "react";
 import useUtilities from "@/context/hooks/useUtilities.hook";
-import { getBranchById } from "@/services/branches.services";
+import { getBranchById } from "@/services/branches.service";
 
 const UTILITY_DB_KEY_FALLBACK: Record<string, string> = {
   nombre_produccion: "production_name",

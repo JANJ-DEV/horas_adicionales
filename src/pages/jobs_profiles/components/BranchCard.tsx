@@ -3,7 +3,7 @@ import Btn from "@/components/Btn";
 import { useState, type ChangeEvent, type FC, type SubmitEvent } from "react";
 import { handleAppError } from "@/services/error.service";
 import { updateJobProfile } from "@/services/jobsProfile.service";
-import useBranches from "@/context/hooks/useBranches.hook.";
+import useBranches from "@/context/hooks/useBranches.hook";
 import SelectJobProfile from "./SelectJobProfile";
 import { notify, TOAST_SCOPE } from "@/services/toast.service";
 

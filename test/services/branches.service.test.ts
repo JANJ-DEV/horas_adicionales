@@ -26,7 +26,7 @@ import {
   removeBranchById,
   subscribeToBranches,
   updateBranchById,
-} from "../../src/services/branches.services";
+} from "../../src/services/branches.service";
 
 const flushAsyncTasks = async () => {
   await new Promise((resolve) => {
@@ -34,7 +34,7 @@ const flushAsyncTasks = async () => {
   });
 };
 
-describe("branches.services (logic without firestore)", () => {
+describe("branches.service (logic without firestore)", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.collection.mockImplementation((_target: unknown, ...segments: string[]) => ({
