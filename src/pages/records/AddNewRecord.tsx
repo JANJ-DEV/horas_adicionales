@@ -51,14 +51,12 @@ const AddNewRecord: FC = () => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [localRate, setLocalRate] = useState("");
+  const [prevEstimatedHourlyRate, setPrevEstimatedHourlyRate] = useState<number | undefined>(estimatedHourlyRate);
 
-  useEffect(() => {
-    if (estimatedHourlyRate !== undefined) {
-      setLocalRate(String(estimatedHourlyRate));
-    } else {
-      setLocalRate("");
-    }
-  }, [estimatedHourlyRate]);
+  if (estimatedHourlyRate !== prevEstimatedHourlyRate) {
+    setPrevEstimatedHourlyRate(estimatedHourlyRate);
+    setLocalRate(estimatedHourlyRate !== undefined ? String(estimatedHourlyRate) : "");
+  }
 
   const isSubmitting = formAction.state === "submitting";
 
