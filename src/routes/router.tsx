@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router";
 
 // Pages
-import { PageNotFound } from "./lazy.load";
+import { PageNotFound, PrivateLayout } from "./lazy.load";
 // Routers
 import { jobProfilesRouter } from "./job_profiles.router";
 import { recordsRouter } from "./records.router";
@@ -11,9 +11,14 @@ import { accountRouter } from "./account.router";
 // Router
 export const routers = [
   ...publicRouter,
-  ...recordsRouter,
-  ...jobProfilesRouter,
-  ...accountRouter,
+  {
+    element: <PrivateLayout />,
+    children: [
+      ...recordsRouter,
+      ...jobProfilesRouter,
+      ...accountRouter,
+    ],
+  },
   {
     path: "*",
     element: <PageNotFound />,
