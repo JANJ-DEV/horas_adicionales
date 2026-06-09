@@ -15,6 +15,7 @@ vi.mock("react-router", () => ({
 vi.mock("../../src/routes/lazy.load", () => ({
   App: () => null,
   PublicLayout: () => null,
+  PrivateLayout: () => null,
   RecordsLayout: () => null,
   Records: () => null,
   AddNewRecord: () => null,
@@ -101,14 +102,14 @@ describe("routes composition", () => {
     );
   });
 
-  it("router.tsx compone los routers y agrega fallback 404", () => {
-    expect(routers.map((route) => route.path)).toEqual([
-      "/",
-      "/records",
-      "/jobs-profiles",
-      "/account",
-      "*",
+  it("router.tsx compone los routers bajo PrivateLayout y agrega fallback 404", () => {
+    expect(routers[0].path).toBe("/");
+    expect(routers[1].children).toEqual([
+      ...recordsRouter,
+      ...jobProfilesRouter,
+      ...accountRouter,
     ]);
+    expect(routers[2].path).toBe("*");
     expect(mocks.createBrowserRouter).toHaveBeenCalledWith(routers);
     expect(router).toEqual({
       routes: routers,
