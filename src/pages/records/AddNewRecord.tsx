@@ -50,8 +50,10 @@ const AddNewRecord: FC = () => {
   const [selectedUtilityIds, setSelectedUtilityIds] = useState<string[]>([]);
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
-  const [localRate, setLocalRate] = useState("");
   const [prevEstimatedHourlyRate, setPrevEstimatedHourlyRate] = useState<number | undefined>(estimatedHourlyRate);
+  const [localRate, setLocalRate] = useState(
+    estimatedHourlyRate !== undefined ? String(estimatedHourlyRate) : ""
+  );
 
   if (estimatedHourlyRate !== prevEstimatedHourlyRate) {
     setPrevEstimatedHourlyRate(estimatedHourlyRate);
