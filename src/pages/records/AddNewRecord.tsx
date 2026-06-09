@@ -3,7 +3,7 @@ import InfoTooltip from "@/components/InfoTooltip";
 import RecordCalculationSummary from "@/components/RecordCalculationSummary";
 import useUtilities from "@/context/hooks/useUtilities.hook";
 import { useAddRecord } from "./hooks/useAddRecord";
-import { useState, useEffect, type FC } from "react";
+import { useState, type FC } from "react";
 import { Link } from "react-router";
 import type { AddRecordActionResponse } from "@/routes/actions/records.actions";
 
