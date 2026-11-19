@@ -5,6 +5,8 @@ import RecordCalculationSummary from "@/components/RecordCalculationSummary";
 import Btn from "@/components/Btn";
 import InfoTooltip from "@/components/InfoTooltip";
 import useUtilities from "@/context/hooks/useUtilities.hook";
+import type { JobProfile } from "@/types";
+import { getBillingCycle } from "../billingCycle";
 
 const UTILITY_DB_KEY_FALLBACK: Record<string, string> = {
   nombre_produccion: "production_name",
@@ -27,6 +29,7 @@ interface RecordCardProps {
   record: RecordService;
   branchName?: string;
   jobPositionName?: string;
+  jobProfiles: JobProfile[];
   handlerViewDetails: (recordId: string) => void;
   handleDeleteRecord: (recordId: string) => void;
 }
@@ -35,10 +38,12 @@ const RecordCard: FC<RecordCardProps> = ({
   record,
   branchName,
   jobPositionName,
+  jobProfiles,
   handlerViewDetails,
   handleDeleteRecord,
 }) => {
   const { catalog } = useUtilities();
+  const cycle = getBillingCycle(record, jobProfiles);
 
   const utilityLabelsByStorageKey = Object.entries(catalog.utility_definitions).reduce<
     Record<string, string>
@@ -63,6 +68,7 @@ const RecordCard: FC<RecordCardProps> = ({
     >
       <div className="pointer-events-none absolute -right-12 -top-12 h-28 w-28 rounded-full bg-[color:var(--accent)]/15 blur-2xl transition-opacity duration-300 group-hover:opacity-100" />
 
+      {cycle && <p className={`billing-cycle-label billing-cycle-${cycle.color}`}>{cycle.label}</p>}
       <RecordedTimeInfo record={record} />
 
       <section className="app-panel flex flex-col gap-2 p-3 text-sm text-[var(--text)]">

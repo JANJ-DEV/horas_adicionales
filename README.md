@@ -60,6 +60,10 @@ Capturas con sesion iniciada para mostrar el flujo privado principal de la app.
 - Inicio y cierre de sesion con Google.
 - Rutas privadas para records, job-profiles y account.
 - Alta y listado de registros de jornada.
+- Edicion, eliminacion y consulta de detalles de registros.
+- Registros y resumen por perfil de trabajo, con cambio de perfil y seleccion de periodo o ciclo de facturacion.
+- Acceso a registros sin perfil o asociados a perfiles eliminados desde la opcion «Sin perfil».
+- Estadisticas por perfil y por año, semestre, trimestre, mes, semana o dia, con desglose de jornadas, horas y sueldo estimado.
 - Creacion y listado en tiempo real de perfiles de trabajo.
 - Operaciones CRUD de perfiles desde capa de servicios.
 - Vista de cuenta autenticada y actualizacion de datos basicos.
@@ -157,6 +161,9 @@ Cobertura inicial incorporada:
 - Utilidades puras en `test/utils/`.
 - Servicios deterministas y con mocks de Firebase en `test/services/`.
 - Componentes base de UI y navegacion en `test/components/`.
+- Actions, rutas, providers, hooks y pantallas de registros y perfiles.
+
+En la revision local del 18 de noviembre de 2026 se ejecutaron 155 tests en 32 archivos con resultado satisfactorio. Este resultado no sustituye una validacion de Firebase real ni pruebas de extremo a extremo.
 
 Buenas practicas aplicadas en este repo:
 
@@ -214,7 +221,9 @@ public/                # Recursos estaticos
 
 ## Roadmap corto
 
-- Mejorar filtros de registros por fecha y perfil.
-- Incrementar cobertura de tests en servicios y hooks.
-- Documentar reglas de seguridad de Firestore por entorno.
-- Endurecer reglas de branch protection y checks requeridos en CI.
+- Verificar y completar la migracion de registros antiguos con el campo `fecha`.
+- Revisar la consistencia del manejo de errores en servicios y sus consumidores.
+- Evaluar pruebas de extremo a extremo y de reglas de Firestore con el emulador.
+- Documentar reglas de seguridad de Firestore por entorno y verificar la proteccion de ramas en GitHub.
+
+Las prioridades y los elementos ya abordados se detallan en [SUGGESTIONS.md](SUGGESTIONS.md). El [plan de testing](docs/testing-implementation-plan.md) conserva el historial de esa iniciativa.

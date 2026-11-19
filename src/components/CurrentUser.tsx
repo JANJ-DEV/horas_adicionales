@@ -37,7 +37,7 @@ const CurrentUser: FC = () => {
         disabled
         aria-label="Cancelando inicio de sesión"
         title="Cancelando..."
-        className="flex cursor-default animate-pulse items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-2 text-[var(--text-muted)]"
+        className="flex cursor-default animate-pulse items-center gap-1.5 rounded-lg border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-2 text-[var(--text-muted)]"
       >
         <FaTimesCircle size={16} />
         <span className="hidden text-xs sm:inline">Cancelando...</span>
@@ -57,7 +57,7 @@ const CurrentUser: FC = () => {
             toggleMenuCurrentUser();
             closeMenuBars();
           }}
-          className="flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--bg-soft)] p-1 pr-3 text-[var(--text)] transition duration-300 hover:border-[var(--border-strong)] hover:bg-[var(--surface)]"
+          className="flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--bg-soft)] p-1 pr-3 text-[var(--text)] transition duration-300 hover:border-[var(--border-strong)] hover:bg-[var(--surface)]"
         >
           {currentUser.photoURL ? (
             <img
@@ -83,7 +83,7 @@ const CurrentUser: FC = () => {
 
         {/* Dropdown */}
         {isMenuCurrentUserOpen && (
-          <section className="absolute right-0 top-full z-20 mt-3 min-w-[14rem] rounded-2xl border border-[var(--border)] bg-[var(--surface-strong)] py-2 shadow-[0_4px_12px_rgba(11,18,32,0.15)] backdrop-blur-md">
+          <section className="absolute right-0 top-full z-20 mt-3 min-w-[14rem] rounded-lg border border-[var(--border)] bg-[var(--surface-strong)] py-2 shadow-[0_4px_12px_rgba(11,18,32,0.15)] backdrop-blur-md">
             {/* Cabecera del menú */}
             <div className="border-b border-[var(--border)] px-4 py-3">
               <p className="text-xs uppercase tracking-[0.18em] text-[var(--text-soft)]">
@@ -133,7 +133,7 @@ const CurrentUser: FC = () => {
         e.stopPropagation();
         signInWithGoogle();
       }}
-      className="flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-2 text-[var(--text)] transition duration-300 hover:border-[var(--border-strong)] hover:bg-[var(--surface)] hover:text-[var(--accent)]"
+      className="flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-2 text-[var(--text)] transition duration-300 hover:border-[var(--border-strong)] hover:bg-[var(--surface)] hover:text-[var(--accent)]"
     >
       <FaRegUserCircle size={32} />
       <span className="hidden text-xs font-semibold sm:inline">Iniciar sesión</span>

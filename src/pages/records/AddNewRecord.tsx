@@ -20,7 +20,7 @@ const todayISO = () => {
 const fieldCls = "flex flex-col gap-1.5";
 const labelCls = "form-label text-sm font-semibold";
 const inputCls =
-  "form-input rounded-xl p-3 transition focus:outline-none disabled:cursor-not-allowed disabled:opacity-50";
+  "form-input rounded-lg p-3 transition focus:outline-none disabled:cursor-not-allowed disabled:opacity-50";
 
 const isAddRecordError = (
   data: AddRecordActionResponse | null | undefined
@@ -39,6 +39,7 @@ const AddNewRecord: FC = () => {
     jobProfiles,
     loading,
     selectedTitle,
+    selectedProfileId,
     handleProfileChange,
     hasCurrentUser,
     formAction,
@@ -100,7 +101,7 @@ const AddNewRecord: FC = () => {
   if (hasCurrentUser && !loading && !hasJobProfiles) {
     return (
       <section className="mx-auto w-full max-w-2xl pb-6">
-        <aside className="flex flex-col gap-4 rounded-xl border border-amber-500/40 bg-amber-500/10 p-5 text-amber-100">
+        <aside className="flex flex-col gap-4 rounded-lg border border-amber-500/40 bg-amber-500/10 p-5 text-amber-100">
           <h2 className="text-xl font-semibold text-amber-200">Necesitas un perfil de trabajo</h2>
           <p className="text-sm text-amber-100/90">
             Para registrar horas primero debes crear tu primer perfil de trabajo. Ese perfil define
@@ -159,7 +160,7 @@ const AddNewRecord: FC = () => {
                 id="jobProfileId"
                 className={inputCls}
                 onChange={handleProfileChangeAndReset}
-                defaultValue=""
+                value={selectedProfileId ?? ""}
                 required
                 disabled={isSubmitting}
               >
@@ -517,7 +518,7 @@ const AddNewRecord: FC = () => {
       {submitErrorData && (
         <p
           role="alert"
-          className="mt-3 rounded-xl border border-red-700 bg-red-900/30 p-3 text-sm text-red-400"
+          className="mt-3 rounded-lg border border-red-700 bg-red-900/30 p-3 text-sm text-red-400"
         >
           {submitErrorData.error}
         </p>
@@ -525,7 +526,7 @@ const AddNewRecord: FC = () => {
       {submitSuccessData && (
         <p
           role="status"
-          className="mt-3 rounded-xl border border-green-700 bg-green-900/30 p-3 text-sm text-green-400"
+          className="mt-3 rounded-lg border border-green-700 bg-green-900/30 p-3 text-sm text-green-400"
         >
           Registro para <strong>{submitSuccessData.titleJobProfile}</strong> guardado con éxito.
         </p>

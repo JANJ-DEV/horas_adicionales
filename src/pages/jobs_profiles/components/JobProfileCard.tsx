@@ -14,6 +14,8 @@ import IsRemoveProfile from "./IsRemoveProfile";
 import { handleAppError } from "@/services/error.service";
 import { deleteJobProfile } from "@/services/jobsProfile.service";
 import { notify, TOAST_SCOPE } from "@/services/toast.service";
+import BillingCycleEditor from "./BillingCycleEditor";
+import { Link } from "react-router";
 
 const JobProfileCard: FC<{ jobProfile: JobProfile }> = ({ jobProfile }) => {
   const [isRemoveProfile, setIsRemoveProfile] = useState(false);
@@ -55,6 +57,7 @@ const JobProfileCard: FC<{ jobProfile: JobProfile }> = ({ jobProfile }) => {
       <CardBody variant="card">
         <BranchCard branch={jobProfile.branch} jobProfileId={jobProfile.id as string} />
         <JobPositionCard jobProfile={jobProfile} />
+        <BillingCycleEditor profile={jobProfile} />
         <EstimatedHourlyRate
           rate={jobProfile.estimatedHourlyRate}
           jobProfileId={jobProfile.id as string}
@@ -64,6 +67,14 @@ const JobProfileCard: FC<{ jobProfile: JobProfile }> = ({ jobProfile }) => {
         />
       </CardBody>
       <CardFooter variant="card">
+        {jobProfile.id && (
+          <Link
+            to={`/records?jobProfileId=${encodeURIComponent(jobProfile.id)}`}
+            className="rounded-lg border border-[var(--border)] px-3 py-2 text-sm font-semibold text-[var(--text)] hover:border-[var(--accent)]"
+          >
+            Ver registros
+          </Link>
+        )}
         <IsRemoveProfile state={isRemoveProfile} message="Eliminando..." />
         {!isRemoveProfile && (
           <Btn

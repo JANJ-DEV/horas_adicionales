@@ -26,7 +26,7 @@ const Footer: FC = () => {
   ];
 
   return (
-    <footer className="app-surface mt-auto w-full px-4 py-6 sm:px-6 lg:px-8">
+    <footer className="app-surface mx-auto mt-auto w-full max-w-[100rem] px-4 py-6 sm:px-6 lg:px-8">
       <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
         <p className="text-sm font-medium text-[var(--text-muted)]">© {currentYear} JDNJ</p>
 
@@ -39,7 +39,7 @@ const Footer: FC = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={link.ariaLabel}
-                  className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-2 text-sm font-medium text-[var(--text)] transition duration-300 hover:-translate-y-0.5 hover:border-[var(--border-strong)] hover:text-[var(--accent)]"
+                  className="inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-2 text-sm font-medium text-[var(--text)] transition duration-300 hover:-translate-y-0.5 hover:border-[var(--border-strong)] hover:text-[var(--accent)]"
                 >
                   <link.icon size={16} aria-hidden="true" />
                   <span className="hidden sm:inline">{link.label}</span>

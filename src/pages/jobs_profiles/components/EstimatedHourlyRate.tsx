@@ -126,7 +126,7 @@ const EstimatedHourlyRate: FC<{
       </header>
 
       {!isUpdatingRate && (
-        <p className="inline-flex items-center rounded-full border border-[var(--border-strong)] bg-[color:var(--accent)]/10 px-3 py-1 text-sm font-semibold text-[var(--accent)]">
+        <p className="inline-flex items-center rounded-lg border border-[var(--border-strong)] bg-[color:var(--accent)]/10 px-3 py-1 text-sm font-semibold text-[var(--accent)]">
           Tarifa estimada: {currencyFormatter.format(normalizedCurrentRate)}/hora
         </p>
       )}

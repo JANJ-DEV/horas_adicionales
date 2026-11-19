@@ -7,7 +7,7 @@ type IsRemoveProfileProps = {
 };
 const IsRemoveProfile: FC<IsRemoveProfileProps> = ({ state, message }) => {
   return state ? (
-    <span className="absolute inset-0 flex items-center justify-center bg-red-500/80 text-white font-bold text-lg rounded-xl">
+    <span className="absolute inset-0 flex items-center justify-center bg-red-500/80 text-white font-bold text-lg rounded-lg">
       {message ? message : "Eliminando..."}
     </span>
   ) : null;

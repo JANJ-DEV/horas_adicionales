@@ -7,6 +7,7 @@ import { notify, TOAST_SCOPE } from "@/services/toast.service";
 import type { JobProfile } from "@/types";
 import { useEffect, useState } from "react";
 import { useFetcher, useNavigate, useParams } from "react-router";
+import { storeProfile } from "../profileSelection";
 
 export const useEditRecord = () => {
   const { currentUser } = useAuth();
@@ -109,9 +110,10 @@ export const useEditRecord = () => {
 
     if (formAction.data.success) {
       notify.success("Registro actualizado correctamente", { scope: TOAST_SCOPE.RECORDS });
+      storeProfile(currentUser?.uid, selectedProfileId);
       navigate("/records");
     }
-  }, [formAction.data, formAction.state, navigate]);
+  }, [formAction.data, formAction.state, navigate, currentUser?.uid, selectedProfileId]);
 
   return {
     record,

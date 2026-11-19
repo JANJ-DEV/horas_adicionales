@@ -89,7 +89,7 @@ const DetailsRecord = () => {
   }
 
   return (
-    <section id={record.id} className="app-surface mt-8 flex flex-col gap-6 rounded-[1.5rem] p-6">
+    <section id={record.id} className="app-surface mt-8 flex flex-col gap-6 rounded-lg p-6">
       <header className="flex items-center justify-between border-b border-[var(--border)] pb-4">
         <section>
           <h2 className="font-[var(--font-display)] text-3xl font-bold text-[var(--text)]">

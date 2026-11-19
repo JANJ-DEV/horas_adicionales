@@ -77,7 +77,7 @@ const App: FC = () => {
           <div className="mt-4 grid gap-4 lg:mt-5">
             {steps.map((item) => (
               <section key={item.step} className="app-card flex gap-4 px-4 py-4 sm:px-5">
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[var(--bg-soft)] font-[var(--font-display)] text-sm font-bold text-[var(--accent)]">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-[var(--bg-soft)] font-[var(--font-display)] text-sm font-bold text-[var(--accent)]">
                   {item.step}
                 </span>
                 <div>
@@ -88,7 +88,7 @@ const App: FC = () => {
                   {item.action && (
                     <Link
                       to="#"
-                      className="mt-3 inline-flex rounded-full bg-[var(--accent)] px-4 py-2 text-sm font-bold text-slate-950 transition duration-300 hover:-translate-y-0.5 hover:bg-[var(--accent-strong)] hover:text-white"
+                      className="mt-3 inline-flex rounded-lg bg-[var(--accent)] px-4 py-2 text-sm font-bold text-slate-950 transition duration-300 hover:-translate-y-0.5 hover:bg-[var(--accent-strong)] hover:text-white"
                       onClick={(e) => {
                         e.stopPropagation();
                         signInWithGoogle();

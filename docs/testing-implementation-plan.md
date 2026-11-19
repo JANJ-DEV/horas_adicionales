@@ -1,5 +1,7 @@
 # Plan de Implementación de Testing
 
+> Estado: plan completado. Este documento conserva el historial de la iniciativa de marzo de 2026; el backlog y el próximo paso al final reflejan propuestas de ese momento, no trabajo necesariamente pendiente. Para las prioridades actuales, consultar [SUGGESTIONS.md](../SUGGESTIONS.md). El pipeline de CI propuesto ya está versionado.
+
 ## Objetivo
 
 Implementar una base de testing incremental para el proyecto sin romper funcionalidad existente ni bloquear el ritmo de desarrollo.

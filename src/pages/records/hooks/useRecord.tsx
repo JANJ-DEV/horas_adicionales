@@ -17,6 +17,7 @@ export const useRecord = (queryFilters?: RecordsQueryFilters) => {
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [records, setRecords] = useState<RecordService[]>([]);
+  const [recordsOwner, setRecordsOwner] = useState<string | undefined>();
   const filterBranchId = queryFilters?.branchId;
   const filterJobPositionId = queryFilters?.jobPositionId;
   const filterJobProfileId = queryFilters?.jobProfileId;
@@ -49,9 +50,11 @@ export const useRecord = (queryFilters?: RecordsQueryFilters) => {
     if (!currentUser?.uid) {
       return;
     }
+    const userId = currentUser.uid;
 
     const unsubscribe = subscribeToRecords(
       (records) => {
+        setRecordsOwner(userId);
         if (!records || records.length === 0) {
           setRecords([]);
           setErrorMessage(null);
@@ -65,6 +68,7 @@ export const useRecord = (queryFilters?: RecordsQueryFilters) => {
         }
       },
       (error) => {
+        setRecordsOwner(userId);
         handleAppError(error, "useRecord.subscribeToRecords");
         setRecords([]);
         setIsError(true);
@@ -98,11 +102,12 @@ export const useRecord = (queryFilters?: RecordsQueryFilters) => {
   ]);
 
   return {
-    records,
-    isLoading,
+    records: recordsOwner === currentUser?.uid ? records : [],
+    isLoading: isLoading || (hasCurrentUser && recordsOwner !== currentUser?.uid),
     isError,
     errorMessage,
     hasCurrentUser,
+    currentUserId: currentUser?.uid,
     handleDeleteRecord,
     handlerViewDetails,
     navigate,

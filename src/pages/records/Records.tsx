@@ -1,22 +1,22 @@
 import RecordCard from "./components/RecordCard";
+import RecordReveal from "./components/RecordReveal";
 import { useEffect, useState } from "react";
 import { subscribeToBranches } from "@/services/branches.service";
 import { subscribeToJobProfiles } from "@/services/jobsProfile.service";
 import type { Branch, JobProfile } from "@/types";
 import type { RecordsPeriod } from "@/utils";
 import RecordsPeriodSelector from "./components/RecordsPeriodSelector";
-import RecordsSummary from "./components/RecordsSummary";
 import RecordsListGrid from "./components/RecordsListGrid";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 import { Link } from "react-router";
-import RecordsFiltersBar, { type RecordsFiltersState } from "./components/RecordsFiltersBar";
-import { MdViewList, MdViewAgenda, MdVisibility, MdVisibilityOff } from "react-icons/md";
+import { UNASSIGNED_PROFILE } from "./profileSelection";
+import useAuth from "@/context/hooks/auth.hook";
+import { MdViewList, MdViewAgenda, MdWorkOutline } from "react-icons/md";
 import { useRecordsFiltering } from "./hooks/useRecordsFiltering";
 import { clearPendingSelectedRecordId, getPendingSelectedRecordId } from "./recordNavigation";
 
 const PAGE_SIZE = 9;
 const VIEW_MODE_STORAGE_KEY = "records:view-mode";
-const SUMMARY_VISIBLE_STORAGE_KEY = "records:summary-visible";
 
 type ViewMode = "card" | "list";
 
@@ -39,33 +39,20 @@ const setStoredViewMode = (mode: ViewMode) => {
   }
 };
 
-const getStoredSummaryVisible = (): boolean => {
-  if (typeof window === "undefined") return true;
-  try {
-    const stored = localStorage.getItem(SUMMARY_VISIBLE_STORAGE_KEY);
-    return stored !== "false";
-  } catch {
-    return true;
-  }
-};
-
-const setStoredSummaryVisible = (isVisible: boolean) => {
-  if (typeof window === "undefined") return;
-  try {
-    localStorage.setItem(SUMMARY_VISIBLE_STORAGE_KEY, String(isVisible));
-  } catch {
-    // localStorage no disponible
-  }
-};
-
 const Records = () => {
+  const { currentUser } = useAuth();
+  const [jobProfiles, setJobProfiles] = useState<JobProfile[]>([]);
+  const [profilesOwner, setProfilesOwner] = useState<string | undefined>();
+  const [isLoadingProfiles, setIsLoadingProfiles] = useState(true);
+  const [profilesError, setProfilesError] = useState(false);
+  const profilesReady = !isLoadingProfiles && !profilesError && profilesOwner === currentUser?.uid;
+  const visibleProfiles = profilesReady ? jobProfiles : [];
   const {
-    filters,
-    hasManualDateRange,
+    selectedProfileId,
+    hasUnassignedRecords,
+    profile,
     selectedPeriod,
     recordsByPeriod,
-    summary,
-    effectiveSummaryPeriod,
     isLoading,
     isError,
     errorMessage,
@@ -73,35 +60,38 @@ const Records = () => {
     handleDeleteRecord,
     handlerViewDetails,
     handlePeriodChange,
-    handleFilterChange,
-    cycleStartDay,
-    handleCycleStartDayChange,
-  } = useRecordsFiltering();
+    handleProfileChange,
+    sinceDate,
+    setSinceDate,
+    cycleOptions,
+    selectedCycle,
+    setSelectedCycle,
+  } = useRecordsFiltering(visibleProfiles, profilesReady);
   const [branches, setBranches] = useState<Branch[]>([]);
-  const [jobProfiles, setJobProfiles] = useState<JobProfile[]>([]);
   const [hasJobProfiles, setHasJobProfiles] = useState(true);
-  const [isLoadingProfiles, setIsLoadingProfiles] = useState(true);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [pendingSelectedRecordId, setPendingSelectedRecordId] = useState<string | null>(() =>
     getPendingSelectedRecordId()
   );
   const [viewMode, setViewMode] = useState<ViewMode>(() => getStoredViewMode());
-  const [isSummaryVisible, setIsSummaryVisible] = useState<boolean>(() =>
-    getStoredSummaryVisible()
-  );
 
   useEffect(() => {
-    if (!hasCurrentUser) {
+    if (!hasCurrentUser || !currentUser?.uid) {
       return;
     }
+    const userId = currentUser.uid;
 
     const unsubscribe = subscribeToJobProfiles(
       (profiles) => {
+        setProfilesOwner(userId);
         setJobProfiles(profiles);
         setHasJobProfiles(profiles.length > 0);
+        setProfilesError(false);
         setIsLoadingProfiles(false);
       },
       () => {
+        setProfilesOwner(userId);
+        setProfilesError(true);
         setJobProfiles([]);
         setIsLoadingProfiles(false);
       },
@@ -115,7 +105,7 @@ const Records = () => {
         unsubscribe();
       }
     };
-  }, [hasCurrentUser]);
+  }, [hasCurrentUser, currentUser?.uid]);
 
   useEffect(() => {
     const unsubscribe = subscribeToBranches((nextBranches) => {
@@ -161,6 +151,7 @@ const Records = () => {
   const { sentinelRef } = useInfiniteScroll({
     onLoadMore: loadMoreRecords,
     hasMore,
+    resetKey: effectiveVisibleCount,
     disabled: !hasCurrentUser || isLoading || isError,
   });
 
@@ -171,29 +162,13 @@ const Records = () => {
     setVisibleCount(PAGE_SIZE);
   };
 
-  const handleFilterChangeWithPaginationReset = (
-    name: keyof RecordsFiltersState,
-    value: string
-  ) => {
-    handleFilterChange(name, value);
-    setVisibleCount(PAGE_SIZE);
-  };
-
   const handleViewModeChange = (mode: ViewMode) => {
     setViewMode(mode);
     setStoredViewMode(mode);
   };
 
-  const handleSummaryVisibilityToggle = () => {
-    setIsSummaryVisible((current) => {
-      const next = !current;
-      setStoredSummaryVisible(next);
-      return next;
-    });
-  };
-
   const renderViewModeToggle = () => (
-    <div className="flex gap-1 rounded-full border border-[var(--border)] bg-[var(--bg-soft)] p-1">
+    <div className="flex gap-1 rounded-lg border border-[var(--border)] bg-[var(--bg-soft)] p-1">
       <button
         type="button"
         onClick={() => handleViewModeChange("card")}
@@ -226,7 +201,14 @@ const Records = () => {
   );
 
   useEffect(() => {
-    if (!pendingSelectedRecordId || !hasCurrentUser || isLoading || isError) {
+    if (
+      !pendingSelectedRecordId ||
+      !hasCurrentUser ||
+      isLoading ||
+      isLoadingProfiles ||
+      profilesError ||
+      isError
+    ) {
       return;
     }
 
@@ -263,6 +245,8 @@ const Records = () => {
     pendingSelectedRecordIndex,
     hasCurrentUser,
     isLoading,
+    isLoadingProfiles,
+    profilesError,
     isError,
     effectiveVisibleCount,
     visibleCount,
@@ -270,51 +254,74 @@ const Records = () => {
   ]);
 
   return (
-    <section className="flex min-w-0 min-h-[60vh] flex-col gap-4 overflow-x-hidden">
+    <section className="flex min-w-0 min-h-[60vh] flex-col gap-4 overflow-x-clip">
       {hasCurrentUser && (
         <>
-          <div className="app-surface flex flex-wrap items-center justify-between gap-2 p-4">
-            <RecordsPeriodSelector
-              value={selectedPeriod}
-              onChange={handlePeriodChangeWithPaginationReset}
-              cycleStartDay={cycleStartDay}
-              onChangeCycleStartDay={handleCycleStartDayChange}
-              disabled={hasManualDateRange}
-            />
-            <div className="flex w-full items-center justify-between gap-2 sm:w-auto sm:justify-end">
-              <button
-                type="button"
-                onClick={handleSummaryVisibilityToggle}
-                className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-2 py-1.5 text-sm font-semibold text-[var(--text)] transition duration-200 hover:border-[var(--accent)] hover:text-[var(--accent)] md:px-3"
-                aria-pressed={isSummaryVisible}
-                aria-label={isSummaryVisible ? "Ocultar resumen" : "Mostrar resumen"}
-                title={isSummaryVisible ? "Ocultar resumen" : "Mostrar resumen"}
+          <div className="app-surface grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-2 p-3 md:flex md:flex-wrap md:justify-between md:gap-4 md:p-4">
+            <label className="order-1 flex min-w-0 items-center gap-2 text-sm text-[var(--text)] md:order-none">
+              <MdWorkOutline
+                aria-hidden="true"
+                className="shrink-0 text-xl text-[var(--accent)] md:hidden"
+              />
+              <span className="sr-only md:not-sr-only md:font-semibold">Cambiar perfil</span>
+              <select
+                aria-label="Cambiar perfil"
+                value={selectedProfileId ?? ""}
+                disabled={isLoadingProfiles || profilesError || !selectedProfileId}
+                onChange={(event) => {
+                  handleProfileChange(event.target.value);
+                  setVisibleCount(PAGE_SIZE);
+                }}
+                className="w-full min-w-0 rounded-lg border border-[var(--border)] bg-[var(--bg-soft)] px-2 py-2 text-[var(--text)] md:w-auto md:px-3"
               >
-                {isSummaryVisible ? (
-                  <MdVisibilityOff className="text-[24px] md:text-[18px]" />
-                ) : (
-                  <MdVisibility className="text-[24px] md:text-[18px]" />
+                {!selectedProfileId && (
+                  <option value="">
+                    {isLoadingProfiles ? "Cargando perfiles..." : "Selecciona un perfil"}
+                  </option>
                 )}
-                <span className="hidden md:inline">
-                  {isSummaryVisible ? "Ocultar resumen" : "Mostrar resumen"}
-                </span>
-              </button>
-              {renderViewModeToggle()}
-              <RecordsFiltersBar
-                branches={branches}
-                jobProfiles={jobProfiles}
-                filters={filters}
-                onFilterChange={handleFilterChangeWithPaginationReset}
+                {visibleProfiles.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.title}
+                  </option>
+                ))}
+                {hasUnassignedRecords && <option value={UNASSIGNED_PROFILE}>Sin perfil</option>}
+              </select>
+            </label>
+            <div className="order-3 col-span-2 min-w-0 md:order-none">
+              <RecordsPeriodSelector
+                value={selectedPeriod}
+                onChange={handlePeriodChangeWithPaginationReset}
+                sinceDate={sinceDate}
+                cycleOptions={cycleOptions}
+                selectedCycle={selectedCycle}
+                onChangeCycle={(cycle) => {
+                  setSelectedCycle(cycle);
+                  setVisibleCount(PAGE_SIZE);
+                }}
+                onChangeSinceDate={(date) => {
+                  setSinceDate(date);
+                  setVisibleCount(PAGE_SIZE);
+                }}
+                disabled={!selectedProfileId}
               />
             </div>
+            <div className="order-2 flex items-center justify-end md:order-none">
+              {renderViewModeToggle()}
+            </div>
           </div>
-          {isSummaryVisible && (
-            <RecordsSummary
-              period={effectiveSummaryPeriod}
-              recordsCount={recordsByPeriod.length}
-              totalHoursDecimal={summary.totalHoursDecimal}
-              totalSalary={summary.totalSalary}
-            />
+          <p className="text-sm text-[var(--text-muted)]">
+            Los colores identifican ciclos de facturación según el perfil. En la lista, sitúa el
+            cursor sobre la fecha para ver el intervalo. Los perfiles sin ciclo configurado se
+            muestran sin color.
+          </p>
+          {selectedPeriod === "custom_cycle" && profile && !profile.billingCycleStartDay && (
+            <p className="text-sm text-[var(--text-muted)]">
+              Este perfil no tiene ciclo de facturación configurado.{" "}
+              <Link className="text-[var(--accent)] underline" to="/jobs-profiles">
+                Configurar perfil
+              </Link>
+              .
+            </p>
           )}
         </>
       )}
@@ -329,13 +336,20 @@ const Records = () => {
           <p className="text-sm font-semibold text-[var(--danger)]">{errorMessage}</p>
         </aside>
       )}
+      {hasCurrentUser && profilesError && (
+        <aside className="app-card p-4 text-[var(--danger)]">
+          No se pudieron cargar los perfiles. Vuelve a intentarlo.
+        </aside>
+      )}
 
       {!isLoading &&
         !isError &&
         !isLoadingProfiles &&
+        !profilesError &&
         hasCurrentUser &&
         recordsByPeriod.length === 0 &&
-        !hasJobProfiles && (
+        !hasJobProfiles &&
+        !hasUnassignedRecords && (
           <aside className="app-surface p-4 text-[var(--text)]">
             <h3 className="font-[var(--font-display)] text-base font-semibold text-[var(--accent-warm)]">
               Tu cuenta esta lista para empezar
@@ -346,13 +360,13 @@ const Records = () => {
             <div className="mt-3 flex flex-wrap gap-2">
               <Link
                 to="/jobs-profiles/add"
-                className="inline-flex rounded-full bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-slate-950 transition duration-300 hover:-translate-y-0.5 hover:bg-[var(--accent-strong)] hover:text-white"
+                className="inline-flex rounded-lg bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-slate-950 transition duration-300 hover:-translate-y-0.5 hover:bg-[var(--accent-strong)] hover:text-white"
               >
                 Crear primer perfil
               </Link>
               <Link
                 to="/jobs-profiles"
-                className="inline-flex rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-2 text-sm font-semibold text-[var(--text)] transition duration-300 hover:border-[var(--border-strong)] hover:text-[var(--accent)]"
+                className="inline-flex rounded-lg border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-2 text-sm font-semibold text-[var(--text)] transition duration-300 hover:border-[var(--border-strong)] hover:text-[var(--accent)]"
               >
                 Ver perfiles
               </Link>
@@ -363,17 +377,19 @@ const Records = () => {
       {!isLoading &&
         !isError &&
         !isLoadingProfiles &&
+        !profilesError &&
         hasCurrentUser &&
         recordsByPeriod.length === 0 &&
-        hasJobProfiles && (
+        (hasJobProfiles || hasUnassignedRecords) && (
           <aside className="app-card p-4 text-[var(--text-muted)]">
-            No hay registros que coincidan con los filtros seleccionados.
+            No hay registros para este perfil y período.
           </aside>
         )}
 
       {viewMode === "list" ? (
         <RecordsListGrid
           records={visibleRecords}
+          jobProfiles={visibleProfiles}
           branchNameById={branchNameById}
           jobPositionNameByCompositeKey={jobPositionNameByCompositeKey}
           onViewDetails={handlerViewDetails}
@@ -382,9 +398,10 @@ const Records = () => {
       ) : (
         <section className="grid min-w-0 gap-4 grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
           {visibleRecords.map((record) => (
-            <div key={record.id} data-record-anchor={record.id} data-record-variant="desktop">
+            <RecordReveal key={record.id} recordId={record.id}>
               <RecordCard
                 record={record}
+                jobProfiles={visibleProfiles}
                 branchName={record.branchId ? (branchNameById[record.branchId] ?? "") : ""}
                 jobPositionName={
                   record.branchId && record.jobPositionId
@@ -396,13 +413,27 @@ const Records = () => {
                 handlerViewDetails={handlerViewDetails}
                 handleDeleteRecord={handleDeleteRecord}
               />
-            </div>
+            </RecordReveal>
           ))}
         </section>
       )}
 
       {hasCurrentUser && !isLoading && !isError && hasMore && (
-        <div ref={sentinelRef} className="h-8 w-full" aria-hidden="true" />
+        <div
+          ref={sentinelRef}
+          className="flex w-full flex-col items-center gap-2 py-2 text-center text-xs text-[var(--text-muted)]"
+        >
+          <p>
+            Mostrando {visibleRecords.length} de {recordsByPeriod.length} registros.
+          </p>
+          <button
+            type="button"
+            onClick={loadMoreRecords}
+            className="rounded-lg border border-[var(--border)] px-3 py-2 font-semibold text-[var(--text)] hover:border-[var(--accent)]"
+          >
+            Cargar más registros
+          </button>
+        </div>
       )}
 
       {hasCurrentUser &&

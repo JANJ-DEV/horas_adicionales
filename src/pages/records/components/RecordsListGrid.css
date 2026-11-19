@@ -24,7 +24,18 @@
 
 .records-list-grid.ag-theme-quartz .ag-row {
   color: var(--text) !important;
-  background-color: var(--bg-soft) !important;
+  background-color: color-mix(
+    in srgb,
+    var(--cycle-color, var(--bg-soft)) 20%,
+    var(--surface)
+  ) !important;
+}
+.records-list-grid.ag-theme-quartz .ag-row-hover {
+  background-color: color-mix(
+    in srgb,
+    var(--cycle-color, var(--accent)) 30%,
+    var(--surface)
+  ) !important;
 }
 
 .records-list-grid.ag-theme-quartz .ag-cell,

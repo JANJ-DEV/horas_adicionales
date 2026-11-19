@@ -67,7 +67,15 @@ export const calculateSalary = (decimalHours: number, hourlyRate: number): numbe
   return Number(totalSalary.toFixed(2));
 };
 
-export type RecordsPeriod = "day" | "week" | "month" | "custom_cycle";
+export type RecordsPeriod =
+  | "all"
+  | "day"
+  | "week"
+  | "month"
+  | "quarter"
+  | "semester"
+  | "since"
+  | "custom_cycle";
 
 export type RecordsAdvancedFilters = {
   branchId?: string;
@@ -137,7 +145,16 @@ export const isDateInPeriod = (
   referenceDate: Date = new Date(),
   cycleStartDay: number = 1
 ) => {
+  if (period === "all" || period === "since") return true;
   const normalizedValue = startOfDay(value).getTime();
+
+  if (period === "quarter" || period === "semester") {
+    const months = period === "quarter" ? 3 : 6;
+    const startMonth = Math.floor(referenceDate.getMonth() / months) * months;
+    const start = new Date(referenceDate.getFullYear(), startMonth, 1).getTime();
+    const end = new Date(referenceDate.getFullYear(), startMonth + months, 1).getTime();
+    return normalizedValue >= start && normalizedValue < end;
+  }
 
   if (period === "day") {
     return normalizedValue === startOfDay(referenceDate).getTime();
@@ -177,6 +194,7 @@ export const filterRecordsByPeriod = <T extends RecordLike>(
   referenceDate: Date = new Date(),
   cycleStartDay: number = 1
 ) => {
+  if (period === "all" || period === "since") return [...records];
   return records.filter((record) => {
     const reference = getRecordReferenceDate(record);
     if (!reference) return false;

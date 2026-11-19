@@ -8,6 +8,8 @@ import {
 } from "ag-grid-community";
 import type { RecordService } from "@/services/records.service";
 import { calculateSalary, calculateWorkedHours } from "@/utils";
+import type { JobProfile } from "@/types";
+import { getBillingCycle } from "../billingCycle";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import "./RecordsListGrid.css";
@@ -20,6 +22,7 @@ type RecordsListGridProps = {
   jobPositionNameByCompositeKey: Record<string, string>;
   onViewDetails: (recordId: string) => void;
   onDeleteRecord: (recordId: string) => void;
+  jobProfiles: JobProfile[];
 };
 
 type RecordGridRow = {
@@ -30,6 +33,7 @@ type RecordGridRow = {
   jobPositionLabel: string;
   workedHoursLabel: string;
   salaryLabel: string;
+  cycle: ReturnType<typeof getBillingCycle>;
 };
 
 const formatDateLabel = (value: RecordService["dateTimeRecord"]) => {
@@ -47,6 +51,7 @@ const RecordsListGrid = ({
   jobPositionNameByCompositeKey,
   onViewDetails,
   onDeleteRecord,
+  jobProfiles,
 }: RecordsListGridProps) => {
   const [isMobileViewport, setIsMobileViewport] = useState(() => {
     if (typeof window === "undefined") return false;
@@ -86,6 +91,7 @@ const RecordsListGrid = ({
       jobPositionLabel: jobPositionLabel || "No especificado",
       workedHoursLabel: worked.formatted,
       salaryLabel: `${salary.toFixed(2)} EUR`,
+      cycle: getBillingCycle(record, jobProfiles),
     };
   });
 
@@ -97,8 +103,13 @@ const RecordsListGrid = ({
       width: isMobileViewport ? 112 : undefined,
       flex: isMobileViewport ? undefined : 0.9,
       cellRenderer: ({ data, value }: ICellRendererParams<RecordGridRow, string>) => (
-        <span data-record-anchor={data?.id} data-record-variant="mobile">
+        <span
+          data-record-anchor={data?.id}
+          data-record-variant="mobile"
+          title={data?.cycle?.label ?? "Ciclo de facturación sin configurar"}
+        >
           {value}
+          {data?.cycle && <span className="sr-only"> ({data.cycle.label})</span>}
         </span>
       ),
     },
@@ -156,14 +167,14 @@ const RecordsListGrid = ({
           <div className="flex h-full w-full items-center justify-end gap-2">
             <button
               type="button"
-              className="rounded-full bg-[var(--accent)] px-3 py-1 text-xs font-semibold text-slate-950 transition duration-200 hover:bg-[var(--accent-strong)] hover:text-white"
+              className="rounded-lg bg-[var(--accent)] px-3 py-1 text-xs font-semibold text-slate-950 transition duration-200 hover:bg-[var(--accent-strong)] hover:text-white"
               onClick={() => onViewDetails(recordId)}
             >
               Detalles
             </button>
             <button
               type="button"
-              className="rounded-full bg-[var(--danger)] px-3 py-1 text-xs font-semibold text-white transition duration-200 hover:opacity-90"
+              className="rounded-lg bg-[var(--danger)] px-3 py-1 text-xs font-semibold text-white transition duration-200 hover:opacity-90"
               onClick={() => onDeleteRecord(recordId)}
             >
               Eliminar
@@ -176,13 +187,16 @@ const RecordsListGrid = ({
 
   return (
     <article className="app-surface overflow-hidden p-2">
-      <div className="records-list-grid ag-theme-quartz min-h-[120px] w-full overflow-x-auto rounded-xl">
+      <div className="records-list-grid ag-theme-quartz min-h-[120px] w-full overflow-x-auto rounded-lg">
         <AgGridReact<RecordGridRow>
           theme="legacy"
           rowData={rowData}
+          getRowId={({ data }) => data.id}
+          getRowClass={({ data }) =>
+            data?.cycle ? `billing-cycle-${data.cycle.color}` : undefined
+          }
           columnDefs={columnDefs}
           defaultColDef={{ sortable: true, filter: false, resizable: true }}
-          animateRows
           domLayout="autoHeight"
           headerHeight={40}
           rowHeight={48}

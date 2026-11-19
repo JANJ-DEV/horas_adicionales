@@ -1,72 +1,39 @@
-# Sugerencias de Mejora - Horas Adicionales
+# Sugerencias de mejora - Horas Adicionales
 
-Este documento resume los riesgos y la deuda técnica que conviene priorizar en futuras iteraciones del proyecto.
+Revisión de la documentación y del código local: 18 de noviembre de 2026. Las prioridades son propuestas, no indican que haya trabajo en curso.
 
 ## Prioridad alta
 
-### 1. Consistencia del modelo de datos en registros
+### Migración de fechas de registros
 
-En `records.service.ts` conviven campos actuales como `dateTimeRecord` con lógica heredada que todavía usa `fecha`.
+El modelo actual usa `dateTimeRecord`. `records.service.ts` todavía admite el campo heredado `fecha` y, al leer un documento, intenta migrarlo en segundo plano. Las consultas con rango de fechas filtran por `dateTimeRecord`, por lo que un documento que solo tenga `fecha` podría no aparecer en esas consultas y, por tanto, no migrarse mediante esa lectura.
 
-- Unificar el modelo de datos de `records`.
-- Eliminar helpers y consultas heredadas que dependan de `fecha`.
-- Revisar filtros, reportes y lecturas históricas para evitar comportamientos ambiguos.
+- Comprobar el alcance de los datos heredados y definir cómo completar y verificar la migración.
+- Revisar las consultas y pruebas con registros antiguos antes de retirar la compatibilidad.
 
-**Riesgo:** errores sutiles en filtros por fecha, reportes inconsistentes y mayor dificultad para evolucionar la capa de datos.
+### Consistencia en el manejo de errores
 
-### 2. Manejo de errores demasiado permisivo
+Varios servicios ya propagan errores, pero algunos flujos aún usan valores de retorno para comunicar fallos. Por ejemplo, `deleteRecord` devuelve `false` ante un error, y la actualización de tarifas devuelve `0` cuando no hay usuario autenticado.
 
-Varios servicios devuelven `null`, `false` o `[]` cuando ocurre un error real. Eso evita caídas visibles, pero también esconde fallos y dificulta distinguir entre "sin datos" y "falló la operación".
-
-- Revisar servicios que hoy silencian errores con valores por defecto.
-- Propagar errores de forma explícita cuando la UI necesite diferenciar estados.
-- Mantener `handleAppError` como punto central, pero con respuestas más claras para cada flujo.
-
-**Riesgo:** fallos difíciles de depurar, estados inconsistentes en UI y feedback poco fiable al usuario.
-
-### 3. Resolución de autenticación al arrancar la app
-
-`PrivateLayout` decide el acceso usando `isAuthenticated`, pero no espera explícitamente a `isAuthResolved`.
-
-- Alinear las rutas privadas con el estado `isAuthResolved`.
-- Mostrar estado de carga controlado mientras Firebase resuelve la sesión inicial.
-
-**Riesgo:** redirecciones prematuras, parpadeo de pantallas y UX inconsistente en recargas.
+- Revisar los contratos de los servicios y sus consumidores para distinguir errores de resultados vacíos o ausentes.
+- Mantener el tratamiento centralizado y ofrecer feedback adecuado en la interfaz.
 
 ## Prioridad media
 
-### 4. Limpieza de deuda histórica y nombres inconsistentes
+### Pruebas de integración y seguridad
 
-Hay archivos y símbolos con nombres poco consistentes o con typos, por ejemplo:
+- Evaluar pruebas de extremo a extremo para los flujos críticos y pruebas de reglas con el emulador de Firestore.
+- Documentar el despliegue y la validación de reglas e índices por entorno. Las reglas versionadas permiten lectura pública de catálogos y restringen los datos de `users/{userId}` al usuario autenticado correspondiente; esto no verifica la configuración desplegada.
+- Revisar en GitHub la protección de ramas y los checks obligatorios. El workflow de CI está versionado, pero su configuración efectiva no se puede deducir del repositorio local.
 
-- `useBranches.hook..tsx`
-- `useDeyailsRecord.tsx`
-- `branches.services.ts`
-- `jobsPositions.service.tsx`
+### Logs y rendimiento
 
-**Acción sugerida:** renombrar y normalizar convenciones para reducir fricción al navegar y mantener el proyecto.
+- Revisar los mensajes de consola, incluidos los de migración y errores, y decidir cuáles conservar.
+- Vigilar el tamaño del bundle y la limpieza de las suscripciones cuando crezca la aplicación.
 
-### 5. Revisión de logs y trazas técnicas en cliente
+## Elementos ya abordados
 
-Todavía hay `console.error` y `console.warn` en flujos de aplicación y utilidades de soporte.
-
-- Revisar qué logs deben seguir existiendo.
-- Sustituir logs transitorios por manejo centralizado o feedback de UI cuando corresponda.
-
-**Riesgo:** ruido en depuración, menor claridad operativa y exposición innecesaria de detalles técnicos.
-
-## Prioridad baja
-
-### 6. Optimización de rendimiento y peso de bundle
-
-La estrategia de `manualChunks` ya ayuda, pero todavía hay margen para seguir reduciendo el peso del chunk principal y vigilar suscripciones activas.
-
-- Vigilar crecimiento del bundle principal.
-- Revisar puntos de carga diferida si se agregan nuevas pantallas pesadas.
-- Confirmar limpieza consistente de suscripciones `onSnapshot`.
-
-## Notas de contexto
-
-- Las reglas actuales de Firestore ya protegen correctamente los datos de usuario bajo `users/{uid}/...`.
-- El proyecto ya cuenta con validación base mediante `npm run lint`, `npm run build` y `npm run test`.
-- La base de tests y CI es buena; por eso la prioridad ahora no es "agregar estructura", sino reducir deuda técnica en flujos críticos.
+- `PrivateLayout` espera a `isAuthResolved` y muestra carga antes de decidir el acceso.
+- Los archivos con nombres inconsistentes mencionados anteriormente fueron renombrados.
+- Existen filtros de registros por fecha, perfil, rama, puesto, tarifa y horas, además de selección de periodo.
+- El repositorio incluye CI para lint, compilación y pruebas. Consultar [README.md](README.md) para su uso.

@@ -20,7 +20,7 @@ const UTILITY_DB_KEY_FALLBACK: Record<string, string> = {
 const fieldCls = "flex flex-col gap-1.5";
 const labelCls = "form-label text-sm font-semibold";
 const inputCls =
-  "form-input rounded-xl p-3 transition focus:outline-none disabled:cursor-not-allowed disabled:opacity-50";
+  "form-input rounded-lg p-3 transition focus:outline-none disabled:cursor-not-allowed disabled:opacity-50";
 
 const toInputDate = (value?: string | Date) => {
   if (!value) {
@@ -521,7 +521,7 @@ const EditRecordForm: FC<EditRecordFormProps> = ({
       {formAction.data?.error && (
         <p
           role="alert"
-          className="mt-3 rounded-xl border border-red-700 bg-red-900/30 p-3 text-sm text-red-400"
+          className="mt-3 rounded-lg border border-red-700 bg-red-900/30 p-3 text-sm text-red-400"
         >
           {formAction.data.error}
         </p>
@@ -556,7 +556,7 @@ const EditRecord: FC = () => {
   if (hasCurrentUser && !isLoadingProfiles && !hasJobProfiles) {
     return (
       <section className="mx-auto w-full max-w-2xl pb-6">
-        <aside className="flex flex-col gap-4 rounded-xl border border-amber-500/40 bg-amber-500/10 p-5 text-amber-100">
+        <aside className="flex flex-col gap-4 rounded-lg border border-amber-500/40 bg-amber-500/10 p-5 text-amber-100">
           <h2 className="text-xl font-semibold text-amber-200">Necesitas un perfil de trabajo</h2>
           <p className="text-sm text-amber-100/90">
             Para editar un registro debes contar con al menos un perfil de trabajo disponible.

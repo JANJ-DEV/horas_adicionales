@@ -86,7 +86,7 @@ const ProfileTitle: FC<{ title: string; jobProfileId: string }> = ({ title, jobP
             id={`title-${jobProfileId}`}
             defaultValue={title}
             disabled={isSaving}
-            className="mt-2 w-full rounded-2xl border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-sm text-[var(--text)] outline-none transition duration-300 focus:border-[var(--border-strong)] focus:ring-2 focus:ring-[color:var(--accent)]/15 lg:text-base"
+            className="mt-2 w-full rounded-lg border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-sm text-[var(--text)] outline-none transition duration-300 focus:border-[var(--border-strong)] focus:ring-2 focus:ring-[color:var(--accent)]/15 lg:text-base"
           />
 
           <CardFooter variant="card">

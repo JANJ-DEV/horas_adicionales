@@ -1,131 +1,121 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
-import type { RecordsQueryFilters, RecordService } from "@/services/records.service";
+import type { RecordService } from "@/services/records.service";
+import type { JobProfile } from "@/types";
 import {
   calculateRecordsSummary,
-  filterRecordsByAdvancedFilters,
   filterRecordsByPeriod,
   getRecordReferenceDate,
   type RecordsPeriod,
 } from "@/utils";
 import { useRecord } from "./useRecord";
-import type { RecordsFiltersState } from "../components/RecordsFiltersBar";
+import { getBillingCycle } from "../billingCycle";
+import { getStoredProfile, storeProfile, UNASSIGNED_PROFILE } from "../profileSelection";
 
-const parseOptionalNumber = (value: string) => {
-  if (value.trim() === "") {
-    return undefined;
-  }
-
-  const parsed = Number(value);
-  return Number.isNaN(parsed) ? undefined : parsed;
-};
-
-const buildFiltersFromSearchParams = (searchParams: URLSearchParams): RecordsFiltersState => ({
-  branchId: searchParams.get("branchId") ?? "",
-  jobPositionId: searchParams.get("jobPositionId") ?? "",
-  jobProfileId: searchParams.get("jobProfileId") ?? "",
-  dateFrom: searchParams.get("dateFrom") ?? "",
-  dateTo: searchParams.get("dateTo") ?? "",
-  minHourlyRate: searchParams.get("minHourlyRate") ?? "",
-  maxHourlyRate: searchParams.get("maxHourlyRate") ?? "",
-  minWorkedHours: searchParams.get("minWorkedHours") ?? "",
-  maxWorkedHours: searchParams.get("maxWorkedHours") ?? "",
-});
-
-const buildQueryFilters = (filters: RecordsFiltersState): RecordsQueryFilters => ({
-  branchId: filters.branchId || undefined,
-  jobPositionId: filters.jobPositionId || undefined,
-  jobProfileId: filters.jobProfileId || undefined,
-  dateFrom: filters.dateFrom || undefined,
-  dateTo: filters.dateTo || undefined,
-});
-
-const sortRecordsByReferenceDate = (records: RecordService[]) => {
-  return [...records].sort((left, right) => {
-    const leftDate = getRecordReferenceDate(left);
-    const rightDate = getRecordReferenceDate(right);
-
-    if (!leftDate && !rightDate) return 0;
-    if (!leftDate) return 1;
-    if (!rightDate) return -1;
-
-    return rightDate.getTime() - leftDate.getTime();
+const sortRecords = (records: RecordService[]) =>
+  [...records].sort((a, b) => {
+    const left = getRecordReferenceDate(a)?.getTime() ?? -Infinity;
+    const right = getRecordReferenceDate(b)?.getTime() ?? -Infinity;
+    return right - left;
   });
-};
 
-export const useRecordsFiltering = () => {
+export const useRecordsFiltering = (jobProfiles: JobProfile[] = [], profilesReady = true) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [selectedPeriod, setSelectedPeriod] = useState<RecordsPeriod>("week");
-  const [cycleStartDay, setCycleStartDay] = useState<number>(10);
-
-  const filters = buildFiltersFromSearchParams(searchParams);
-  const queryFilters = buildQueryFilters(filters);
-
+  const [selectedPeriod, setSelectedPeriod] = useState<RecordsPeriod>("all");
+  const [sinceDate, setSinceDate] = useState("");
+  const [selectedCycle, setSelectedCycle] = useState("");
   const {
     records,
     isLoading,
     isError,
     errorMessage,
     hasCurrentUser,
+    currentUserId,
     handleDeleteRecord,
     handlerViewDetails,
-  } = useRecord(queryFilters);
-
-  const hasManualDateRange = Boolean(filters.dateFrom || filters.dateTo);
-
-  const orderedRecords = sortRecordsByReferenceDate(records);
-
-  const recordsByFilters = filterRecordsByAdvancedFilters(orderedRecords, {
-    ...queryFilters,
-    minHourlyRate: parseOptionalNumber(filters.minHourlyRate),
-    maxHourlyRate: parseOptionalNumber(filters.maxHourlyRate),
-    minWorkedHours: parseOptionalNumber(filters.minWorkedHours),
-    maxWorkedHours: parseOptionalNumber(filters.maxWorkedHours),
-  });
-
-  const recordsByPeriod = hasManualDateRange
-    ? recordsByFilters
-    : filterRecordsByPeriod(recordsByFilters, selectedPeriod, new Date(), cycleStartDay);
-
-  const summary = calculateRecordsSummary(recordsByPeriod);
-  const effectiveSummaryPeriod: RecordsPeriod | null = hasManualDateRange ? null : selectedPeriod;
-
-  const handlePeriodChange = (nextPeriod: RecordsPeriod) => {
-    setSelectedPeriod(nextPeriod);
-  };
-
-  const handleCycleStartDayChange = (day: number) => {
-    setCycleStartDay(day);
-  };
-
-  const handleFilterChange = (name: keyof RecordsFiltersState, value: string) => {
-    setSearchParams(
-      (current) => {
-        const next = new URLSearchParams(current);
-        if (name === "branchId") {
-          next.delete("jobPositionId");
-        }
-
-        if (value) {
-          next.set(name, value);
-        } else {
-          next.delete(name);
-        }
-
-        return next;
-      },
-      { replace: true }
+  } = useRecord();
+  const profileIds = new Set(jobProfiles.map((profile) => profile.id).filter(Boolean));
+  const isReady = profilesReady && !isLoading && !isError;
+  const unassignedRecords = isReady
+    ? records.filter((record) => !record.jobProfileId || !profileIds.has(record.jobProfileId))
+    : [];
+  const requestedProfile = searchParams.get("jobProfileId");
+  const savedProfile = getStoredProfile(currentUserId);
+  const isValidSelection = (id: string | null) =>
+    Boolean(
+      id && (profileIds.has(id) || (id === UNASSIGNED_PROFILE && unassignedRecords.length > 0))
     );
+  const selectedProfileId = !isReady
+    ? ""
+    : isValidSelection(requestedProfile)
+      ? requestedProfile!
+      : isValidSelection(savedProfile)
+        ? savedProfile
+        : (jobProfiles.find((profile) => profile.id)?.id ??
+          (unassignedRecords.length ? UNASSIGNED_PROFILE : ""));
+
+  useEffect(() => {
+    if (isReady && selectedProfileId) storeProfile(currentUserId, selectedProfileId);
+  }, [currentUserId, isReady, selectedProfileId]);
+
+  const profileRecords = sortRecords(
+    selectedProfileId === UNASSIGNED_PROFILE
+      ? unassignedRecords
+      : selectedProfileId
+        ? records.filter((record) => record.jobProfileId === selectedProfileId)
+        : []
+  );
+  const profile = jobProfiles.find((item) => item.id === selectedProfileId);
+  const currentCycle = profile
+    ? getBillingCycle(
+        { jobProfileId: profile.id, titleJobProfile: profile.title, dateTimeRecord: new Date() },
+        jobProfiles
+      )
+    : null;
+  const cycleOptions = Array.from(
+    new Map([
+      ...(currentCycle ? [[currentCycle.key, currentCycle] as const] : []),
+      ...profileRecords.flatMap((record) => {
+        const cycle = getBillingCycle(record, jobProfiles);
+        return cycle ? [[cycle.key, cycle] as const] : [];
+      }),
+    ]).values()
+  );
+  const effectiveCycle =
+    cycleOptions.find((cycle) => cycle.key === selectedCycle)?.key ?? cycleOptions[0]?.key ?? "";
+  const recordsByPeriod =
+    selectedPeriod === "custom_cycle"
+      ? profileRecords.filter(
+          (record) => getBillingCycle(record, jobProfiles)?.key === effectiveCycle
+        )
+      : selectedPeriod === "since" && sinceDate
+        ? profileRecords.filter((record) => {
+            const date = getRecordReferenceDate(record);
+            return date && date >= new Date(`${sinceDate}T00:00:00`);
+          })
+        : filterRecordsByPeriod(profileRecords, selectedPeriod, new Date());
+
+  const handleProfileChange = (id: string) => {
+    if (!isValidSelection(id)) return;
+    storeProfile(currentUserId, id);
+    setSearchParams({ jobProfileId: id }, { replace: true });
+    setSelectedPeriod("all");
+    setSelectedCycle("");
+    setSinceDate("");
+  };
+  const handlePeriodChange = (period: RecordsPeriod) => {
+    if (period === "custom_cycle") setSelectedCycle("");
+    setSelectedPeriod(period);
   };
 
   return {
-    filters,
-    queryFilters,
+    selectedProfileId,
+    hasUnassignedRecords: unassignedRecords.length > 0,
+    profile,
     selectedPeriod,
-    hasManualDateRange,
     recordsByPeriod,
-    summary,
-    effectiveSummaryPeriod,
+    summary: calculateRecordsSummary(recordsByPeriod),
+    effectiveSummaryPeriod: selectedPeriod,
     isLoading,
     isError,
     errorMessage,
@@ -133,8 +123,11 @@ export const useRecordsFiltering = () => {
     handleDeleteRecord,
     handlerViewDetails,
     handlePeriodChange,
-    handleFilterChange,
-    cycleStartDay,
-    handleCycleStartDayChange,
+    handleProfileChange,
+    sinceDate,
+    setSinceDate,
+    cycleOptions,
+    selectedCycle: effectiveCycle,
+    setSelectedCycle,
   };
 };

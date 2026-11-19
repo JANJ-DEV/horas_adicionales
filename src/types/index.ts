@@ -25,6 +25,7 @@ export interface JobProfile {
   branch: MakeOptional<Branch, "jobsPositions">;
   jobPosition: JobPosition;
   estimatedHourlyRate?: number;
+  billingCycleStartDay?: number;
   createdAt?: Timestamp;
   updatedAt?: Timestamp;
 }

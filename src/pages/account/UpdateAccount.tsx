@@ -58,7 +58,7 @@ const UpdateAccount: FC = () => {
 
   if (!currentUser) {
     return (
-      <section className="mx-auto mt-6 w-full max-w-xl rounded-2xl border border-red-400/35 bg-red-500/10 p-4 text-red-100">
+      <section className="mx-auto mt-6 w-full max-w-xl rounded-lg border border-red-400/35 bg-red-500/10 p-4 text-red-100">
         No hay un usuario autenticado
       </section>
     );
@@ -91,7 +91,7 @@ const UpdateAccount: FC = () => {
               placeholder="Nombre de usuario"
               defaultValue={currentUser.displayName as string}
               disabled={isSubmitting}
-              className="w-full rounded-2xl border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-[var(--text)] outline-none transition duration-300 focus:border-[var(--border-strong)] focus:ring-2 focus:ring-[color:var(--accent)]/15"
+              className="w-full rounded-lg border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-[var(--text)] outline-none transition duration-300 focus:border-[var(--border-strong)] focus:ring-2 focus:ring-[color:var(--accent)]/15"
             />
           </label>
 
@@ -120,7 +120,7 @@ const UpdateAccount: FC = () => {
                 <small className="text-xs text-[var(--text-muted)]">
                   {selectedFileName || "PNG o JPG. Se mostrará una vista previa antes de guardar."}
                 </small>
-                <span className="inline-flex w-fit rounded-full border border-[var(--border-strong)] bg-[var(--accent)]/10 px-3 py-1 text-xs font-semibold text-[var(--accent)]">
+                <span className="inline-flex w-fit rounded-lg border border-[var(--border-strong)] bg-[var(--accent)]/10 px-3 py-1 text-xs font-semibold text-[var(--accent)]">
                   Cambiar foto
                 </span>
               </span>
@@ -146,13 +146,13 @@ const UpdateAccount: FC = () => {
           />
 
           {formFeedback.error && (
-            <p className="rounded-2xl border border-[var(--danger)]/30 bg-[var(--danger)]/10 px-4 py-3 text-sm font-semibold text-[var(--danger)]">
+            <p className="rounded-lg border border-[var(--danger)]/30 bg-[var(--danger)]/10 px-4 py-3 text-sm font-semibold text-[var(--danger)]">
               {formFeedback.error}
             </p>
           )}
 
           {formFeedback.message && !formFeedback.error && (
-            <p className="rounded-2xl border border-[var(--success)]/30 bg-[var(--success)]/10 px-4 py-3 text-sm font-semibold text-[var(--success)]">
+            <p className="rounded-lg border border-[var(--success)]/30 bg-[var(--success)]/10 px-4 py-3 text-sm font-semibold text-[var(--success)]">
               {formFeedback.message}
             </p>
           )}

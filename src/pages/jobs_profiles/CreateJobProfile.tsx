@@ -44,7 +44,7 @@ const CreateJobProfile: FC = () => {
             name="title"
             id="title"
             placeholder="ej. Transportes SL"
-            className="rounded-2xl border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-[var(--text)] outline-none transition duration-300 focus:border-[var(--border-strong)] focus:ring-2 focus:ring-[color:var(--accent)]/15"
+            className="rounded-lg border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-[var(--text)] outline-none transition duration-300 focus:border-[var(--border-strong)] focus:ring-2 focus:ring-[color:var(--accent)]/15"
           />
         </section>
         {branches && (
@@ -70,10 +70,31 @@ const CreateJobProfile: FC = () => {
             name="estimatedHourlyRate"
             id="estimatedHourlyRate"
             placeholder="ej. 20€/hora"
-            className="rounded-2xl border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-[var(--text)] outline-none transition duration-300 focus:border-[var(--border-strong)] focus:ring-2 focus:ring-[color:var(--accent)]/15"
+            className="rounded-lg border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-[var(--text)] outline-none transition duration-300 focus:border-[var(--border-strong)] focus:ring-2 focus:ring-[color:var(--accent)]/15"
           />
         </section>
 
+        <section className="flex flex-col gap-2">
+          <label
+            htmlFor="billingCycleStartDay"
+            className="text-sm font-semibold text-[var(--text)]"
+          >
+            Día de inicio del ciclo de facturación (opcional):
+          </label>
+          <input
+            type="number"
+            name="billingCycleStartDay"
+            id="billingCycleStartDay"
+            min="1"
+            max="28"
+            placeholder="Ej. 10"
+            className="rounded-lg border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-[var(--text)]"
+          />
+          <p className="text-sm text-[var(--text-muted)]">
+            El ciclo comienza ese día de cada mes y termina el día anterior al siguiente inicio. Al
+            modificarlo, los registros anteriores se muestran según el día actualizado.
+          </p>
+        </section>
         <Btn
           type="submit"
           label={formAction.state === "submitting" ? "Guardando..." : "Guardar"}
@@ -81,7 +102,7 @@ const CreateJobProfile: FC = () => {
         />
         {/* Mensaje de error */}
         {formAction.data && formAction.data.error && (
-          <p className="rounded-2xl border border-[var(--danger)]/30 bg-[var(--danger)]/10 px-4 py-3 text-sm font-semibold text-[var(--danger)]">
+          <p className="rounded-lg border border-[var(--danger)]/30 bg-[var(--danger)]/10 px-4 py-3 text-sm font-semibold text-[var(--danger)]">
             {formAction.data.error}
           </p>
         )}
@@ -91,7 +112,7 @@ const CreateJobProfile: FC = () => {
             <p className="font-semibold text-[var(--success)]">{formAction.data.message}</p>
             <Link
               to="/records/add"
-              className="w-fit rounded-full bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-slate-950 transition duration-300 hover:-translate-y-0.5 hover:bg-[var(--accent-strong)] hover:text-white"
+              className="w-fit rounded-lg bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-slate-950 transition duration-300 hover:-translate-y-0.5 hover:bg-[var(--accent-strong)] hover:text-white"
             >
               Ir a registrar horas
             </Link>

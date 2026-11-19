@@ -15,6 +15,12 @@ export const add = async ({ request }: ActionFunctionArgs) => {
   const idBranch = formData.get("branch") as string;
   const idJobPosition = formData.get("jobPosition") as string;
   const estimatedHourlyRate = formData.get("estimatedHourlyRate") as string;
+  const cycleInput = String(formData.get("billingCycleStartDay") ?? "").trim();
+  const cycleDay = Number(cycleInput);
+
+  if (cycleInput && (!Number.isInteger(cycleDay) || cycleDay < 1 || cycleDay > 28)) {
+    return { error: "El día de inicio del ciclo debe estar entre 1 y 28." };
+  }
 
   if (!title || !idBranch || !idJobPosition) {
     notify.error("Todos los campos son requeridos", { scope: TOAST_SCOPE.JOBS_PROFILES });
@@ -52,6 +58,7 @@ export const add = async ({ request }: ActionFunctionArgs) => {
         description: jobPositions.description,
       },
       estimatedHourlyRate: parseFloat(estimatedHourlyRate),
+      ...(cycleInput ? { billingCycleStartDay: cycleDay } : {}),
     };
 
     const jobProfile = await saveJobProfile(newJobProfile);

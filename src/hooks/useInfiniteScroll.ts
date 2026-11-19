@@ -6,6 +6,7 @@ type UseInfiniteScrollParams = {
   disabled?: boolean;
   rootMargin?: string;
   threshold?: number;
+  resetKey?: number;
 };
 
 const useInfiniteScroll = ({
@@ -14,6 +15,7 @@ const useInfiniteScroll = ({
   disabled = false,
   rootMargin = "400px 0px",
   threshold = 0,
+  resetKey,
 }: UseInfiniteScrollParams) => {
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
@@ -39,7 +41,7 @@ const useInfiniteScroll = ({
     return () => {
       observer.disconnect();
     };
-  }, [onLoadMore, hasMore, disabled, rootMargin, threshold]);
+  }, [onLoadMore, hasMore, disabled, rootMargin, threshold, resetKey]);
 
   return { sentinelRef };
 };

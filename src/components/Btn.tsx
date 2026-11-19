@@ -67,7 +67,7 @@ const Btn: FC<BtnProps> = ({
   return (
     <button
       type={type}
-      className={`inline-flex items-center justify-center gap-2 rounded-full font-bold tracking-[0.01em] transition duration-300 ${variantStyles[variant]} ${sizeStyles[size]}`}
+      className={`inline-flex items-center justify-center gap-2 rounded-lg font-bold tracking-[0.01em] transition duration-300 ${variantStyles[variant]} ${sizeStyles[size]}`}
       onClick={onClick}
       disabled={formState}
       title={title}

@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useFetcher, useNavigate } from "react-router";
 import type { AddRecordActionResponse } from "@/routes/actions/records.actions";
 import { rememberSelectedRecordId } from "../recordNavigation";
+import { getStoredProfile, storeProfile } from "../profileSelection";
 
 const isAddRecordSuccess = (
   data: AddRecordActionResponse | null | undefined
@@ -24,6 +25,7 @@ export const useAddRecord = () => {
   const [jobProfiles, setJobProfiles] = useState<JobProfile[]>([]);
   const [loading, setLoading] = useState(hasCurrentUser);
   const [selectedTitle, setSelectedTitle] = useState<string>("");
+  const [selectedProfileId, setSelectedProfileId] = useState("");
   const [estimatedHourlyRate, setEstimatedHourlyRate] = useState<number | undefined>(undefined);
   const [selectedBranchId, setSelectedBranchId] = useState<string>("");
   const [selectedJobPositionId, setSelectedJobPositionId] = useState<string>("");
@@ -31,6 +33,8 @@ export const useAddRecord = () => {
   const handleProfileChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedProfileId = event.target.value;
     const profile = jobProfiles.find((p) => p.id === selectedProfileId);
+    setSelectedProfileId(selectedProfileId);
+    storeProfile(currentUser?.uid, selectedProfileId);
     setSelectedTitle(profile ? profile.title : "");
     setEstimatedHourlyRate(profile ? profile.estimatedHourlyRate : undefined);
     setSelectedBranchId(profile?.branch?.id ?? "");
@@ -48,6 +52,15 @@ export const useAddRecord = () => {
     const unsubscribe = subscribeToJobProfiles(
       (profiles) => {
         setJobProfiles(profiles);
+        const saved = profiles.find((profile) => profile.id === getStoredProfile(currentUser.uid));
+        if (saved?.id) {
+          setSelectedProfileId(saved.id);
+          setSelectedTitle(saved.title);
+          setEstimatedHourlyRate(saved.estimatedHourlyRate);
+          setSelectedBranchId(saved.branch?.id ?? "");
+          setSelectedJobPositionId(saved.jobPosition?.id ?? "");
+          setSelectedProfileContext(saved.branch?.id ?? null, saved.jobPosition?.id ?? null);
+        }
         setLoading(false);
       },
       (error) => {
@@ -86,6 +99,7 @@ export const useAddRecord = () => {
     jobProfiles,
     loading,
     selectedTitle,
+    selectedProfileId,
     handleProfileChange,
     hasCurrentUser,
     formAction,

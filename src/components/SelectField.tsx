@@ -29,7 +29,7 @@ const SelectField: FC<SelectFieldProps> = ({
   onChange,
   disabled,
   placeholder = "Selecciona una opción",
-  className = "w-full rounded-2xl border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-sm text-[var(--text)] outline-none transition duration-300 focus:border-[var(--border-strong)] focus:ring-2 focus:ring-[color:var(--accent)]/15 disabled:cursor-not-allowed disabled:opacity-60 lg:text-base",
+  className = "w-full rounded-lg border border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-sm text-[var(--text)] outline-none transition duration-300 focus:border-[var(--border-strong)] focus:ring-2 focus:ring-[color:var(--accent)]/15 disabled:cursor-not-allowed disabled:opacity-60 lg:text-base",
   labelClassName = "text-sm font-semibold text-[var(--text)] lg:text-base",
   containerClassName = "flex flex-col gap-2",
 }) => {

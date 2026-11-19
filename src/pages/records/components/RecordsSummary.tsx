@@ -8,10 +8,14 @@ type RecordsSummaryProps = {
 };
 
 const periodLabel: Record<RecordsPeriod | "range", string> = {
+  all: "total",
   day: "hoy",
   week: "esta semana",
   month: "este mes",
-  custom_cycle: "este ciclo de facturación",
+  quarter: "este trimestre",
+  semester: "este semestre",
+  since: "desde la fecha",
+  custom_cycle: "ciclo seleccionado",
   range: "periodo seleccionado",
 };
 
@@ -30,26 +34,18 @@ const RecordsSummary = ({
   totalSalary,
 }: RecordsSummaryProps) => {
   return (
-    <section className="app-surface grid gap-3 p-4 sm:grid-cols-3">
-      <article className="app-card p-4">
-        <p className="text-xs uppercase tracking-[0.18em] text-[var(--text-soft)]">
-          Registros ({periodLabel[period ?? "range"]})
-        </p>
-        <strong className="mt-2 block text-2xl text-[var(--text)]">{recordsCount}</strong>
+    <section className="grid gap-1 text-xs">
+      <article className="flex items-center justify-between gap-2">
+        <p className="text-[var(--text-soft)]">Registros ({periodLabel[period ?? "range"]})</p>
+        <strong className="text-sm text-[var(--text)]">{recordsCount}</strong>
       </article>
-      <article className="app-card p-4">
-        <p className="text-xs uppercase tracking-[0.18em] text-[var(--text-soft)]">Horas totales</p>
-        <strong className="mt-2 block text-2xl text-[var(--text)]">
-          {totalHoursDecimal.toFixed(2)}h
-        </strong>
+      <article className="flex items-center justify-between gap-2">
+        <p className="text-[var(--text-soft)]">Horas totales</p>
+        <strong className="text-sm text-[var(--text)]">{totalHoursDecimal.toFixed(2)}h</strong>
       </article>
-      <article className="app-card p-4">
-        <p className="text-xs uppercase tracking-[0.18em] text-[var(--text-soft)]">
-          Sueldo estimado
-        </p>
-        <strong className="mt-2 block text-2xl text-[var(--success)]">
-          {formatCurrency(totalSalary)}
-        </strong>
+      <article className="flex items-center justify-between gap-2">
+        <p className="text-[var(--text-soft)]">Sueldo estimado</p>
+        <strong className="text-sm text-[var(--success)]">{formatCurrency(totalSalary)}</strong>
       </article>
     </section>
   );

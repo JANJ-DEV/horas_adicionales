@@ -1,6 +1,6 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { MemoryRouter } from "react-router";
+import { MemoryRouter, Route, Routes } from "react-router";
 
 const mocks = vi.hoisted(() => ({
   useRecordsFiltering: vi.fn(),
@@ -11,6 +11,10 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("../../../src/pages/records/hooks/useRecordsFiltering", () => ({
   useRecordsFiltering: mocks.useRecordsFiltering,
+}));
+
+vi.mock("@/context/hooks/auth.hook", () => ({
+  default: () => ({ currentUser: { uid: "user-1" } }),
 }));
 
 vi.mock("@/services/branches.service", () => ({
@@ -54,6 +58,7 @@ vi.mock("../../../src/pages/records/components/RecordCard", () => ({
 }));
 
 import Records from "../../../src/pages/records/Records";
+import RecordsLayout from "../../../src/pages/records/RecordsLayout";
 import { rememberSelectedRecordId } from "../../../src/pages/records/recordNavigation";
 
 const buildRecord = (id: string) => ({
@@ -73,6 +78,7 @@ describe("Records", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     sessionStorage.clear();
+    localStorage.clear();
     Object.defineProperty(HTMLElement.prototype, "scrollIntoView", {
       configurable: true,
       value: scrollIntoView,
@@ -97,6 +103,104 @@ describe("Records", () => {
     mocks.useInfiniteScroll.mockReturnValue({
       sentinelRef: { current: null },
     });
+  });
+
+  it.each(["card", "list"])("carga progresivamente todos los registros en vista %s", (viewMode) => {
+    localStorage.setItem("records:view-mode", viewMode);
+    const records = Array.from({ length: 20 }, (_, index) => buildRecord(`record-${index + 1}`));
+    mocks.useRecordsFiltering.mockReturnValue({
+      filters: {},
+      selectedPeriod: "all",
+      hasManualDateRange: false,
+      recordsByPeriod: records,
+      summary: { totalHoursDecimal: 0, totalSalary: 0 },
+      effectiveSummaryPeriod: "all",
+      isLoading: false,
+      isError: false,
+      errorMessage: null,
+      hasCurrentUser: true,
+      handleDeleteRecord: vi.fn(),
+      handlerViewDetails: vi.fn(),
+      handlePeriodChange: vi.fn(),
+      handleFilterChange: vi.fn(),
+    });
+
+    render(
+      <MemoryRouter initialEntries={["/records"]}>
+        <Records />
+      </MemoryRouter>
+    );
+
+    expect(screen.queryByText("Registro record-20")).not.toBeInTheDocument();
+    expect(screen.getByText(/Mostrando 9 de 20 registros/)).toBeInTheDocument();
+    expect(mocks.useInfiniteScroll).toHaveBeenLastCalledWith(
+      expect.objectContaining({ hasMore: true })
+    );
+    act(() => mocks.useInfiniteScroll.mock.lastCall?.[0].onLoadMore());
+    expect(screen.getByText(/Mostrando 18 de 20 registros/)).toBeInTheDocument();
+    act(() => mocks.useInfiniteScroll.mock.lastCall?.[0].onLoadMore());
+    expect(screen.getByText("Registro record-20")).toBeInTheDocument();
+    expect(mocks.useInfiniteScroll).toHaveBeenLastCalledWith(
+      expect.objectContaining({ hasMore: false })
+    );
+  });
+
+  it("permite cambiar de perfil desde la pantalla de registros", () => {
+    const changeProfile = vi.fn();
+    mocks.subscribeToJobProfiles.mockImplementation((onUpdate: (profiles: unknown[]) => void) => {
+      onUpdate([
+        { id: "profile-1", title: "Empresa A" },
+        { id: "profile-2", title: "Empresa B" },
+      ]);
+      return vi.fn();
+    });
+    mocks.useRecordsFiltering.mockReturnValue({
+      selectedProfileId: "profile-1",
+      hasUnassignedRecords: false,
+      selectedPeriod: "all",
+      recordsByPeriod: [],
+      summary: { totalHoursDecimal: 0, totalSalary: 0 },
+      effectiveSummaryPeriod: "all",
+      isLoading: false,
+      isError: false,
+      hasCurrentUser: true,
+      handleProfileChange: changeProfile,
+      handlePeriodChange: vi.fn(),
+    });
+    render(
+      <MemoryRouter>
+        <Records />
+      </MemoryRouter>
+    );
+    fireEvent.change(screen.getByLabelText("Cambiar perfil"), { target: { value: "profile-2" } });
+    expect(changeProfile).toHaveBeenCalledWith("profile-2");
+  });
+
+  it("muestra las acciones sin el resumen en la barra superior", () => {
+    mocks.useRecordsFiltering.mockReturnValue({
+      selectedProfileId: "profile-1",
+      hasUnassignedRecords: false,
+      selectedPeriod: "all",
+      recordsByPeriod: [],
+      summary: { totalHoursDecimal: 0, totalSalary: 0 },
+      effectiveSummaryPeriod: "all",
+      isLoading: false,
+      isError: false,
+      hasCurrentUser: true,
+      handleProfileChange: vi.fn(),
+      handlePeriodChange: vi.fn(),
+    });
+    render(
+      <MemoryRouter initialEntries={["/records"]}>
+        <Routes>
+          <Route path="/records" element={<RecordsLayout />}>
+            <Route index element={<Records />} />
+          </Route>
+        </Routes>
+      </MemoryRouter>
+    );
+    expect(screen.queryByRole("button", { name: /resumen/i })).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Registrar hora" })).toBeInTheDocument();
   });
 
   it("restaura el scroll al registro seleccionado aunque quede fuera del primer bloque visible", async () => {

@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router";
 
 // Pages
-import { PageNotFound, PrivateLayout } from "./lazy.load";
+import { PageNotFound, PrivateLayout, Statistics } from "./lazy.load";
 // Routers
 import { jobProfilesRouter } from "./job_profiles.router";
 import { recordsRouter } from "./records.router";
@@ -13,7 +13,12 @@ export const routers = [
   ...publicRouter,
   {
     element: <PrivateLayout />,
-    children: [...recordsRouter, ...jobProfilesRouter, ...accountRouter],
+    children: [
+      ...recordsRouter,
+      ...jobProfilesRouter,
+      ...accountRouter,
+      { path: "/statistics", element: <Statistics /> },
+    ],
   },
   {
     path: "*",

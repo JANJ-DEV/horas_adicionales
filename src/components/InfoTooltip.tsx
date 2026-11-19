@@ -25,7 +25,7 @@ const InfoTooltip: FC<InfoTooltipProps> = ({ content, ariaLabel, className = "" 
       {isOpen && (
         <section
           role="tooltip"
-          className="absolute bottom-full left-1/2 z-20 mb-2 w-[min(18rem,calc(100vw-1.5rem))] -translate-x-1/2 rounded-2xl border border-[var(--border)] bg-[var(--surface-strong)] p-3 text-xs text-[var(--text)] shadow-[0_4px_12px_rgba(11,18,32,0.15)] sm:w-72"
+          className="absolute bottom-full left-1/2 z-20 mb-2 w-[min(18rem,calc(100vw-1.5rem))] -translate-x-1/2 rounded-lg border border-[var(--border)] bg-[var(--surface-strong)] p-3 text-xs text-[var(--text)] shadow-[0_4px_12px_rgba(11,18,32,0.15)] sm:w-72"
         >
           {content}
         </section>

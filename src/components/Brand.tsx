@@ -12,7 +12,7 @@ const Brand: FC<Props> = ({ variant = "large" }) => {
     <div className={`inline-flex items-center gap-3 ${isFull ? "w-full" : "w-auto"}`}>
       <div
         aria-hidden="true"
-        className={`relative flex items-center justify-center overflow-hidden rounded-2xl border border-[#ff6b35]/30 bg-gradient-to-br from-[#ff6b35] via-[#ff8c42] to-[#0077b6] shadow-[0_2px_8px_rgba(255,107,53,0.25)] ${isSmall ? "h-11 w-11" : "h-16 w-16"}`}
+        className={`relative flex items-center justify-center overflow-hidden rounded-lg border border-[#ff6b35]/30 bg-gradient-to-br from-[#ff6b35] via-[#ff8c42] to-[#0077b6] shadow-[0_2px_8px_rgba(255,107,53,0.25)] ${isSmall ? "h-11 w-11" : "h-16 w-16"}`}
       >
         <svg
           viewBox="0 0 64 64"

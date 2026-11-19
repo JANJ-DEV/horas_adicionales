@@ -39,7 +39,7 @@ const RecordListItem = ({
         </p>
       </header>
 
-      <div className="flex items-center justify-between gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-2">
+      <div className="flex items-center justify-between gap-3 rounded-lg border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-2">
         <p className="text-xs text-[var(--text-soft)]">Sueldo estimado</p>
         <p className="text-sm font-semibold text-[var(--success)]">{salary.toFixed(2)} EUR</p>
       </div>
@@ -52,14 +52,14 @@ const RecordListItem = ({
         <button
           type="button"
           onClick={() => onViewDetails(record.id as string)}
-          className="rounded-full border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-1.5 text-xs font-semibold text-[var(--text)] transition duration-200 hover:border-[var(--accent)] hover:text-[var(--accent)]"
+          className="rounded-lg border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-1.5 text-xs font-semibold text-[var(--text)] transition duration-200 hover:border-[var(--accent)] hover:text-[var(--accent)]"
         >
           Detalles
         </button>
         <button
           type="button"
           onClick={() => onDeleteRecord(record.id as string)}
-          className="rounded-full border border-transparent bg-[var(--danger)]/16 px-3 py-1.5 text-xs font-semibold text-[var(--danger)] transition duration-200 hover:bg-[var(--danger)] hover:text-white"
+          className="rounded-lg border border-transparent bg-[var(--danger)]/16 px-3 py-1.5 text-xs font-semibold text-[var(--danger)] transition duration-200 hover:bg-[var(--danger)] hover:text-white"
         >
           Eliminar
         </button>

@@ -6,7 +6,7 @@ type Props = {
 
 const Hero: FC<Props> = ({ children }) => {
   return (
-    <section className="hero-glass relative overflow-hidden rounded-[1.75rem] px-5 py-8 text-center sm:px-8 sm:py-12 lg:px-10 lg:py-14">
+    <section className="hero-glass relative overflow-hidden rounded-lg px-5 py-8 text-center sm:px-8 sm:py-12 lg:px-10 lg:py-14">
       <div className="absolute inset-0 bg-[var(--hero-gradient)] opacity-80" aria-hidden="true" />
       <div
         className="absolute -left-12 top-4 h-32 w-32 rounded-full bg-[color:var(--accent)]/20 blur-3xl"

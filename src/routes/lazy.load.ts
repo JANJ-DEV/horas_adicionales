@@ -4,6 +4,7 @@ import { lazy } from "react";
 const App = lazy(() => import("../pages/App.tsx"));
 const JobProfiles = lazy(() => import("../pages/jobs_profiles/JobProfiles.tsx"));
 const Records = lazy(() => import("../pages/records/Records.tsx"));
+const Statistics = lazy(() => import("../pages/statistics/Statistics.tsx"));
 const PageNotFound = lazy(() => import("../pages/layouts/PageNotFound.tsx"));
 const PrivateLayout = lazy(() => import("../pages/layouts/PrivateLayout.tsx"));
 const PublicLayout = lazy(() => import("../pages/layouts/PublicLayout.tsx"));
@@ -22,6 +23,7 @@ export {
   App,
   JobProfiles,
   Records,
+  Statistics,
   RecordsLayout,
   PageNotFound,
   PrivateLayout,
